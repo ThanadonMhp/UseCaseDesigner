@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="1550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
+<VBox prefHeight="1280" prefWidth="720" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
 
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -72,7 +72,8 @@
                     <ImageView fx:id="ovalImageView" fitHeight="106.0" fitWidth="106.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../images/oval.png" />
-                                 </image></ImageView>
+                                 </image>
+                              </ImageView>
                               <ImageView fx:id="ovalImageView1" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../images/human.png" />
@@ -94,6 +95,11 @@
             </TitledPane>
           </panes>
         </Accordion>
+            <ImageView fx:id="ovalImageView2" fitHeight="106.0" fitWidth="106.0" layoutX="382.0" layoutY="170.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/oval.png" />
+               </image>
+            </ImageView>
       </children>
     </AnchorPane>
   </children>
