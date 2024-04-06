@@ -2,6 +2,7 @@ package ku.cs.usecasedesigner;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -70,5 +71,17 @@ public class DragIcon extends AnchorPane {
             default:
                 break;
         }
+    }
+
+    public void relocateToPoint (Point2D p) {
+
+        Point2D localCoords = new Point2D(getParent().sceneToLocal(p));
+
+        relocate (
+                (int) (localCoords.getX() -
+                        (getBoundsInLocal().getWidth() / 2)),
+                (int) (localCoords.getY() -
+                        (getBoundsInLocal().getHeight() / 2))
+        );
     }
 }
