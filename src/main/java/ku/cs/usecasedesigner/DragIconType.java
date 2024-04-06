@@ -1,5 +1,11 @@
 package ku.cs.usecasedesigner;
 
-public class DragIconType {
-
+public enum DragIconType {
+    red,
+    green,
+    blue,
+    black,
+    yellow,
+    purple,
+    grey
 }
