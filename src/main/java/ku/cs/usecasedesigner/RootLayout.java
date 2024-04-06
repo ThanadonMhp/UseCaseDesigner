@@ -101,20 +101,23 @@ public class RootLayout extends AnchorPane{
             }
         };
 
+
         mIconDragDropped = new EventHandler <DragEvent> () {
 
             @Override
             public void handle(DragEvent event) {
 
+                DragContainer container =
+                        (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+
+                container.addData("scene_coords",
+                        new Point2D(event.getSceneX(), event.getSceneY()));
+
+                ClipboardContent content = new ClipboardContent();
+                content.put(DragContainer.AddNode, container);
+
+                event.getDragboard().setContent(content);
                 event.setDropCompleted(true);
-
-                right_pane.removeEventHandler(DragEvent.DRAG_OVER, mIconDragOverRightPane);
-                right_pane.removeEventHandler(DragEvent.DRAG_DROPPED, mIconDragDropped);
-                base_pane.removeEventHandler(DragEvent.DRAG_OVER, mIconDragOverRoot);
-
-                mDragOverIcon.setVisible(false);
-
-                event.consume();
             }
         };
 
@@ -128,6 +131,11 @@ public class RootLayout extends AnchorPane{
                 base_pane.removeEventHandler(DragEvent.DRAG_OVER, mIconDragOverRoot);
 
                 mDragOverIcon.setVisible(false);
+
+                DragContainer container =
+                        (DragContainer) event.getDragboard().getContent(DragContainer.AddNode);
+
+                System.out.println (container.getData().toString());
 
                 event.consume();
             }
@@ -154,7 +162,10 @@ public class RootLayout extends AnchorPane{
                 mDragOverIcon.relocateToPoint(new Point2D (event.getSceneX(), event.getSceneY()));
 
                 ClipboardContent content = new ClipboardContent();
-                content.putString(icn.getType().toString());
+                DragContainer container = new DragContainer();
+
+                container.addData ("type", mDragOverIcon.getType().toString());
+                content.put(DragContainer.AddNode, container);
 
                 mDragOverIcon.startDragAndDrop (TransferMode.ANY).setContent(content);
                 mDragOverIcon.setVisible(true);
