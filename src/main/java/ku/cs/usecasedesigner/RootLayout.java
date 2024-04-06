@@ -36,6 +36,6 @@ public class RootLayout extends AnchorPane {
     }
 
     @FXML
-    private void initialize() {
+    public void initialize() {
     }
 }

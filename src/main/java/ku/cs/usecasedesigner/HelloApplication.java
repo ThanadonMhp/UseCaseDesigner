@@ -12,7 +12,7 @@ public class HelloApplication extends Application {
 
         try {
 
-            Scene scene = new Scene(root,640,480);
+            Scene scene = new Scene(root,1280,720);
             scene.getStylesheets().add(getClass().getResource("/ku/cs/usecasedesigner/application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
