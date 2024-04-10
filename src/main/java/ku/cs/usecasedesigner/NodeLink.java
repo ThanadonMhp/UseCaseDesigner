@@ -29,7 +29,7 @@ public class NodeLink extends AnchorPane {
     public NodeLink() {
 
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/NodeLink.fxml")
+                getClass().getResource("ku/cs/usecasedesigner/NodeLink.fxml")
         );
 
         fxmlLoader.setRoot(this);
