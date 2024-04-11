@@ -9,9 +9,9 @@ import java.io.IOException;
 public class ProjectApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, "UseCaseDesigner | RootLayout", 1280, 720);
+        FXRouter.bind(this, stage, "UseCaseDesigner | Homepage", 1280, 720);
         configRoute();
-        FXRouter.goTo("RootLayout");
+        FXRouter.goTo("Homepage");
     }
 
     private static void configRoute() {
@@ -22,6 +22,8 @@ public class ProjectApplication extends Application {
         FXRouter.when("DragIcon", packageStr + "DragIcon.fxml", "UseCaseDesigner | DragIcon");
         FXRouter.when("NodeLink", packageStr + "NodeLink.fxml", "UseCaseDesigner | NodeLink");
         FXRouter.when("RootLayout", packageStr + "RootLayout.fxml", "UseCaseDesigner | RootLayout");
+
+        FXRouter.when("Homepage", packageStr + "Homepage.fxml", "UseCaseDesigner | Homepage");
 
     }
     public static void main(String[] args) {
