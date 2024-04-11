@@ -5,4 +5,5 @@ module ku.cs.usecasedesigner {
     opens ku.cs.usecasedesigner.controller to javafx.fxml;
 
     exports ku.cs.usecasedesigner;
+    exports ku.cs.usecasedesigner.controller;
 }

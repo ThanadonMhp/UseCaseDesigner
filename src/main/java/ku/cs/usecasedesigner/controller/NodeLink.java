@@ -1,11 +1,9 @@
-package ku.cs.usecasedesigner;
+package ku.cs.usecasedesigner.controller;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.When;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -1,4 +1,4 @@
-package ku.cs.usecasedesigner;
+package ku.cs.usecasedesigner.controller;
 
 import java.io.IOException;
 

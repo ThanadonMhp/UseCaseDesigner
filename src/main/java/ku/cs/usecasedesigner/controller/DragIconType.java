@@ -1,4 +1,4 @@
-package ku.cs.usecasedesigner;
+package ku.cs.usecasedesigner.controller;
 
 public enum DragIconType {
     cubic_curve,
