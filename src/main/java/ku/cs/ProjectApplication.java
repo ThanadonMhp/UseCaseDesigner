@@ -9,7 +9,7 @@ import java.io.IOException;
 public class ProjectApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, "UseCaseDesigner | RootLayout", 1280, 720);
+        FXRouter.bind(this, stage, 1280,720);
         configRoute();
         FXRouter.goTo("Homepage");
     }
