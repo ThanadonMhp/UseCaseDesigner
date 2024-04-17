@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class HomepageController {
@@ -13,7 +14,7 @@ public class HomepageController {
 
     @FXML private ImageView actorImageView;
 
-    @FXML private Pane pane;
+    @FXML private Pane designPane;
 
     @FXML void initialize() {
 
@@ -39,10 +40,10 @@ public class HomepageController {
             imageView.setFitHeight(150);
             imageView.setLayoutX(dragEvent.getX() - 75);
             imageView.setLayoutY(dragEvent.getY() - 75);
-            pane.getChildren().add(imageView);
+            designPane.getChildren().add(imageView);
 
-            MakeDraggable(pane.getChildren().get(pane.getChildren().size() - 1));
-            System.out.println(pane.getChildren().get(pane.getChildren().size() - 1) + " is now draggable");
+            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            System.out.println(designPane.getChildren().get(designPane.getChildren().size() - 1) + " is now draggable");
         }
     }
 
