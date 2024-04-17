@@ -4,57 +4,60 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.Pane;
 
 public class HomepageController {
     @FXML
     private ImageView ovalImageView;
 
     @FXML
+    private ImageView actorImageView;
+
+    @FXML
+    private Pane pane;
+
+    @FXML
     void initialize() {
-        ovalImageView.setOnDragDetected(this::handleDragDetected);
-        ovalImageView.setOnDragOver(this::handleDragOver);
-        ovalImageView.setOnDragDropped(this::handleDragDropped);
+
     }
 
-    @FXML
-    private void handleDragDetected(MouseEvent event) {
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.COPY);
-
-        ClipboardContent content = new ClipboardContent();
-        content.putImage(ovalImageView.getImage());
-
-        dragboard.setContent(content);
-
-        event.consume();
-    }
-
-    @FXML
-    private void handleDragOver(DragEvent event) {
-        if (event.getGestureSource() != ovalImageView &&
-                event.getDragboard().hasImage()) {
-            event.acceptTransferModes(TransferMode.COPY);
+    public void PaneDragOver(DragEvent dragEvent) {
+        if(dragEvent.getDragboard().hasString()) {
+            dragEvent.acceptTransferModes(TransferMode.ANY);
         }
-
-        event.consume();
     }
 
-    @FXML
-    private void handleDragDropped(DragEvent event) {
-        boolean success = false;
-
-        if (event.getDragboard().hasImage()) {
-            ImageView imageView = new ImageView(event.getDragboard().getImage());
-            imageView.setFitWidth(100);
-            imageView.setFitHeight(100);
-
-            // Add the image to the container or pane where you want to drop it
-            // For example, if you have a Pane named "containerPane", you can do:
-            // containerPane.getChildren().add(imageView);
-
-            success = true;
+    public void PaneDragDropped(DragEvent dragEvent) {
+        if(dragEvent.getDragboard().hasString()) {
+            ImageView imageView = new ImageView();
+            if(dragEvent.getDragboard().getString().equals("Oval")) {
+                imageView.setImage(ovalImageView.getImage());
+                System.out.println("Oval Dropped");
+            } else if(dragEvent.getDragboard().getString().equals("Actor")) {
+                imageView.setImage(actorImageView.getImage());
+                System.out.println("Actor Dropped");
+            }
+            imageView.setFitWidth(150);
+            imageView.setFitHeight(150);
+            imageView.setLayoutX(dragEvent.getX() - 75);
+            imageView.setLayoutY(dragEvent.getY() - 75);
+            pane.getChildren().add(imageView);
         }
+    }
 
-        event.setDropCompleted(success);
-        event.consume();
+    public void ovalDragDetected(MouseEvent mouseEvent) {
+        System.out.println("Oval Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("Oval");
+        dragboard.setContent(clipboardContent);
+    }
+
+    public void ActorDragDetected(MouseEvent mouseEvent) {
+        System.out.println("Actor Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("Actor");
+        dragboard.setContent(clipboardContent);
     }
 }

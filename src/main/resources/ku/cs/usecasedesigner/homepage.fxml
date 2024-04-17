@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="1280" prefWidth="720" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
+<VBox prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
 
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -62,44 +62,30 @@
             <Font size="18.0" />
           </font>
         </Label>
-        <Accordion layoutX="7.0" layoutY="63.0">
+        <Accordion layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0">
           <panes>
-            <TitledPane animated="false" collapsible="false" text="untitled 1">
+            <TitledPane animated="false" expanded="false" text="Components">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0">
                   <children>
                     <!-- ImageView for oval.jpg with drag-and-drop functionality -->
-                    <ImageView fx:id="ovalImageView" fitHeight="106.0" fitWidth="106.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/oval.png" />
-                                 </image>
+                    <ImageView fx:id="ovalImageView" fitHeight="106.0" fitWidth="106.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/oval.png" />
+                      </image>
                               </ImageView>
-                              <ImageView fx:id="ovalImageView1" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/human.png" />
-                                 </image>
-                              </ImageView>
+                    <ImageView fx:id="actorImageView" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/human.png" />
+                      </image>
+                    </ImageView>
                   </children>
                 </AnchorPane>
               </content>
             </TitledPane>
-            <TitledPane animated="false" text="untitled 2">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </TitledPane>
-            <TitledPane animated="false" text="untitled 3">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </TitledPane>
           </panes>
         </Accordion>
-            <ImageView fx:id="ovalImageView2" fitHeight="106.0" fitWidth="106.0" layoutX="382.0" layoutY="170.0" onDragDetected="#handleDragDetected" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMousePressed="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/oval.png" />
-               </image>
-            </ImageView>
+            <AnchorPane fx:id="pane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" prefHeight="664.0" prefWidth="1031.0" />
       </children>
     </AnchorPane>
   </children>
