@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ku.cs.usecasedesigner/ku.cs.usecasedesigner.ProjectApplication</mainClass>
+                            <mainClass>ku.cs.usecasedesigner/ku.cs.ProjectApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

@@ -1,4 +1,4 @@
-package fxrouter;
+package ku.cs.fxrouter;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;

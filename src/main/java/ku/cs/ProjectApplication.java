@@ -1,6 +1,6 @@
-package ku.cs.usecasedesigner;
+package ku.cs;
 
-import fxrouter.FXRouter;
+import ku.cs.fxrouter.FXRouter;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -11,7 +11,7 @@ public class ProjectApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXRouter.bind(this, stage, "UseCaseDesigner | RootLayout", 1280, 720);
         configRoute();
-        FXRouter.goTo("RootLayout");
+        FXRouter.goTo("Homepage");
     }
 
     private static void configRoute() {
