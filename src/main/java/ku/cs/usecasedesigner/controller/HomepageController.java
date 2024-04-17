@@ -7,17 +7,14 @@ import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 
 public class HomepageController {
-    @FXML
-    private ImageView ovalImageView;
 
-    @FXML
-    private ImageView actorImageView;
+    @FXML private ImageView ovalImageView;
 
-    @FXML
-    private Pane pane;
+    @FXML private ImageView actorImageView;
 
-    @FXML
-    void initialize() {
+    @FXML private Pane pane;
+
+    @FXML void initialize() {
 
     }
 
