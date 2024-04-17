@@ -2,6 +2,7 @@ package ku.cs.usecasedesigner.controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
@@ -39,6 +40,9 @@ public class HomepageController {
             imageView.setLayoutX(dragEvent.getX() - 75);
             imageView.setLayoutY(dragEvent.getY() - 75);
             pane.getChildren().add(imageView);
+
+            MakeDraggable(pane.getChildren().get(pane.getChildren().size() - 1));
+            System.out.println(pane.getChildren().get(pane.getChildren().size() - 1) + " is now draggable");
         }
     }
 
@@ -56,5 +60,20 @@ public class HomepageController {
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("Actor");
         dragboard.setContent(clipboardContent);
+    }
+
+    private double startX;
+    private double startY;
+
+    private void MakeDraggable(Node node) {
+        node.setOnMousePressed(e -> {
+            startX = e.getSceneX() - node.getTranslateX();
+            startY = e.getSceneY() - node.getTranslateY();
+        });
+
+        node.setOnMouseDragged(e -> {
+            node.setTranslateX(e.getSceneX() - startX);
+            node.setTranslateY(e.getSceneY() - startY);
+        });
     }
 }
