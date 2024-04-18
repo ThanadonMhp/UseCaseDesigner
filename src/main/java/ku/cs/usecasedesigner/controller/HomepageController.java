@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 
 public class HomepageController {
 
@@ -15,6 +16,9 @@ public class HomepageController {
     @FXML private ImageView actorImageView;
 
     @FXML private Pane designPane;
+
+    private double startX;
+    private double startY;
 
     @FXML void initialize() {
 
@@ -43,6 +47,20 @@ public class HomepageController {
             designPane.getChildren().add(imageView);
 
             MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+
+            designPane.getChildren().get(designPane.getChildren().size() - 1).addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getClickCount() == 1) {
+                        System.out.println("Item Clicked");
+                        designPane.getChildren().get(designPane.getChildren().size() - 1).setStyle("-fx-border-color: red");
+                    }
+                    if (mouseEvent.getClickCount() == 2) {
+                        designPane.getChildren().remove(designPane.getChildren().size() - 1);
+                        System.out.println("Item Removed");
+                    }
+                }
+            });
         }
     }
 
@@ -61,9 +79,6 @@ public class HomepageController {
         clipboardContent.putString("Actor");
         dragboard.setContent(clipboardContent);
     }
-
-    private double startX;
-    private double startY;
 
     private void MakeDraggable(Node node) {
         System.out.println("Making " + node + " draggable");
