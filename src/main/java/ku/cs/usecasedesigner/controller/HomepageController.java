@@ -43,7 +43,6 @@ public class HomepageController {
             designPane.getChildren().add(imageView);
 
             MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-            System.out.println(designPane.getChildren().get(designPane.getChildren().size() - 1) + " is now draggable");
         }
     }
 
@@ -67,6 +66,7 @@ public class HomepageController {
     private double startY;
 
     private void MakeDraggable(Node node) {
+        System.out.println("Making " + node + " draggable");
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getTranslateX();
             startY = e.getSceneY() - node.getTranslateY();
