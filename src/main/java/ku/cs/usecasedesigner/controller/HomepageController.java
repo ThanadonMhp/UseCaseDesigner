@@ -95,25 +95,72 @@ public class HomepageController {
         ContextMenu contextMenu = new ContextMenu();
 
         // Create menu items
+        MenuItem resizeItem = new MenuItem("Resize");
+        MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem deleteItem = new MenuItem("Delete");
-        MenuItem editItem = new MenuItem("Edit");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(deleteItem, editItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, deleteItem);
 
-        // Set the action for the menu items
+        // Set the action for delete menu item
         deleteItem.setOnAction(e -> {
             designPane.getChildren().remove(node);
             System.out.println("Item Removed");
         });
 
-        // Set the action for the menu items
+        //set the action for edit menu item
+        resizeItem.setOnAction(e -> {
+            System.out.println("Edit Clicked");
+            //Make the node resizable
+            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.isPrimaryButtonDown()) {
+                        double newWidth = mouseEvent.getX() + 10;
+                        double newHeight = mouseEvent.getY() + 10;
+
+                        if (newWidth > 0 && newHeight > 0) {
+                            ((ImageView) node).setFitWidth(newWidth);
+                            ((ImageView) node).setFitHeight(newHeight);
+                        }
+                        System.out.println("Item Resized to " + newWidth + "x" + newHeight);
+                    }
+                }
+            });
+        });
+
+        // Set the action for rotate menu item
+        rotateItem.setOnAction(e -> {
+            System.out.println("Rotate Clicked");
+            //Make the node rotatable
+            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.isPrimaryButtonDown()) {
+                        double newRotate = mouseEvent.getX() + 10;
+                        if (newRotate > 0) {
+                            node.setRotate(newRotate);
+                        }
+                        System.out.println("Item Rotated to " + newRotate);
+                    }
+                }
+            });
+        });
+
+        // Deselect the node when the mouse is released
+        node.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                node.setOnMouseDragged(null);
+                System.out.println("Editing Finished");
+                MakeDraggable(node);
+            }
+        });
+
+        // Show the context menu
         node.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                    System.out.println("Item Left Clicked");
-                } else
                 if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
                     System.out.println("Item Right Clicked");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
