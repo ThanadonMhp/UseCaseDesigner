@@ -3,6 +3,8 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -89,18 +91,36 @@ public class HomepageController {
     }
 
     private void MakeSelectable(Node node) {
+        // Create a context menu
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Create menu items
+        MenuItem deleteItem = new MenuItem("Delete");
+        MenuItem editItem = new MenuItem("Edit");
+
+        // Add menu items to the context menu
+        contextMenu.getItems().addAll(deleteItem, editItem);
+
+        // Set the action for the menu items
+        deleteItem.setOnAction(e -> {
+            designPane.getChildren().remove(node);
+            System.out.println("Item Removed");
+        });
+
+        // Set the action for the menu items
         node.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 1) {
-                    System.out.println("Item Clicked");
-                    node.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-                }
-                if (mouseEvent.getClickCount() == 2) {
-                    designPane.getChildren().remove(node);
-                    System.out.println("Item Removed");
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                    System.out.println("Item Left Clicked");
+                } else
+                if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+                    System.out.println("Item Right Clicked");
+                    contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
             }
         });
+
+
     }
 }
