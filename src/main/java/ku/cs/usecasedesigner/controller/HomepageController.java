@@ -19,6 +19,12 @@ public class HomepageController {
 
     @FXML private ImageView actorImageView;
 
+    @FXML private ImageView systemImageView;
+
+    @FXML private ImageView lineImageView;
+
+    @FXML private ImageView arrowImageView;
+
     @FXML private Pane designPane;
 
     private double startX;
@@ -45,6 +51,15 @@ public class HomepageController {
             } else if(dragEvent.getDragboard().getString().equals("Actor")) {
                 imageView.setImage(actorImageView.getImage());
                 System.out.println("Actor Dropped");
+            } else if (dragEvent.getDragboard().getString().equals("System")) {
+                imageView.setImage(systemImageView.getImage());
+                System.out.println("System Dropped");
+            } else if (dragEvent.getDragboard().getString().equals("Line")) {
+                imageView.setImage(lineImageView.getImage());
+                System.out.println("Line Dropped");
+            } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
+                imageView.setImage(arrowImageView.getImage());
+                System.out.println("Arrow Dropped");
             }
 
             // Set the size and position of the component
@@ -76,6 +91,30 @@ public class HomepageController {
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("Actor");
+        dragboard.setContent(clipboardContent);
+    }
+
+    public void SystemDragDetected(MouseEvent mouseEvent) {
+        System.out.println("System Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("System");
+        dragboard.setContent(clipboardContent);
+    }
+
+    public void LineDragDetected(MouseEvent mouseEvent) {
+        System.out.println("Line Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("Line");
+        dragboard.setContent(clipboardContent);
+    }
+
+    public void ArrowDragDetected(MouseEvent mouseEvent) {
+        System.out.println("Arrow Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("Arrow");
         dragboard.setContent(clipboardContent);
     }
 
