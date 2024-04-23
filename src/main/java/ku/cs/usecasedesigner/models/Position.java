@@ -14,23 +14,23 @@ public class Position {
         this.size = size;
     }
 
-    public Object getPosition_id() {
+    public double getPosition_id() {
         return position_id;
     }
 
-    public Object getSymbol_id() {
+    public double getSymbol_id() {
         return symbol_id;
     }
 
-    public Object getX_position() {
+    public double getX_position() {
         return x_position;
     }
 
-    public Object getY_position() {
+    public double getY_position() {
         return y_position;
     }
 
-    public Object getSize() {
+    public double getSize() {
         return size;
     }
 

@@ -8,11 +8,11 @@ public class System {
         this.system_name = system_name;
     }
 
-    public Object getSystem_id() {
+    public double getSystem_id() {
         return system_id;
     }
 
-    public Object getSystem_name() {
+    public String getSystem_name() {
         return system_name;
     }
 

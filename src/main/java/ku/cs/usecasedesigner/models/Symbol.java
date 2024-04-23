@@ -12,19 +12,19 @@ public class Symbol {
         this.label = label;
     }
 
-    public Object getSymbol_id() {
+    public double getSymbol_id() {
         return symbol_id;
     }
 
-    public Object getSubsystem_id() {
+    public double getSubsystem_id() {
         return subsystem_id;
     }
 
-    public Object getSymbol_type() {
+    public String getSymbol_type() {
         return symbol_type;
     }
 
-    public Object getLabel() {
+    public String getLabel() {
         return label;
     }
 
