@@ -1,5 +1,6 @@
 package ku.cs.usecasedesigner.controller;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import ku.cs.usecasedesigner.models.Position;
 
 public class HomepageController {
 
@@ -223,5 +225,23 @@ public class HomepageController {
         });
 
 
+    }
+
+    public void saveProject(ActionEvent actionEvent) {
+        System.out.println("Project Saving");
+        try {
+            // Save the project
+            designPane.getChildren().forEach(node -> {
+                if (node instanceof ImageView) {
+                    System.out.println("Node: " + node);
+                    System.out.println("Node Type: " + ((ImageView) node).getImage());
+                    System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
+                    System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
+                    System.out.println("Node Rotation: " + node.getRotate());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
