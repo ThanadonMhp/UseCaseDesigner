@@ -90,7 +90,7 @@
                         <Image url="@../../../images/line.png" />
                       </image>
                     </ImageView>
-                    <ImageView fx:id="arrowImageView111" fitHeight="101.0" fitWidth="101.0" layoutY="202.0" onDragDetected="#ArrowDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="arrowImageView" fitHeight="101.0" fitWidth="101.0" layoutY="202.0" onDragDetected="#ArrowDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/directional.png" />
                       </image>
