@@ -1,17 +1,23 @@
 package ku.cs.usecasedesigner.models;
 
 public class Position {
+    private String type;
     private double position_id;
     private double symbol_id;
     private double x_position;
     private double y_position;
-    private double size;
-    public Position(double position_id, double symbol_id, double x_position, double y_position, double size) {
+    private double fit_width;
+    private double fit_height;
+    private double rotation;
+    public Position(double position_id, double symbol_id, double x_position, double y_position, double fit_width, double fit_height, double rotation) {
+        this.type = "position";
         this.position_id = position_id;
         this.symbol_id = symbol_id;
         this.x_position = x_position;
         this.y_position = y_position;
-        this.size = size;
+        this.fit_width = fit_width;
+        this.fit_height = fit_height;
+        this.rotation = rotation;
     }
 
     public double getPosition_id() {
@@ -30,46 +36,16 @@ public class Position {
         return y_position;
     }
 
-    public double getSize() {
-        return size;
+    public double getFit_width() {
+        return fit_width;
     }
 
-    public void setX_position(double x_position) {
-        this.x_position = x_position;
+    public double getFit_height() {
+        return fit_height;
     }
 
-    public void setY_position(double y_position) {
-        this.y_position = y_position;
-    }
-
-    public void setSize(double size) {
-        this.size = size;
-    }
-
-    public void setPosition_id(double position_id) {
-        this.position_id = position_id;
-    }
-
-    public void setSymbol_id(double symbol_id) {
-        this.symbol_id = symbol_id;
-    }
-
-    public void setPosition(double x_position, double y_position) {
-        this.x_position = x_position;
-        this.y_position = y_position;
-    }
-
-    public void setPosition(double x_position, double y_position, double size) {
-        this.x_position = x_position;
-        this.y_position = y_position;
-        this.size = size;
-    }
-
-    public void setPosition(double x_position, double y_position, double size, double position_id) {
-        this.x_position = x_position;
-        this.y_position = y_position;
-        this.size = size;
-        this.position_id = position_id;
+    public double getRotation() {
+        return rotation;
     }
 
 }

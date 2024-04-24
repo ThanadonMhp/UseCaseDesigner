@@ -8,10 +8,4 @@ public class SystemState implements Serializable {
     private List<Symbol> Symbols;
     private List<Position> Positions;
 
-    public SystemState(List<Subsystem> Subsystems, List<Symbol> Symbols, List<Position> Positions) {
-        this.Subsystems = Subsystems;
-        this.Symbols = Symbols;
-        this.Positions = Positions;
-    }
-
 }

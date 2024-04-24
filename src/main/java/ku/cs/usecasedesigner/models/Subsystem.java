@@ -1,10 +1,12 @@
 package ku.cs.usecasedesigner.models;
 
 public class Subsystem {
+    private String type;
     private double subsystem_id;
     private String subsystem_name;
     private double system_id;
     public Subsystem(double subsystem_id, String subsystem_name, double system_id) {
+        this.type = "subsystem";
         this.subsystem_id = subsystem_id;
         this.subsystem_name = subsystem_name;
         this.system_id = system_id;

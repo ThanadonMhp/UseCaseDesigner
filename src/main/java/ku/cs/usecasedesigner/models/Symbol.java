@@ -1,11 +1,13 @@
 package ku.cs.usecasedesigner.models;
 
 public class Symbol {
+    private String type;
     private double symbol_id;
     private double subsystem_id;
     private String symbol_type;
     private String label;
     public Symbol(double symbol_id, double subsystem_id, String symbol_type, String label) {
+        this.type = "symbol";
         this.symbol_id = symbol_id;
         this.subsystem_id = subsystem_id;
         this.symbol_type = symbol_type;

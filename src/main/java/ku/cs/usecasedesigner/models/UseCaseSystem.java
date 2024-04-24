@@ -1,9 +1,11 @@
 package ku.cs.usecasedesigner.models;
 
-public class System {
+public class UseCaseSystem {
+    private String type;
     private double system_id;
     private String system_name;
-    public System(double system_id, String system_name) {
+    public UseCaseSystem(double system_id, String system_name) {
+        this.type = "system";
         this.system_id = system_id;
         this.system_name = system_name;
     }

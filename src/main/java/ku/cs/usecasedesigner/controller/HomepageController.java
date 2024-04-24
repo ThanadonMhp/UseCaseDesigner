@@ -15,6 +15,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ku.cs.usecasedesigner.models.Position;
 import ku.cs.usecasedesigner.models.PositionList;
+import ku.cs.usecasedesigner.services.DataSource;
+import ku.cs.usecasedesigner.services.PositionListFileDataSource;
+
+import java.io.File;
 
 public class HomepageController {
 
@@ -224,22 +228,27 @@ public class HomepageController {
                 }
             }
         });
-
-
     }
 
     public void saveProject(ActionEvent actionEvent) {
         System.out.println("Project Saving");
         try {
             // Save the project
+            PositionList positionList = new PositionList();
             designPane.getChildren().forEach(node -> {
-                if (node instanceof ImageView) {
-                    System.out.println("Node: " + node);
-                    System.out.println("Node Type: " + ((ImageView) node).getImage());
-                    System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
-                    System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
-                    System.out.println("Node Rotation: " + node.getRotate());
-                }
+                System.out.println("Node: " + node);
+                System.out.println("Node Type: " + ((ImageView) node).getImage());
+                System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
+                System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
+                System.out.println("Node Rotation: " + node.getRotate());
+
+
+                DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , "saveFile.csv");
+                Position position = new Position(positionList.findLastPositionId() + 1, 0, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
+                positionList.addPosition(position);
+                dataSource.writeData(positionList);
+                System.out.println("Project Saved");
+
             });
         } catch (Exception e) {
             e.printStackTrace();
