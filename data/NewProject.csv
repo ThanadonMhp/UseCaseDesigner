@@ -1,4 +1,6 @@
-symbol,1.0,0.0,directional.png,none
+symbol,1.0,0.0,box.png,none
 symbol,2.0,0.0,oval.png,none
-position,1.0,1.0,286.0,159.0,150.0,150.0,0.0
-position,2.0,2.0,414.0,202.0,150.0,150.0,0.0
+symbol,3.0,0.0,line.png,none
+position,1.0,1.0,245.0,135.0,150.0,150.0,0.0
+position,2.0,2.0,334.0,198.0,150.0,150.0,0.0
+position,3.0,3.0,230.0,326.0,150.0,150.0,0.0
