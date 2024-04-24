@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="933.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
+
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label alignment="CENTER" layoutX="233.0" layoutY="14.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+          <font>
+            <Font size="18.0" />
+          </font>
+        </Label>
+        <Accordion layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0">
+          <panes>
+            <TitledPane animated="false" text="Components">
+              <content>
+                <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0">
+                  <children>
+                    <!-- ImageView for oval.jpg with drag-and-drop functionality -->
+                    <ImageView fx:id="ovalImageView" fitHeight="106.0" fitWidth="106.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/oval.png" />
+                      </image>
+                              </ImageView>
+                    <ImageView fx:id="actorImageView" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/human.png" />
+                      </image>
+                    </ImageView>
+                              <ImageView fx:id="actorImageView1" fitHeight="127.0" fitWidth="129.0" layoutY="120.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/box.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="actorImageView11" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" layoutY="120.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/line.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="actorImageView111" fitHeight="127.0" fitWidth="129.0" layoutY="230.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/directional.png" />
+                                 </image>
+                              </ImageView>
+                              <Text layoutX="142.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                  </children>
+                </AnchorPane>
+              </content>
+            </TitledPane>
+          </panes>
+        </Accordion>
+            <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" prefHeight="664.0" prefWidth="1027.0" />
+      </children>
+    </AnchorPane>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+  </children>
+</VBox>
