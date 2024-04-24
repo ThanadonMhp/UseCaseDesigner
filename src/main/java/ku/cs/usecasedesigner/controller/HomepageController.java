@@ -15,8 +15,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ku.cs.usecasedesigner.models.Position;
 import ku.cs.usecasedesigner.models.PositionList;
+import ku.cs.usecasedesigner.models.Symbol;
+import ku.cs.usecasedesigner.models.SymbolList;
 import ku.cs.usecasedesigner.services.DataSource;
 import ku.cs.usecasedesigner.services.PositionListFileDataSource;
+import ku.cs.usecasedesigner.services.SymbolListFileDataSource;
 
 import java.io.File;
 
@@ -36,6 +39,7 @@ public class HomepageController {
 
     private double startX;
     private double startY;
+    private String projectName = "NewProject";
 
     @FXML void initialize() {
 
@@ -139,6 +143,7 @@ public class HomepageController {
     }
 
     private void MakeSelectable(Node node) {
+        System.out.println("Making " + node + " selectable");
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
@@ -230,23 +235,91 @@ public class HomepageController {
         });
     }
 
-    public void saveProject(ActionEvent actionEvent) {
+    public void handleNewMenuItem(ActionEvent actionEvent) {
+        System.out.println("New Project");
+        designPane.getChildren().clear();
+    }
+
+    public void handleOpenMenuItem(ActionEvent actionEvent){
+        System.out.println("Project Opening");
+        try {
+            // Open the project
+
+            //get position list
+            PositionList positionList = new PositionList();
+            DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , projectName + ".csv");
+            positionList = dataSource.readData();
+
+            //get symbol list
+            SymbolList symbolList = new SymbolList();
+            DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource("data" , projectName + ".csv");
+            symbolList = dataSourceSymbol.readData();
+
+            //add symbol to the design pane
+            SymbolList finalSymbolList = symbolList;
+            positionList.getPositionList().forEach(position -> {
+                ImageView imageView = new ImageView();
+                finalSymbolList.getSymbolList().forEach(symbol -> {
+                    if (symbol.getSymbol_id() == position.getSymbol_id()) {
+                        if (symbol.getSymbol_type().equals("box.png")) {
+                            imageView.setImage(systemImageView.getImage());
+                        } else if (symbol.getSymbol_type().equals("oval.png")) {
+                            imageView.setImage(ovalImageView.getImage());
+                        } else if (symbol.getSymbol_type().equals("human.png")) {
+                            imageView.setImage(actorImageView.getImage());
+                        } else if (symbol.getSymbol_type().equals("line.png")) {
+                            imageView.setImage(lineImageView.getImage());
+                        } else if (symbol.getSymbol_type().equals("directional.png")) {
+                            imageView.setImage(arrowImageView.getImage());
+
+                        }
+
+                    }
+
+                });
+
+                imageView.setFitWidth(position.getFit_width());
+                imageView.setFitHeight(position.getFit_height());
+                imageView.setLayoutX(position.getX_position());
+                imageView.setLayoutY(position.getY_position());
+                imageView.setRotate(position.getRotation());
+                designPane.getChildren().add(imageView);
+
+                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            });
+            System.out.println("Project Opened");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleSaveMenuItem(ActionEvent actionEvent) {
         System.out.println("Project Saving");
         try {
             // Save the project
             PositionList positionList = new PositionList();
+            SymbolList symbolList = new SymbolList();
             designPane.getChildren().forEach(node -> {
                 System.out.println("Node: " + node);
-                System.out.println("Node Type: " + ((ImageView) node).getImage());
+                System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
+                String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
                 System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
                 System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
                 System.out.println("Node Rotation: " + node.getRotate());
 
-
-                DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , "saveFile.csv");
-                Position position = new Position(positionList.findLastPositionId() + 1, 0, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
+                //Save position to the list
+                DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , projectName + ".csv");
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
                 positionList.addPosition(position);
                 dataSource.writeData(positionList);
+
+                //Save symbol to the list
+                DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource("data" , projectName + ".csv");
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
+                symbolList.addSymbol(symbol);
+                dataSourceSymbol.writeData(symbolList);
+
                 System.out.println("Project Saved");
 
             });

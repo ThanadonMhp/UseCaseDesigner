@@ -38,4 +38,16 @@ public class SymbolList {
         }
         return null;
     }
+
+    public double findLastSymbolId() {
+        double lastSymbolId = 0;
+        for (Symbol symbol : symbolList) {
+            if (symbol.getSymbol_id() > lastSymbolId) {
+                lastSymbolId = symbol.getSymbol_id();
+            }
+        }
+        return lastSymbolId;
+    }
 }
+
+
