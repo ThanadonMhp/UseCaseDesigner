@@ -8,11 +8,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import ku.cs.usecasedesigner.models.Position;
 import ku.cs.usecasedesigner.models.PositionList;
 import ku.cs.usecasedesigner.models.Symbol;
@@ -215,19 +211,6 @@ public class HomepageController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
-                    // Create a rectangle border around the selected node
-//                    Rectangle border = new Rectangle();
-//                    border.setWidth(((ImageView) node).getFitWidth());
-//                    border.setHeight(((ImageView) node).getFitHeight());
-//                    border.setLayoutX(node.getLayoutX());
-//                    border.setLayoutY(node.getLayoutY());
-//                    border.setStroke(Color.BLACK);
-//                    border.setFill(Color.TRANSPARENT);
-//
-//                    // Add the border to the design pane
-//                    designPane.getChildren().add(border);
-//                    node.toFront();
-
                     System.out.println("Item Right Clicked");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
