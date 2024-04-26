@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -14,15 +15,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class NewProjectPageController {
-    private String projectName = "NewProject";
-    private String directory = "data";
+    private String projectName;
+    private String directory;
 
     @FXML private Button selectButton;
 
     @FXML private TextField SystemNameTextField;
 
+    @FXML private Text systemNameErrorText;
+
+    @FXML private Text directoryErrorText;
+
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         System.out.println("Confirm button clicked.");
+
+        // Check if the system name and directory are empty
+        if(SystemNameTextField.getText().isEmpty()){
+            systemNameErrorText.setText("Please enter a name.");
+            return;
+        } else {
+            systemNameErrorText.setText("");
+        }
+
+        if(directory == null){
+            directoryErrorText.setText("Please select a directory.");
+            return;
+        } else {
+            directoryErrorText.setText("");
+        }
+
         // Set value for projectName
         projectName = SystemNameTextField.getText();
 

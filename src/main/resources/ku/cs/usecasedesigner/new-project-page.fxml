@@ -12,5 +12,7 @@
       <Button layoutX="121.0" layoutY="144.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
       <Text layoutX="32.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save Location" />
       <Button fx:id="selectButton" layoutX="124.0" layoutY="96.0" mnemonicParsing="false" onAction="#handleSelectButton" prefHeight="25.0" prefWidth="149.0" text="Select" />
+      <Text fx:id="systemNameErrorText" fill="RED" layoutX="124.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99999871850014" />
+      <Text fx:id="directoryErrorText" fill="RED" layoutX="124.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99999871850014" />
    </children>
 </AnchorPane>
