@@ -30,4 +30,10 @@ public class UseCaseSystemList {
         return null;
     }
 
+    public double findLastUseCaseSystemId() {
+        if (useCaseSystemList.isEmpty()) {
+            return 0;
+        }
+        return useCaseSystemList.get(useCaseSystemList.size() - 1).getSystem_id();
+    }
 }

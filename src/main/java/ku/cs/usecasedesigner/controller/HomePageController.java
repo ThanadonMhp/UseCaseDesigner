@@ -9,17 +9,20 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
-import ku.cs.usecasedesigner.models.Position;
-import ku.cs.usecasedesigner.models.PositionList;
-import ku.cs.usecasedesigner.models.Symbol;
-import ku.cs.usecasedesigner.models.SymbolList;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import ku.cs.fxrouter.FXRouter;
+import ku.cs.usecasedesigner.models.*;
 import ku.cs.usecasedesigner.services.DataSource;
 import ku.cs.usecasedesigner.services.PositionListFileDataSource;
 import ku.cs.usecasedesigner.services.SymbolListFileDataSource;
+import ku.cs.usecasedesigner.services.UseCaseSystemListFileDataSource;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-public class HomepageController {
+public class HomePageController {
 
     @FXML private ImageView ovalImageView;
 
@@ -36,9 +39,20 @@ public class HomepageController {
     private double startX;
     private double startY;
     private String projectName = "NewProject";
+    private String directory = "data";
 
     @FXML void initialize() {
-
+        // Recieve data from Landing Page
+        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+        projectName = (String) objects.get(0);
+        if (objects.size() > 1)
+        {
+            directory = (String) objects.get(1);
+        }
+        saveProject();
+        loadProject();
+        System.out.println("Project Name: " + projectName);
+        System.out.println("Directory: " + directory);
     }
 
     public void PaneDragOver(DragEvent dragEvent) {
@@ -218,24 +232,17 @@ public class HomepageController {
         });
     }
 
-    public void handleNewMenuItem(ActionEvent actionEvent) {
-        System.out.println("New Project");
-        designPane.getChildren().clear();
-    }
-
-    public void handleOpenMenuItem(ActionEvent actionEvent){
-        System.out.println("Project Opening");
+    public void loadProject()
+    {
         try {
-            // Open the project
-
             //get position list
             PositionList positionList = new PositionList();
-            DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , projectName + ".csv");
+            DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
             positionList = dataSource.readData();
 
             //get symbol list
             SymbolList symbolList = new SymbolList();
-            DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource("data" , projectName + ".csv");
+            DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
             symbolList = dataSourceSymbol.readData();
 
             //add symbol to the design pane
@@ -254,13 +261,11 @@ public class HomepageController {
                             imageView.setImage(lineImageView.getImage());
                         } else if (symbol.getSymbol_type().equals("directional.png")) {
                             imageView.setImage(arrowImageView.getImage());
-
                         }
-
                     }
-
                 });
 
+                // Set the size and position of the component
                 imageView.setFitWidth(position.getFit_width());
                 imageView.setFitHeight(position.getFit_height());
                 imageView.setLayoutX(position.getX_position());
@@ -268,6 +273,7 @@ public class HomepageController {
                 imageView.setRotate(position.getRotation());
                 designPane.getChildren().add(imageView);
 
+                // Make the component draggable and selectable
                 MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
                 MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
             });
@@ -277,12 +283,13 @@ public class HomepageController {
         }
     }
 
-    public void handleSaveMenuItem(ActionEvent actionEvent) {
-        System.out.println("Project Saving");
+    public void saveProject()
+    {
         try {
             // Save the project
             PositionList positionList = new PositionList();
             SymbolList symbolList = new SymbolList();
+            UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
             designPane.getChildren().forEach(node -> {
                 System.out.println("Node: " + node);
                 System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
@@ -291,17 +298,23 @@ public class HomepageController {
                 System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
                 System.out.println("Node Rotation: " + node.getRotate());
 
+                //Save project name
+                DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
+                UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
+                useCaseSystemList.addSystem(useCaseSystem);
+                useCaseSystemListDataSource.writeData(useCaseSystemList);
+
                 //Save position to the list
-                DataSource<PositionList> dataSource = new PositionListFileDataSource("data" , projectName + ".csv");
+                DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
                 Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
                 positionList.addPosition(position);
-                dataSource.writeData(positionList);
+                positionListDataSource.writeData(positionList);
 
                 //Save symbol to the list
-                DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource("data" , projectName + ".csv");
+                DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
                 Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
                 symbolList.addSymbol(symbol);
-                dataSourceSymbol.writeData(symbolList);
+                symbolListDataSource.writeData(symbolList);
 
                 System.out.println("Project Saved");
 
@@ -309,5 +322,42 @@ public class HomepageController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
+        System.out.println("New Project");
+        FXRouter.popup("NewProjectPage");
+    }
+
+    public void handleOpenMenuItem(ActionEvent actionEvent){
+        System.out.println("Project Opening");
+
+        // Create a file chooser
+        FileChooser fileChooser = new FileChooser();
+
+        // Configure the file chooser
+        fileChooser.setTitle("Open Project");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show the file chooser
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            System.out.println("Opening: " + file.getName());
+            // Get the project name from the file name
+            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+
+            // Get the directory from the file path
+            directory = file.getParent();
+
+            loadProject();
+        } else {
+            System.out.println("Open command cancelled");
+        }
+    }
+
+    public void handleSaveMenuItem(ActionEvent actionEvent) {
+        System.out.println("Project Saving");
+        saveProject();
     }
 }

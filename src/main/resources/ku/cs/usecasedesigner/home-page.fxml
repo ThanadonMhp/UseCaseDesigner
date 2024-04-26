@@ -13,27 +13,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="933.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomepageController">
+<VBox prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomePageController">
 
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
+            <MenuItem mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
+            <MenuItem mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -71,41 +62,39 @@
                 <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0">
                   <children>
                     <!-- ImageView for oval.jpg with drag-and-drop functionality -->
-                    <ImageView fx:id="ovalImageView" fitHeight="106.0" fitWidth="106.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="ovalImageView" fitHeight="101.0" fitWidth="101.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/oval.png" />
                       </image>
-                              </ImageView>
-                    <ImageView fx:id="actorImageView" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                    </ImageView>
+                    <ImageView fx:id="actorImageView" fitHeight="101.0" fitWidth="101.0" layoutX="102.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/human.png" />
                       </image>
                     </ImageView>
-                              <ImageView fx:id="actorImageView1" fitHeight="127.0" fitWidth="129.0" layoutY="120.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/box.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fx:id="actorImageView11" fitHeight="127.0" fitWidth="129.0" layoutX="76.0" layoutY="120.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/line.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fx:id="actorImageView111" fitHeight="127.0" fitWidth="129.0" layoutY="230.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/directional.png" />
-                                 </image>
-                              </ImageView>
-                              <Text layoutX="142.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                    <ImageView fx:id="systemImageView" fitHeight="101.0" fitWidth="101.0" layoutY="101.0" onDragDetected="#SystemDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/box.png" />
+                      </image>
+                    </ImageView>
+                    <ImageView fx:id="lineImageView" fitHeight="101.0" fitWidth="101.0" layoutX="101.0" layoutY="101.0" onDragDetected="#LineDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/line.png" />
+                      </image>
+                    </ImageView>
+                    <ImageView fx:id="arrowImageView" fitHeight="101.0" fitWidth="101.0" layoutY="202.0" onDragDetected="#ArrowDragDetected" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                        <Image url="@../../../images/directional.png" />
+                      </image>
+                    </ImageView>
                   </children>
                 </AnchorPane>
               </content>
             </TitledPane>
           </panes>
         </Accordion>
-            <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" prefHeight="664.0" prefWidth="1027.0" />
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" prefHeight="664.0" prefWidth="1027.0" />
       </children>
     </AnchorPane>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
   </children>
 </VBox>
