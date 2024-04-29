@@ -34,8 +34,7 @@ public class HomePageController {
 
     private double startX;
     private double startY;
-    private String projectName = "NewProject";
-    private String directory = "data";
+    private String projectName, directory;
 
     @FXML void initialize() {
         // Check if the data is not null

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class NewProjectPageController {
-    private String projectName;
     private String directory;
 
     @FXML private Button selectButton;
@@ -45,7 +44,7 @@ public class NewProjectPageController {
         }
 
         // Set value for projectName
-        projectName = SystemNameTextField.getText();
+        String projectName = SystemNameTextField.getText();
 
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
@@ -71,7 +70,6 @@ public class NewProjectPageController {
             System.out.println("Selected directory: " + file.getAbsolutePath());
             directory = file.getAbsolutePath();
             selectButton.setText(directory);
-
         } else {
             System.out.println("No directory selected.");
         }
