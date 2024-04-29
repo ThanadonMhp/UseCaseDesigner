@@ -6,9 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -23,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class HomePageController {
+
+    @FXML private VBox homePageVBox;
 
     @FXML private ImageView ovalImageView;
 
@@ -42,17 +46,25 @@ public class HomePageController {
     private String directory = "data";
 
     @FXML void initialize() {
-        // Recieve data from Landing Page
-        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-        projectName = (String) objects.get(0);
-        if (objects.size() > 1)
-        {
-            directory = (String) objects.get(1);
+        // Check if the data is not null
+        if (FXRouter.getData() == null) {
+            System.out.println("No Data");
+            homePageVBox.setDisable(true);
         }
-        saveProject();
-        loadProject();
-        System.out.println("Project Name: " + projectName);
-        System.out.println("Directory: " + directory);
+        else if(FXRouter.getData() != null){
+            // Recieve data from New Project Page
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            if (objects.size() > 1)
+            {
+                directory = (String) objects.get(1);
+            }
+            homePageVBox.setDisable(false);
+            saveProject();
+            loadProject();
+            System.out.println("Project Name: " + projectName);
+            System.out.println("Directory: " + directory);
+        }
     }
 
     public void PaneDragOver(DragEvent dragEvent) {
