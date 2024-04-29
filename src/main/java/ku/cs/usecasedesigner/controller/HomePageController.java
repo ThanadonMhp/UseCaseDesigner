@@ -297,24 +297,27 @@ public class HomePageController {
 
     public void saveProject()
     {
+        // Save the project
         try {
-            // Save the project
+            // Create new lists
             PositionList positionList = new PositionList();
             SymbolList symbolList = new SymbolList();
             UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
+
+            // Save project name
+            DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
+            UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
+            useCaseSystemList.addSystem(useCaseSystem);
+            useCaseSystemListDataSource.writeData(useCaseSystemList);
+
             designPane.getChildren().forEach(node -> {
+                // Print the details of the node
                 System.out.println("Node: " + node);
                 System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
                 String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
                 System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
                 System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
                 System.out.println("Node Rotation: " + node.getRotate());
-
-                //Save project name
-                DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
-                UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
-                useCaseSystemList.addSystem(useCaseSystem);
-                useCaseSystemListDataSource.writeData(useCaseSystemList);
 
                 //Save position to the list
                 DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
