@@ -28,15 +28,7 @@ public class HomePageController {
 
     @FXML private VBox homePageVBox;
 
-    @FXML private ImageView ovalImageView;
-
-    @FXML private ImageView actorImageView;
-
-    @FXML private ImageView systemImageView;
-
-    @FXML private ImageView lineImageView;
-
-    @FXML private ImageView arrowImageView;
+    @FXML private ImageView ovalImageView, actorImageView, systemImageView, lineImageView, arrowImageView;
 
     @FXML private Pane designPane;
 
@@ -48,8 +40,9 @@ public class HomePageController {
     @FXML void initialize() {
         // Check if the data is not null
         if (FXRouter.getData() == null) {
-            System.out.println("No Data");
+            // Disable the home page
             homePageVBox.setDisable(true);
+            System.out.println("Home Page Disabled");
         }
         else if(FXRouter.getData() != null){
             // Recieve data from New Project Page
@@ -246,97 +239,91 @@ public class HomePageController {
 
     public void loadProject()
     {
-        try {
-            //get position list
-            PositionList positionList = new PositionList();
-            DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-            positionList = dataSource.readData();
+        // Clear the design pane
+        designPane.getChildren().clear();
 
-            //get symbol list
-            SymbolList symbolList = new SymbolList();
-            DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
-            symbolList = dataSourceSymbol.readData();
+        // Get position list
+        PositionList positionList = new PositionList();
+        DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+        positionList = dataSource.readData();
 
-            //add symbol to the design pane
-            SymbolList finalSymbolList = symbolList;
-            positionList.getPositionList().forEach(position -> {
-                ImageView imageView = new ImageView();
-                finalSymbolList.getSymbolList().forEach(symbol -> {
-                    if (symbol.getSymbol_id() == position.getSymbol_id()) {
-                        if (symbol.getSymbol_type().equals("box.png")) {
-                            imageView.setImage(systemImageView.getImage());
-                        } else if (symbol.getSymbol_type().equals("oval.png")) {
-                            imageView.setImage(ovalImageView.getImage());
-                        } else if (symbol.getSymbol_type().equals("human.png")) {
-                            imageView.setImage(actorImageView.getImage());
-                        } else if (symbol.getSymbol_type().equals("line.png")) {
-                            imageView.setImage(lineImageView.getImage());
-                        } else if (symbol.getSymbol_type().equals("directional.png")) {
-                            imageView.setImage(arrowImageView.getImage());
-                        }
+        // Get symbol list
+        SymbolList symbolList = new SymbolList();
+        DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
+        symbolList = dataSourceSymbol.readData();
+
+        // Add symbol to the design pane
+        SymbolList finalSymbolList = symbolList;
+        positionList.getPositionList().forEach(position -> {
+            ImageView imageView = new ImageView();
+            finalSymbolList.getSymbolList().forEach(symbol -> {
+                if (symbol.getSymbol_id() == position.getSymbol_id()) {
+                    if (symbol.getSymbol_type().equals("box.png")) {
+                        imageView.setImage(systemImageView.getImage());
+                    } else if (symbol.getSymbol_type().equals("oval.png")) {
+                        imageView.setImage(ovalImageView.getImage());
+                    } else if (symbol.getSymbol_type().equals("human.png")) {
+                        imageView.setImage(actorImageView.getImage());
+                    } else if (symbol.getSymbol_type().equals("line.png")) {
+                        imageView.setImage(lineImageView.getImage());
+                    } else if (symbol.getSymbol_type().equals("directional.png")) {
+                        imageView.setImage(arrowImageView.getImage());
                     }
-                });
-
-                // Set the size and position of the component
-                imageView.setFitWidth(position.getFit_width());
-                imageView.setFitHeight(position.getFit_height());
-                imageView.setLayoutX(position.getX_position());
-                imageView.setLayoutY(position.getY_position());
-                imageView.setRotate(position.getRotation());
-                designPane.getChildren().add(imageView);
-
-                // Make the component draggable and selectable
-                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                }
             });
-            System.out.println("Project Opened");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            // Set the size and position of the component
+            imageView.setFitWidth(position.getFit_width());
+            imageView.setFitHeight(position.getFit_height());
+            imageView.setLayoutX(position.getX_position());
+            imageView.setLayoutY(position.getY_position());
+            imageView.setRotate(position.getRotation());
+            designPane.getChildren().add(imageView);
+
+            // Make the component draggable and selectable
+            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        });
+        System.out.println("Project Opened");
     }
 
     public void saveProject()
     {
-        // Save the project
-        try {
-            // Create new lists
-            PositionList positionList = new PositionList();
-            SymbolList symbolList = new SymbolList();
-            UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
+        System.out.println("Saving Project");
 
-            // Save project name
-            DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
-            UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
-            useCaseSystemList.addSystem(useCaseSystem);
-            useCaseSystemListDataSource.writeData(useCaseSystemList);
+        // Create new lists
+        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
+        SymbolList symbolList = new SymbolList();
+        PositionList positionList = new PositionList();
 
-            designPane.getChildren().forEach(node -> {
-                // Print the details of the node
-                System.out.println("Node: " + node);
-                System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
-                String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
-                System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
-                System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
-                System.out.println("Node Rotation: " + node.getRotate());
+        // Save project name
+        DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
+        UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
+        useCaseSystemList.addSystem(useCaseSystem);
+        useCaseSystemListDataSource.writeData(useCaseSystemList);
 
-                //Save position to the list
-                DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
-                positionList.addPosition(position);
-                positionListDataSource.writeData(positionList);
+        designPane.getChildren().forEach(node -> {
+            // Print the details of the node
+            System.out.println("Node: " + node);
+            System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
+            String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
+            System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
+            System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
+            System.out.println("Node Rotation: " + node.getRotate());
 
-                //Save symbol to the list
-                DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
-                symbolList.addSymbol(symbol);
-                symbolListDataSource.writeData(symbolList);
+            //Save position to the list
+            DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
+            Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
+            positionList.addPosition(position);
+            positionListDataSource.writeData(positionList);
 
-                System.out.println("Project Saved");
+            //Save symbol to the list
+            DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
+            Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
+            symbolList.addSymbol(symbol);
+            symbolListDataSource.writeData(symbolList);
 
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println("Project Saved");
+        });
     }
 
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
@@ -372,7 +359,7 @@ public class HomePageController {
     }
 
     public void handleSaveMenuItem(ActionEvent actionEvent) {
-        System.out.println("Project Saving");
+        // Save the project
         saveProject();
     }
 }
