@@ -22,6 +22,7 @@ import ku.cs.usecasedesigner.services.UseCaseSystemListFileDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
 
@@ -297,6 +298,7 @@ public class HomePageController {
         SymbolList finalSymbolList = symbolList;
         positionList.getPositionList().forEach(position -> {
             ImageView imageView = new ImageView();
+            AtomicBoolean isImage = new AtomicBoolean(true);
             finalSymbolList.getSymbolList().forEach(symbol -> {
                 if (symbol.getSymbol_id() == position.getSymbol_id()) {
                     if (symbol.getSymbol_type().equals("box.png")) {
@@ -309,20 +311,35 @@ public class HomePageController {
                         imageView.setImage(lineImageView.getImage());
                     } else if (symbol.getSymbol_type().equals("directional.png")) {
                         imageView.setImage(arrowImageView.getImage());
+                    } else if (symbol.getSymbol_type().equals("line")) {
+                        isImage.set(false);
+                        Line line = new Line();
+                        line.setStartX(position.getX_position());
+                        line.setStartY(position.getY_position());
+                        line.setEndX(position.getFit_width());
+                        line.setEndY(position.getFit_height());
+                        line.setRotate(position.getRotation());
+                        designPane.getChildren().add(line);
+
+                        // Make the component draggable and selectable
+                        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
                     }
                 }
             });
-            // Set the size and position of the component
-            imageView.setFitWidth(position.getFit_width());
-            imageView.setFitHeight(position.getFit_height());
-            imageView.setLayoutX(position.getX_position());
-            imageView.setLayoutY(position.getY_position());
-            imageView.setRotate(position.getRotation());
-            designPane.getChildren().add(imageView);
+            if (isImage.get()){
+                // Set the size and position of the component
+                imageView.setFitWidth(position.getFit_width());
+                imageView.setFitHeight(position.getFit_height());
+                imageView.setLayoutX(position.getX_position());
+                imageView.setLayoutY(position.getY_position());
+                imageView.setRotate(position.getRotation());
+                designPane.getChildren().add(imageView);
 
-            // Make the component draggable and selectable
-            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-            MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                // Make the component draggable and selectable
+                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            }
         });
         System.out.println("Project Opened");
     }
@@ -345,19 +362,32 @@ public class HomePageController {
         designPane.getChildren().forEach(node -> {
             //Save position to the list
             DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
-            Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
-            positionList.addPosition(position);
+            // if the node is imageView
+            if (node instanceof ImageView)
+            {
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
+                positionList.addPosition(position);
+            } else if (node instanceof Line ){
+                // if the node is a line
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, ((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), ((Line) node).getRotate());
+                positionList.addPosition(position);
+            }
+
             positionListDataSource.writeData(positionList);
 
             //Save symbol to the list
             DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
-            String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
-            Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
-            symbolList.addSymbol(symbol);
+            if (node instanceof Line) {
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "none");
+                symbolList.addSymbol(symbol);
+            } else {
+                String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
+                symbolList.addSymbol(symbol);
+            }
             symbolListDataSource.writeData(symbolList);
-
-            System.out.println("Project Saved");
         });
+        System.out.println("Project Saved");
     }
 
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {

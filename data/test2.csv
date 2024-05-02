@@ -1,0 +1,7 @@
+system,1.0,test2
+symbol,1.0,0.0,box.png,none
+symbol,2.0,0.0,box.png,none
+symbol,3.0,0.0,line.png,none
+position,1.0,1.0,267.0,153.0,150.0,150.0,0.0
+position,2.0,2.0,543.0,167.0,150.0,150.0,0.0
+position,3.0,3.0,342.0,228.0,618.0,242.0,0.0
