@@ -6,13 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
 import ku.cs.usecasedesigner.services.DataSource;
@@ -54,6 +52,7 @@ public class HomePageController {
             homePageVBox.setDisable(false);
             saveProject();
             loadProject();
+            System.out.println("Home Page Enabled");
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
@@ -301,14 +300,6 @@ public class HomePageController {
         useCaseSystemListDataSource.writeData(useCaseSystemList);
 
         designPane.getChildren().forEach(node -> {
-            // Print the details of the node
-            System.out.println("Node: " + node);
-            System.out.println("Node Type: " + ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1));
-            String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
-            System.out.println("Node Position: " + node.getLayoutX() + "," + node.getLayoutY());
-            System.out.println("Node Size: " + ((ImageView) node).getFitWidth() + "x" + ((ImageView) node).getFitHeight());
-            System.out.println("Node Rotation: " + node.getRotate());
-
             //Save position to the list
             DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
             Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
@@ -317,6 +308,7 @@ public class HomePageController {
 
             //Save symbol to the list
             DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
+            String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
             Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
             symbolList.addSymbol(symbol);
             symbolListDataSource.writeData(symbolList);
@@ -326,6 +318,7 @@ public class HomePageController {
     }
 
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
+        // Open the new project page
         System.out.println("New Project");
         FXRouter.popup("NewProjectPage");
     }
