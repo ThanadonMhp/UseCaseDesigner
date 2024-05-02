@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
@@ -33,6 +34,7 @@ public class HomePageController {
     private double startX;
     private double startY;
     private String projectName, directory;
+    private Node startNodeForLink;
 
     @FXML void initialize() {
         // Check if the data is not null
@@ -163,18 +165,13 @@ public class HomePageController {
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
         MenuItem rotateItem = new MenuItem("Rotate");
+        MenuItem connectItem = new MenuItem("Connect");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
 
-        // Set the action for delete menu item
-        deleteItem.setOnAction(e -> {
-            designPane.getChildren().remove(node);
-            System.out.println("Item Removed");
-        });
-
-        //set the action for edit menu item
+        //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
             //Make the node resizable
@@ -213,6 +210,18 @@ public class HomePageController {
             });
         });
 
+        // Set the action for connect menu item
+        connectItem.setOnAction(e -> {
+            startNodeForLink = node;
+            System.out.println("Connect Clicked");
+        });
+
+        // Set the action for delete menu item
+        deleteItem.setOnAction(e -> {
+            designPane.getChildren().remove(node);
+            System.out.println("Item Removed");
+        });
+
         // Deselect the node when the mouse is released
         node.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
@@ -233,6 +242,40 @@ public class HomePageController {
                 }
             }
         });
+    }
+
+    @FXML
+    private void designPaneMouseClicked(MouseEvent mouseEvent) {
+        if (startNodeForLink != null) {
+            System.out.println("Creating Link");
+            Node endNodeForLink = (Node) mouseEvent.getTarget();
+            createLink(startNodeForLink, endNodeForLink);
+            startNodeForLink = null;
+        }
+    }
+
+    private void createLink(Node startNode, Node endNode) {
+        System.out.println("Creating Link");
+        // Create a new line
+        Line line = getLine(startNode, endNode);
+        designPane.getChildren().add(line);
+
+        // Make the component draggable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        // Make the component selectable
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+    }
+
+    private static Line getLine(Node startNode, Node endNode) {
+        Line line = new Line();
+
+        // Set the start and end points of the line
+        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInParent().getWidth() / 2));
+        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInParent().getHeight() / 2));
+        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInParent().getWidth() / 2));
+        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInParent().getHeight() / 2));
+
+        return line;
     }
 
     public void loadProject()

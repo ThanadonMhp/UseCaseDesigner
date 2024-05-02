@@ -93,7 +93,7 @@
             </TitledPane>
           </panes>
         </Accordion>
-        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" prefHeight="664.0" prefWidth="1027.0" />
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="664.0" prefWidth="1027.0" />
       </children>
     </AnchorPane>
   </children>
