@@ -82,6 +82,7 @@ public class HomePageController {
             } else if(dragEvent.getDragboard().getString().equals("Actor")) {
                 imageView.setImage(actorImageView.getImage());
                 System.out.println("Actor Dropped");
+
                 // Create a TextInputDialog
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setTitle("Enter Label");
@@ -110,12 +111,44 @@ public class HomePageController {
                     }
                     label.setText(enteredLabel);
                 }
+
             } else if (dragEvent.getDragboard().getString().equals("System")) {
                 imageView.setImage(systemImageView.getImage());
                 System.out.println("System Dropped");
+
+                // Create a TextInputDialog
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter Label");
+                dialog.setHeaderText("Please enter a label for the object:");
+                dialog.setContentText("Label:");
+
+                // Show the dialog and get the result
+                Optional<String> result = dialog.showAndWait();
+                // If a string was entered, use it as the label
+                if (result.isPresent()) {
+                    String enteredLabel = result.get();
+                    while (enteredLabel.isEmpty()) {
+                        // Show error message
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error Dialog");
+                        alert.setHeaderText("Input Error");
+                        alert.setContentText("Please enter a non-empty label!");
+
+                        alert.showAndWait();
+
+                        // Re-prompt the user
+                        result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            enteredLabel = result.get();
+                        }
+                    }
+                    label.setText(enteredLabel);
+                }
+
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 imageView.setImage(lineImageView.getImage());
                 System.out.println("Line Dropped");
+
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 imageView.setImage(arrowImageView.getImage());
                 System.out.println("Arrow Dropped");
