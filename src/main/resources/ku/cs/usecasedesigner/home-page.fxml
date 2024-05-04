@@ -55,34 +55,34 @@
             <Font size="18.0" />
           </font>
         </Label>
-        <Accordion layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0">
+        <Accordion layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="200.0">
           <panes>
             <TitledPane animated="false" text="Components">
               <content>
                 <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0">
                   <children>
                     <!-- ImageView for oval.jpg with drag-and-drop functionality -->
-                    <ImageView fx:id="ovalImageView" fitHeight="101.0" fitWidth="101.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/oval.png" />
                       </image>
                     </ImageView>
-                    <ImageView fx:id="actorImageView" fitHeight="101.0" fitWidth="101.0" layoutX="102.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="actorImageView" fitHeight="90.0" fitWidth="90.0" layoutX="105.0" layoutY="5.0" onDragDetected="#ActorDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/human.png" />
                       </image>
                     </ImageView>
-                    <ImageView fx:id="systemImageView" fitHeight="101.0" fitWidth="101.0" layoutY="101.0" onDragDetected="#SystemDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="systemImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="100.0" onDragDetected="#SystemDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/box.png" />
                       </image>
                     </ImageView>
-                    <ImageView fx:id="lineImageView" fitHeight="101.0" fitWidth="101.0" layoutX="101.0" layoutY="101.0" onDragDetected="#LineDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="lineImageView" fitHeight="90.0" fitWidth="90.0" layoutX="105.0" layoutY="100.0" onDragDetected="#LineDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/line.png" />
                       </image>
                     </ImageView>
-                    <ImageView fx:id="arrowImageView" fitHeight="101.0" fitWidth="101.0" layoutY="202.0" onDragDetected="#ArrowDragDetected" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="arrowImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="195.0" onDragDetected="#ArrowDragDetected" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../../../images/directional.png" />
                       </image>

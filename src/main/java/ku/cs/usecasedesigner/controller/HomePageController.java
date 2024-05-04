@@ -3,12 +3,14 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
@@ -22,6 +24,7 @@ import ku.cs.usecasedesigner.services.UseCaseSystemListFileDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
@@ -67,9 +70,10 @@ public class HomePageController {
         }
     }
 
-    public void PaneDragDropped(DragEvent dragEvent) {
+    public void PaneDragDropped(DragEvent dragEvent) throws IOException {
         if(dragEvent.getDragboard().hasString()) {
             ImageView imageView = new ImageView();
+            Label label = new Label();
 
             // Set the image of the component
             if(dragEvent.getDragboard().getString().equals("Oval")) {
@@ -78,6 +82,34 @@ public class HomePageController {
             } else if(dragEvent.getDragboard().getString().equals("Actor")) {
                 imageView.setImage(actorImageView.getImage());
                 System.out.println("Actor Dropped");
+                // Create a TextInputDialog
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter Label");
+                dialog.setHeaderText("Please enter a label for the object:");
+                dialog.setContentText("Label:");
+
+                // Show the dialog and get the result
+                Optional<String> result = dialog.showAndWait();
+                // If a string was entered, use it as the label
+                if (result.isPresent()) {
+                    String enteredLabel = result.get();
+                    while (enteredLabel.isEmpty()) {
+                        // Show error message
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error Dialog");
+                        alert.setHeaderText("Input Error");
+                        alert.setContentText("Please enter a non-empty label!");
+
+                        alert.showAndWait();
+
+                        // Re-prompt the user
+                        result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            enteredLabel = result.get();
+                        }
+                    }
+                    label.setText(enteredLabel);
+                }
             } else if (dragEvent.getDragboard().getString().equals("System")) {
                 imageView.setImage(systemImageView.getImage());
                 System.out.println("System Dropped");
@@ -92,11 +124,16 @@ public class HomePageController {
             // Set the size and position of the component
             imageView.setFitWidth(150);
             imageView.setFitHeight(150);
-            imageView.setLayoutX(dragEvent.getX() - 75);
-            imageView.setLayoutY(dragEvent.getY() - 75);
+
+            // Create a new VBox amd add the image and label
+            VBox vbox = new VBox();
+            vbox.getChildren().addAll(imageView, label);
+            vbox.setAlignment(Pos.CENTER);
+            vbox.setLayoutX(dragEvent.getX() - 75);
+            vbox.setLayoutY(dragEvent.getY() - 75);
 
             // Add the component to the design pane
-            designPane.getChildren().add(imageView);
+            designPane.getChildren().add(vbox);
 
             // Make the component draggable
             MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
@@ -184,8 +221,8 @@ public class HomePageController {
                         double newHeight = mouseEvent.getY() + 10;
 
                         if (newWidth > 0 && newHeight > 0) {
-                            ((ImageView) node).setFitWidth(newWidth);
-                            ((ImageView) node).setFitHeight(newHeight);
+                            ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
+                            ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
                         }
                         System.out.println("Item Resized to " + newWidth + "x" + newHeight);
                     }
@@ -203,7 +240,7 @@ public class HomePageController {
                     if (mouseEvent.isPrimaryButtonDown()) {
                         double newRotate = mouseEvent.getX() + 10;
                         if (newRotate > 0) {
-                            node.setRotate(newRotate);
+                            ((ImageView) ((VBox) node).getChildren().get(0)).setRotate(newRotate);
                         }
                         System.out.println("Item Rotated to " + newRotate);
                     }
@@ -279,117 +316,6 @@ public class HomePageController {
         return line;
     }
 
-    public void loadProject()
-    {
-        // Clear the design pane
-        designPane.getChildren().clear();
-
-        // Get position list
-        PositionList positionList = new PositionList();
-        DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        positionList = dataSource.readData();
-
-        // Get symbol list
-        SymbolList symbolList = new SymbolList();
-        DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
-        symbolList = dataSourceSymbol.readData();
-
-        // Add symbol to the design pane
-        SymbolList finalSymbolList = symbolList;
-        positionList.getPositionList().forEach(position -> {
-            ImageView imageView = new ImageView();
-            AtomicBoolean isImage = new AtomicBoolean(true);
-            finalSymbolList.getSymbolList().forEach(symbol -> {
-                if (symbol.getSymbol_id() == position.getSymbol_id()) {
-                    if (symbol.getSymbol_type().equals("box.png")) {
-                        imageView.setImage(systemImageView.getImage());
-                    } else if (symbol.getSymbol_type().equals("oval.png")) {
-                        imageView.setImage(ovalImageView.getImage());
-                    } else if (symbol.getSymbol_type().equals("human.png")) {
-                        imageView.setImage(actorImageView.getImage());
-                    } else if (symbol.getSymbol_type().equals("line.png")) {
-                        imageView.setImage(lineImageView.getImage());
-                    } else if (symbol.getSymbol_type().equals("directional.png")) {
-                        imageView.setImage(arrowImageView.getImage());
-                    } else if (symbol.getSymbol_type().equals("line")) {
-                        isImage.set(false);
-                        Line line = new Line();
-                        line.setStartX(position.getX_position());
-                        line.setStartY(position.getY_position());
-                        line.setEndX(position.getFit_width());
-                        line.setEndY(position.getFit_height());
-                        line.setRotate(position.getRotation());
-                        designPane.getChildren().add(line);
-
-                        // Make the component draggable and selectable
-                        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                    }
-                }
-            });
-            if (isImage.get()){
-                // Set the size and position of the component
-                imageView.setFitWidth(position.getFit_width());
-                imageView.setFitHeight(position.getFit_height());
-                imageView.setLayoutX(position.getX_position());
-                imageView.setLayoutY(position.getY_position());
-                imageView.setRotate(position.getRotation());
-                designPane.getChildren().add(imageView);
-
-                // Make the component draggable and selectable
-                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-            }
-        });
-        System.out.println("Project Opened");
-    }
-
-    public void saveProject()
-    {
-        System.out.println("Saving Project");
-
-        // Create new lists
-        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
-        SymbolList symbolList = new SymbolList();
-        PositionList positionList = new PositionList();
-
-        // Save project name
-        DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
-        UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
-        useCaseSystemList.addSystem(useCaseSystem);
-        useCaseSystemListDataSource.writeData(useCaseSystemList);
-
-        designPane.getChildren().forEach(node -> {
-            //Save position to the list
-            DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
-            // if the node is imageView
-            if (node instanceof ImageView)
-            {
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) node).getFitWidth(), ((ImageView) node).getFitHeight(), node.getRotate());
-                positionList.addPosition(position);
-            } else if (node instanceof Line ){
-                // if the node is a line
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, ((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), ((Line) node).getRotate());
-                positionList.addPosition(position);
-            }
-
-            positionListDataSource.writeData(positionList);
-
-            //Save symbol to the list
-            DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
-            if (node instanceof Line) {
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "none");
-                symbolList.addSymbol(symbol);
-            } else {
-                String type = ((ImageView) node).getImage().getUrl().substring(((ImageView) node).getImage().getUrl().lastIndexOf("/") + 1);
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, type, "none");
-                symbolList.addSymbol(symbol);
-            }
-            symbolListDataSource.writeData(symbolList);
-        });
-        System.out.println("Project Saved");
-    }
-
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
         // Open the new project page
         System.out.println("New Project");
@@ -426,5 +352,145 @@ public class HomePageController {
     public void handleSaveMenuItem(ActionEvent actionEvent) {
         // Save the project
         saveProject();
+    }
+
+    public void loadProject()
+    {
+        // Clear the design pane
+        designPane.getChildren().clear();
+
+        // Get position list
+        PositionList positionList = new PositionList();
+        DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+        positionList = dataSource.readData();
+
+        // Get symbol list
+        SymbolList symbolList = new SymbolList();
+        DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
+        symbolList = dataSourceSymbol.readData();
+
+        // Add symbol to the design pane
+        SymbolList finalSymbolList = symbolList;
+        positionList.getPositionList().forEach(position -> {
+            ImageView imageView = new ImageView();
+            Label label = new Label();
+            AtomicBoolean isImage = new AtomicBoolean(true);
+            finalSymbolList.getSymbolList().forEach(symbol -> {
+                if (symbol.getSymbol_id() == position.getSymbol_id()) {
+                    if (symbol.getSymbol_type().equals("box.png")) {
+                        imageView.setImage(systemImageView.getImage());
+                        if (!symbol.getLabel().equals("none")) {
+                            label.setText(symbol.getLabel());
+                        }
+                    } else if (symbol.getSymbol_type().equals("oval.png")) {
+                        imageView.setImage(ovalImageView.getImage());
+                        if (!symbol.getLabel().equals("none")) {
+                            label.setText(symbol.getLabel());
+                        }
+                    } else if (symbol.getSymbol_type().equals("human.png")) {
+                        imageView.setImage(actorImageView.getImage());
+                        if (!symbol.getLabel().equals("none")) {
+                            label.setText(symbol.getLabel());
+                        }
+                    } else if (symbol.getSymbol_type().equals("line.png")) {
+                        imageView.setImage(lineImageView.getImage());
+                        if (!symbol.getLabel().equals("none")) {
+                            label.setText(symbol.getLabel());
+                        }
+                    } else if (symbol.getSymbol_type().equals("directional.png")) {
+                        imageView.setImage(arrowImageView.getImage());
+                        if (!symbol.getLabel().equals("none")) {
+                            label.setText(symbol.getLabel());
+                        }
+                    } else if (symbol.getSymbol_type().equals("line")) {
+                        isImage.set(false);
+                        Line line = new Line();
+                        line.setStartX(position.getX_position());
+                        line.setStartY(position.getY_position());
+                        line.setEndX(position.getFit_width());
+                        line.setEndY(position.getFit_height());
+                        line.setRotate(position.getRotation());
+                        designPane.getChildren().add(line);
+
+                        // Make the component draggable and selectable
+                        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                    }
+                }
+            });
+            if (isImage.get()){
+                // Set the size and position of the component
+                imageView.setFitWidth(position.getFit_width());
+                imageView.setFitHeight(position.getFit_height());
+                imageView.setRotate(position.getRotation());
+
+                VBox vbox = new VBox();
+                vbox.getChildren().addAll(imageView, label);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setLayoutX(position.getX_position());
+                vbox.setLayoutY(position.getY_position());
+
+                designPane.getChildren().add(vbox);
+
+                // Make the component draggable and selectable
+                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            }
+        });
+        System.out.println("Project Opened");
+    }
+
+    public void saveProject()
+    {
+        System.out.println("Saving Project");
+
+        // Create new lists
+        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
+        SymbolList symbolList = new SymbolList();
+        PositionList positionList = new PositionList();
+
+        // Save project name
+        DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
+        UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
+        useCaseSystemList.addSystem(useCaseSystem);
+        useCaseSystemListDataSource.writeData(useCaseSystemList);
+
+        // Save position and symbol
+        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
+        DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
+        System.out.println("Design Pane Children: " + designPane.getChildren().size());
+        designPane.getChildren().forEach(node -> {
+            if (node instanceof Pane)
+            {
+                // Save position to the list
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(), ((VBox) node).getChildren().get(0).getRotate());
+                positionList.addPosition(position);
+
+                // Save symbol to the list
+                String label = ((Label) ((VBox) node).getChildren().get(1)).getText();
+                if(label.isEmpty())
+                {
+                    label = "none";
+                }
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
+                symbolList.addSymbol(symbol);
+
+            }
+            else if (node instanceof Line)
+            {
+                // Save position to the list
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, ((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), ((Line) node).getRotate());
+                positionList.addPosition(position);
+
+                // Save symbol to the list
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "");
+                symbolList.addSymbol(symbol);
+            }
+        });
+
+        positionListDataSource.writeData(positionList);
+        symbolListDataSource.writeData(symbolList);
+
+        System.out.println("Project Saved");
     }
 }
