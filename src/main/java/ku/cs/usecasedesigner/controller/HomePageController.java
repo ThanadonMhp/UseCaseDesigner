@@ -319,7 +319,13 @@ public class HomePageController {
     private void designPaneMouseClicked(MouseEvent mouseEvent) {
         if (startNodeForLink != null) {
             System.out.println("Creating Link");
-            Node endNodeForLink = (Node) mouseEvent.getTarget();
+            Node endNodeForLink = null;
+            for (Node node : designPane.getChildren()) {
+                if (node.getBoundsInParent().contains(mouseEvent.getX(), mouseEvent.getY())) {
+                    endNodeForLink = node;
+                    break;
+                }
+            }
             createLink(startNodeForLink, endNodeForLink);
             startNodeForLink = null;
         }
@@ -340,11 +346,11 @@ public class HomePageController {
     private static Line getLine(Node startNode, Node endNode) {
         Line line = new Line();
 
-        // Set the start and end points of the line
-        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInParent().getWidth() / 2));
-        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInParent().getHeight() / 2));
-        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInParent().getWidth() / 2));
-        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInParent().getHeight() / 2));
+        // Bind the start and end points of the line to the center points of the nodes
+        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
+        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInLocal().getHeight() / 2));
+        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
+        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
 
         return line;
     }
