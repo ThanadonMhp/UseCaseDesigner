@@ -85,6 +85,9 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
         //Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
+        //Import connectionList from CSV
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -118,6 +121,13 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
             //Write PositionList to CSV
             for (Position position : positionList.getPositionList()) {
                 String line = positionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }

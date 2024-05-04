@@ -88,6 +88,9 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
         //Import symbolList from CSV
         SymbolListFileDataSource symbolListFileDataSource = new SymbolListFileDataSource(directory, fileName);
         SymbolList symbolList = symbolListFileDataSource.readData();
+        //Import connectionList from CSV
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -126,6 +129,12 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
                 buffer.newLine();
             }
 
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
+                buffer.append(line);
+                buffer.newLine();
+            }
 
             buffer.close();
 

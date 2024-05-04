@@ -5,11 +5,11 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageDataSource<Symbol>{
+public class ConnectionListFileDataSource implements DataSource<ConnectionList>, ManageDataSource<Connection>{
     private String directory;
     private String fileName;
 
-    public SymbolListFileDataSource(String directory, String fileName){
+    public ConnectionListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -33,8 +33,8 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
     }
 
     @Override
-    public SymbolList readData() {
-        SymbolList symbolList = new SymbolList();
+    public ConnectionList readData() {
+        ConnectionList connectionList = new ConnectionList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
@@ -47,19 +47,17 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("symbol")) {
-                    Symbol symbol = new Symbol(
-                            Double.parseDouble(data[1]), // symbol_id
-                            Double.parseDouble(data[2]), // subsystem_id
-                            data[3], // symbol_type
-                            data[4] // label
+                if (data[0].trim().equals("connection")) {
+                    Connection connection = new Connection(
+                            Double.parseDouble(data[1]), // startNodeId
+                            Double.parseDouble(data[2]) // endNodeId
                     );
-                    symbolList.addSymbol(symbol);
+                    connectionList.addConnection(connection);
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             try {
                 if (buffer != null) {
                     buffer.close();
@@ -71,23 +69,23 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
                 throw new RuntimeException(e);
             }
         }
-        return symbolList;
+        return connectionList;
     }
 
     @Override
-    public void writeData(SymbolList symbolList) {
-        //Import UseCaseSystemList from CSV
+    public void writeData(ConnectionList connectionList) {
+        //Import useCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
         //Import subsystemList from CSV
         SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
         SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        //Import symbolList from CSV
+        SymbolListFileDataSource symbolListFileDataSource = new SymbolListFileDataSource(directory, fileName);
+        SymbolList symbolList = symbolListFileDataSource.readData();
         //Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        //Import connectionList from CSV
-        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
-        ConnectionList connectionList = connectionListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -100,35 +98,38 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
 
             //Write UseCaseSystemList to CSV
             for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
-                buffer.write(useCaseSystemListFileDataSource.createLine(useCaseSystem));
+                String line  = useCaseSystemListFileDataSource.createLine(useCaseSystem);
+                buffer.append(line);
                 buffer.newLine();
             }
 
             //Write SubsystemList to CSV
             for (Subsystem subsystem : subsystemList.getSubsystemList()) {
-                buffer.write(subsystemListFileDataSource.createLine(subsystem));
+                String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
                 buffer.newLine();
             }
 
             //Write SymbolList to CSV
             for (Symbol symbol : symbolList.getSymbolList()) {
-                buffer.write(createLine(symbol));
+                String line = symbolListFileDataSource.createLine(symbol);
+                buffer.append(line);
                 buffer.newLine();
             }
 
             //Write PositionList to CSV
             for (Position position : positionList.getPositionList()) {
-                buffer.write(positionListFileDataSource.createLine(position));
+                String line = positionListFileDataSource.createLine(position);
+                buffer.append(line);
                 buffer.newLine();
             }
 
             //Write ConnectionList to CSV
             for (Connection connection : connectionList.getConnectionList()) {
-                buffer.write(connectionListFileDataSource.createLine(connection));
+                String line = createLine(connection);
+                buffer.append(line);
                 buffer.newLine();
             }
-
-            buffer.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -136,11 +137,9 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
     }
 
     @Override
-    public String createLine(Symbol symbol) {
-        return "symbol" + ","
-                + symbol.getSymbol_id() + ","
-                + symbol.getSubsystem_id() + ","
-                + symbol.getSymbol_type() + ","
-                + symbol.getLabel();
+    public String createLine(Connection connection) {
+        return "connection,"
+                + connection.getStartNodeId() + ","
+                + connection.getEndNodeId();
     }
 }

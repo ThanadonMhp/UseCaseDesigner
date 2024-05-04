@@ -84,6 +84,9 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
         //Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
+        //Import connectionList from CSV
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -122,6 +125,12 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
                 buffer.newLine();
             }
 
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
+                buffer.append(line);
+                buffer.newLine();
+            }
 
             buffer.close();
 

@@ -8,18 +8,13 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
-import ku.cs.usecasedesigner.services.DataSource;
-import ku.cs.usecasedesigner.services.PositionListFileDataSource;
-import ku.cs.usecasedesigner.services.SymbolListFileDataSource;
-import ku.cs.usecasedesigner.services.UseCaseSystemListFileDataSource;
+import ku.cs.usecasedesigner.services.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +34,8 @@ public class HomePageController {
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
+    private static int nodeId = 0;
+    private static int connectionId = 0;
 
     @FXML void initialize() {
         // Check if the data is not null
@@ -337,6 +334,7 @@ public class HomePageController {
         System.out.println("Creating Link");
         // Create a new line
         Line line = getLine(startNode, endNode);
+        line.setId("connection" + connectionId++); // Set the ID of the line
         designPane.getChildren().add(line);
 
         // Make the component draggable
@@ -347,6 +345,14 @@ public class HomePageController {
 
     private static Line getLine(Node startNode, Node endNode) {
         Line line = new Line();
+
+        // Assign a unique ID to the line if they don't have one
+        if (startNode.getId() == null) {
+            startNode.setId("node" + nodeId++);
+        }
+        if (endNode.getId() == null) {
+            endNode.setId("node" + nodeId++);
+        }
 
         // Bind the start and end points of the line to the center points of the nodes
         line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
@@ -489,6 +495,7 @@ public class HomePageController {
         UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
         SymbolList symbolList = new SymbolList();
         PositionList positionList = new PositionList();
+        ConnectionList connectionList = new ConnectionList();
 
         // Save project name
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
@@ -499,6 +506,7 @@ public class HomePageController {
         // Save position and symbol
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
         DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
         System.out.println("Design Pane Children: " + designPane.getChildren().size());
         designPane.getChildren().forEach(node -> {
             if (node instanceof Pane)
@@ -514,17 +522,6 @@ public class HomePageController {
                     label = "none";
                 }
                 Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
-                symbolList.addSymbol(symbol);
-
-            }
-            else if (node instanceof Line)
-            {
-                // Save position to the list
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, ((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), ((Line) node).getRotate());
-                positionList.addPosition(position);
-
-                // Save symbol to the list
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "none");
                 symbolList.addSymbol(symbol);
             }
         });
