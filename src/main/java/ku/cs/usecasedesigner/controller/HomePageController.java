@@ -56,8 +56,8 @@ public class HomePageController {
                 directory = (String) objects.get(1);
             }
             homePageVBox.setDisable(false);
-            saveProject();
             loadProject();
+            saveProject();
             System.out.println("Home Page Enabled");
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
@@ -155,8 +155,8 @@ public class HomePageController {
             }
 
             // Set the size and position of the component
-            imageView.setFitWidth(150);
-            imageView.setFitHeight(150);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(90);
 
             // Create a new VBox amd add the image and label
             VBox vbox = new VBox();
@@ -218,13 +218,15 @@ public class HomePageController {
     private void MakeDraggable(Node node) {
         System.out.println("Making " + node + " draggable");
         node.setOnMousePressed(e -> {
-            startX = e.getSceneX() - node.getTranslateX();
-            startY = e.getSceneY() - node.getTranslateY();
+            startX = e.getSceneX() - node.getLayoutX();
+            startY = e.getSceneY() - node.getLayoutY();
         });
 
         node.setOnMouseDragged(e -> {
-            node.setTranslateX(e.getSceneX() - startX);
-            node.setTranslateY(e.getSceneY() - startY);
+            double newX = e.getSceneX() - startX;
+            double newY = e.getSceneY() - startY;
+            node.setLayoutX(newX);
+            node.setLayoutY(newY);
         });
     }
 
@@ -522,7 +524,7 @@ public class HomePageController {
                 positionList.addPosition(position);
 
                 // Save symbol to the list
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "");
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, "line", "none");
                 symbolList.addSymbol(symbol);
             }
         });
