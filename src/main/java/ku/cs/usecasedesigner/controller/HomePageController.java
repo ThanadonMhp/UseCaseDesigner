@@ -620,6 +620,12 @@ public class HomePageController {
             }
         });
 
+        // Check if designPane is not empty
+        if (!designPane.getChildren().isEmpty()) {
+            // Make guideLabel invisible
+            guideLabel.setVisible(false);
+        }
+
         System.out.println("Project Opened");
     }
 
