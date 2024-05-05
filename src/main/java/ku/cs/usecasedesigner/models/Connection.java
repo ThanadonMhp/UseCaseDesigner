@@ -1,7 +1,5 @@
 package ku.cs.usecasedesigner.models;
 
-import javafx.scene.layout.Pane;
-
 public class Connection {
     private double startX;
     private double startY;
