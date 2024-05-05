@@ -35,8 +35,6 @@ public class HomePageController {
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
-    private static int nodeId = 0;
-    private static int connectionId = 0;
 
     @FXML void initialize() {
         // Check if the data is not null
@@ -426,7 +424,6 @@ public class HomePageController {
         System.out.println("Creating Link");
         // Create a new line
         Line line = getLine(startNode, endNode);
-        line.setId("connection" + connectionId++); // Set the ID of the line
         designPane.getChildren().add(line);
 
         // Make the component draggable
@@ -437,14 +434,6 @@ public class HomePageController {
 
     private static Line getLine(Node startNode, Node endNode) {
         Line line = new Line();
-
-        // Assign a unique ID to the line if they don't have one
-        if (startNode.getId() == null) {
-            startNode.setId("node" + nodeId++);
-        }
-        if (endNode.getId() == null) {
-            endNode.setId("node" + nodeId++);
-        }
 
         // Bind the start and end points of the line to the center points of the nodes
         line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
@@ -609,7 +598,6 @@ public class HomePageController {
             if (startNode != null && endNode != null) {
                 // Create a new Line object that connects the start and end nodes
                 Line line = getLine(startNode, endNode);
-                line.setId("connection" + connectionId++); // Set the ID of the line
                 designPane.getChildren().add(line);
 
                 // Make the component draggable and selectable
