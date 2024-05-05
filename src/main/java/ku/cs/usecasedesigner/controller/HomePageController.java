@@ -279,13 +279,29 @@ public class HomePageController {
         // Set the action for connect menu item
         connectItem.setOnAction(e -> {
             startNodeForLink = node;
+
+            // Pop up to notify user to select the end node
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Node Connection");
+            alert.setHeaderText("Please select the another component to connect");
+            alert.showAndWait();
+
             System.out.println("Connect Clicked");
         });
 
         // Set the action for delete menu item
         deleteItem.setOnAction(e -> {
-            designPane.getChildren().remove(node);
-            System.out.println("Item Removed");
+            // Pop up to confirm deletion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                System.out.println("Item Deleted");
+                designPane.getChildren().remove(node);
+                System.out.println("Item Removed");
+            }
         });
 
         // Deselect the node when the mouse is released
