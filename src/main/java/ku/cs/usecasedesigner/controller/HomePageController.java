@@ -213,7 +213,6 @@ public class HomePageController {
     }
 
     private void MakeDraggable(Node node) {
-        System.out.println("Making " + node + " draggable");
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getLayoutX();
             startY = e.getSceneY() - node.getLayoutY();
@@ -228,7 +227,6 @@ public class HomePageController {
     }
 
     private void MakeSelectable(Node node) {
-        System.out.println("Making " + node + " selectable");
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
@@ -256,7 +254,6 @@ public class HomePageController {
                             ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
                             ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
                         }
-                        System.out.println("Item Resized to " + newWidth + "x" + newHeight);
                     }
                 }
             });
@@ -274,7 +271,6 @@ public class HomePageController {
                         if (newRotate > 0) {
                             ((ImageView) ((VBox) node).getChildren().get(0)).setRotate(newRotate);
                         }
-                        System.out.println("Item Rotated to " + newRotate);
                     }
                 }
             });
@@ -484,13 +480,33 @@ public class HomePageController {
                 MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
             }
         });
+
+        // Load connections
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
+        ConnectionList connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
+
+        // Recreate each connection
+        connectionList.getConnectionList().forEach(connection -> {
+            // Find the start and end nodes of the connection from position in connection
+            Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
+            Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
+            if (startNode != null && endNode != null) {
+                // Create a new Line object that connects the start and end nodes
+                Line line = getLine(startNode, endNode);
+                line.setId("connection" + connectionId++); // Set the ID of the line
+                designPane.getChildren().add(line);
+
+                // Make the component draggable and selectable
+                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+            }
+        });
+
         System.out.println("Project Opened");
     }
 
     public void saveProject()
     {
-        System.out.println("Saving Project");
-
         // Create new lists
         UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
         SymbolList symbolList = new SymbolList();
@@ -507,7 +523,6 @@ public class HomePageController {
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
         DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
-        System.out.println("Design Pane Children: " + designPane.getChildren().size());
         designPane.getChildren().forEach(node -> {
             if (node instanceof Pane)
             {
@@ -524,10 +539,18 @@ public class HomePageController {
                 Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
                 symbolList.addSymbol(symbol);
             }
+            else if (node instanceof Line)
+            {
+                // Save connection to the list
+                Connection connection = new Connection(((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY()); // Create a new Connection object                connectionList.addConnection(connection);
+                connectionList.addConnection(connection);
+            }
         });
 
+        // Write data to CSV
         positionListDataSource.writeData(positionList);
         symbolListDataSource.writeData(symbolList);
+        connectionListDataSource.writeData(connectionList);
 
         System.out.println("Project Saved");
     }

@@ -1,19 +1,34 @@
 package ku.cs.usecasedesigner.models;
 
+import javafx.scene.layout.Pane;
+
 public class Connection {
-    private double startNodeId;
-    private double endNodeId;
+    private double startX;
+    private double startY;
+    private double endX;
+    private double endY;
 
-    public Connection(double startNodeId, double endNodeId) {
-        this.startNodeId = startNodeId;
-        this.endNodeId = endNodeId;
+    public Connection(double startX, double startY, double endX, double endY) {
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
     }
 
-    public double getStartNodeId() {
-        return startNodeId;
+    public double getStartX() {
+        return startX;
     }
 
-    public double getEndNodeId() {
-        return endNodeId;
+    public double getStartY() {
+        return startY;
     }
+
+    public double getEndX() {
+        return endX;
+    }
+
+    public double getEndY() {
+        return endY;
+    }
+
 }

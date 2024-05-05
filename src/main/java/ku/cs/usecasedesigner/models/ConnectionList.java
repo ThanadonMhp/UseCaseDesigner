@@ -1,5 +1,10 @@
 package ku.cs.usecasedesigner.models;
 
+import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+
 import java.util.ArrayList;
 
 public class ConnectionList {
@@ -21,31 +26,21 @@ public class ConnectionList {
         connectionList.remove(connection);
     }
 
-    public Connection findByStartNodeId(double startNodeId) {
-        for (Connection connection : connectionList) {
-            if (connection.getStartNodeId() == startNodeId) {
-                return connection;
+    public Node findNodeByPosition(double x, double y, Pane pane) {
+        // search for an item in pane that is close to the given position (x, y) and return it as a Node
+        for (Node node : pane.getChildren()) {
+            if (!(node instanceof VBox)) {
+                continue;
+            }
+            double nodeMinX = node.getLayoutX();
+            double nodeMaxX = node.getLayoutX() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth();
+            double nodeMinY = node.getLayoutY();
+            double nodeMaxY = node.getLayoutY() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight();
+
+            if (x >= nodeMinX && x <= nodeMaxX && y >= nodeMinY && y <= nodeMaxY) {
+                return node;
             }
         }
         return null;
-    }
-
-    public Connection findByEndNodeId(double endNodeId) {
-        for (Connection connection : connectionList) {
-            if (connection.getEndNodeId() == endNodeId) {
-                return connection;
-            }
-        }
-        return null;
-    }
-
-    public double findLastConnectionId() {
-        double lastConnectionId = 0;
-        for (Connection connection : connectionList) {
-            if (connection.getStartNodeId() > lastConnectionId) {
-                lastConnectionId = connection.getStartNodeId();
-            }
-        }
-        return lastConnectionId;
     }
 }

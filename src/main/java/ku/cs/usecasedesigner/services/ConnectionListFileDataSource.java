@@ -49,8 +49,10 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 String[] data = line.split(",");
                 if (data[0].trim().equals("connection")) {
                     Connection connection = new Connection(
-                            Double.parseDouble(data[1]), // startNodeId
-                            Double.parseDouble(data[2]) // endNodeId
+                            Double.parseDouble(data[1]), // startX
+                            Double.parseDouble(data[2]), // startY
+                            Double.parseDouble(data[3]), // endX
+                            Double.parseDouble(data[4])  // endY
                     );
                     connectionList.addConnection(connection);
                 }
@@ -131,6 +133,8 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 buffer.newLine();
             }
 
+            buffer.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -139,7 +143,9 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
     @Override
     public String createLine(Connection connection) {
         return "connection,"
-                + connection.getStartNodeId() + ","
-                + connection.getEndNodeId();
+                + connection.getStartX() + ","
+                + connection.getStartY() + ","
+                + connection.getEndX() + ","
+                + connection.getEndY();
     }
 }
