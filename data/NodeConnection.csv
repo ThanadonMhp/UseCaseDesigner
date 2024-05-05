@@ -1,9 +1,9 @@
 system,1.0,NodeConnection
-symbol,1.0,0.0,box.png,2
+symbol,1.0,0.0,box.png,1
 symbol,2.0,0.0,box.png,2
-symbol,3.0,0.0,oval.png,6
-position,1.0,1.0,173.0,106.0,90.0,90.0,0.0
+symbol,3.0,0.0,oval.png,3
+position,1.0,1.0,190.0,120.0,90.0,90.0,0.0
 position,2.0,2.0,631.0,173.0,90.0,90.0,0.0
-position,3.0,3.0,342.0,352.0,90.0,90.0,0.0
-connection,218.0,151.0,676.0,218.0
-connection,218.0,151.0,387.0,397.0
+position,3.0,3.0,451.0,357.0,90.0,90.0,0.0
+connection,235.0,165.0,676.0,218.0
+connection,496.0,402.0,235.0,165.0
