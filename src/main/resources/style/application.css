@@ -55,3 +55,28 @@
 .icon-purple {
     -fx-background-color: purple;
 }
+.title-plane{
+    -fx-border-width: 2px;
+    -fx-border-color: #00934C;
+    -fx-border-style: solid;
+}
+.new-button{
+    -fx-background-color: #70B17F;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.new-button:hover{
+    -fx-background-color: #3cb371;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.open-button{
+    -fx-background-color: #0082E6;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.open-button:hover{
+    -fx-background-color: #3cb371;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}

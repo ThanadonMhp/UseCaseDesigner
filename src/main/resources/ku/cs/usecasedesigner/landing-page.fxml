@@ -4,11 +4,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.LandingPageController">
+<AnchorPane maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" stylesheets="@../../../style/application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.LandingPageController">
    <children>
-      <Button layoutX="170.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleOpenButton" text="Open" />
-      <Button layoutX="77.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleNewButton" text="New" />
+      <Button layoutX="170.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleOpenButton" styleClass="open-button" stylesheets="@../../../style/application.css" text="Open" />
+      <Button layoutX="77.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleNewButton" styleClass="new-button" stylesheets="@../../../style/application.css" text="New" />
       <Text layoutX="66.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Use Case Designer!" />
    </children>
 </AnchorPane>
