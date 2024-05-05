@@ -31,6 +31,8 @@ public class HomePageController {
 
     @FXML private Pane designPane;
 
+    @FXML private Label guideLabel;
+
     private double startX;
     private double startY;
     private String projectName, directory;
@@ -123,6 +125,12 @@ public class HomePageController {
                 // Make the component selectable
                 MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
 
+                // Check if designPane is not empty
+                if (!designPane.getChildren().isEmpty()) {
+                    // Make guideLabel invisible
+                    guideLabel.setVisible(false);
+                }
+
                 return;
 
             } else if(dragEvent.getDragboard().getString().equals("Actor")) {
@@ -214,6 +222,12 @@ public class HomePageController {
             MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
             // Make the component selectable
             MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+
+            // Check if designPane is not empty
+            if (!designPane.getChildren().isEmpty()) {
+                // Make guideLabel invisible
+                guideLabel.setVisible(false);
+            }
         }
     }
 
