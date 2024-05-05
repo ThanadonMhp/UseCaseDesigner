@@ -80,3 +80,23 @@
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
+.select-button{
+    -fx-background-color: #0077DF;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.select-button:hover{
+    -fx-background-color: #0180EF;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.confirm-button{
+    -fx-background-color: #00A3C0;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+.confirm-button:hover{
+    -fx-background-color: #019CB4;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
