@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
@@ -69,13 +70,63 @@ public class HomePageController {
 
     public void PaneDragDropped(DragEvent dragEvent) throws IOException {
         if(dragEvent.getDragboard().hasString()) {
+
             ImageView imageView = new ImageView();
+            // Set the size and position of the component
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(90);
+
             Label label = new Label();
 
             // Set the image of the component
             if(dragEvent.getDragboard().getString().equals("Oval")) {
                 imageView.setImage(ovalImageView.getImage());
                 System.out.println("Oval Dropped");
+
+                // Create a TextInputDialog
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter Label");
+                dialog.setHeaderText("Please enter a label for the object:");
+                dialog.setContentText("Label:");
+
+                // Show the dialog and get the result
+                Optional<String> result = dialog.showAndWait();
+                // If a string was entered, use it as the label
+                if (result.isPresent()) {
+                    String enteredLabel = result.get();
+                    while (enteredLabel.isEmpty()) {
+                        // Show error message
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error Dialog");
+                        alert.setHeaderText("Input Error");
+                        alert.setContentText("Please enter a non-empty label!");
+
+                        alert.showAndWait();
+
+                        // Re-prompt the user
+                        result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            enteredLabel = result.get();
+                        }
+                    }
+                    label.setText(enteredLabel);
+                }
+
+                // Put imageview and label into stackPane
+                StackPane stackPane = new StackPane();
+                stackPane.getChildren().addAll(imageView, label);
+                stackPane.setAlignment(Pos.CENTER);
+                stackPane.setLayoutX(dragEvent.getX() - 75);
+                stackPane.setLayoutY(dragEvent.getY() - 75);
+
+                designPane.getChildren().add(stackPane);
+                // Make the component draggable
+                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                // Make the component selectable
+                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+
+                return;
+
             } else if(dragEvent.getDragboard().getString().equals("Actor")) {
                 imageView.setImage(actorImageView.getImage());
                 System.out.println("Actor Dropped");
@@ -150,10 +201,6 @@ public class HomePageController {
                 imageView.setImage(arrowImageView.getImage());
                 System.out.println("Arrow Dropped");
             }
-
-            // Set the size and position of the component
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(90);
 
             // Create a new VBox amd add the image and label
             VBox vbox = new VBox();
@@ -324,6 +371,39 @@ public class HomePageController {
                 }
             }
         });
+
+        // Double Click to change the label
+        Label label = null;
+        if (node instanceof VBox) {
+            label = (Label) ((VBox) node).getChildren().get(1);
+        } else if (node instanceof StackPane) {
+            label = (Label) ((StackPane) node).getChildren().get(1);
+        }
+
+        Label finalLabel = label;
+
+        if (label != null)
+        {
+            label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                        // Create a TextInputDialog
+                        TextInputDialog dialog = new TextInputDialog(finalLabel.getText());
+                        dialog.setTitle("Change Label");
+                        dialog.setHeaderText("Please enter the new text for the label:");
+                        dialog.setContentText("Label:");
+
+                        // Show the dialog and get the result
+                        Optional<String> result = dialog.showAndWait();
+                        // If a string was entered, use it as the new label text
+                        if (result.isPresent()) {
+                            finalLabel.setText(result.get());
+                        }
+                    }
+                }
+            });
+        }
     }
 
     @FXML
@@ -442,9 +522,29 @@ public class HomePageController {
                             label.setText(symbol.getLabel());
                         }
                     } else if (symbol.getSymbol_type().equals("oval.png")) {
+                        // Set the size and position of the component
                         imageView.setImage(ovalImageView.getImage());
+                        imageView.setFitWidth(position.getFit_width());
+                        imageView.setFitHeight(position.getFit_height());
+                        imageView.setRotate(position.getRotation());
+
                         if (!symbol.getLabel().equals("none")) {
                             label.setText(symbol.getLabel());
+
+                            // Put imageview and label into stackPane
+                            StackPane stackPane = new StackPane();
+                            stackPane.getChildren().addAll(imageView, label);
+                            stackPane.setAlignment(Pos.CENTER);
+                            stackPane.setLayoutX(position.getX_position());
+                            stackPane.setLayoutY(position.getY_position());
+
+                            designPane.getChildren().add(stackPane);
+
+                            // Make the component draggable and selectable
+                            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                            MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+
+                            isImage.set(false);
                         }
                     } else if (symbol.getSymbol_type().equals("human.png")) {
                         imageView.setImage(actorImageView.getImage());
@@ -540,7 +640,7 @@ public class HomePageController {
         DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
         designPane.getChildren().forEach(node -> {
-            if (node instanceof Pane)
+            if (node instanceof VBox)
             {
                 // Save position to the list
                 Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(), ((VBox) node).getChildren().get(0).getRotate());
@@ -553,6 +653,21 @@ public class HomePageController {
                     label = "none";
                 }
                 Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
+                symbolList.addSymbol(symbol);
+            }
+            else if (node instanceof StackPane)
+            {
+                // Save position to the list
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitHeight(), ((ImageView) ((StackPane) node).getChildren().get(0)).getRotate());
+                positionList.addPosition(position);
+
+                // Save symbol to the list
+                String label = ((Label) ((StackPane) node).getChildren().get(1)).getText();
+                if(label.isEmpty())
+                {
+                    label = "none";
+                }
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
                 symbolList.addSymbol(symbol);
             }
             else if (node instanceof Line)
