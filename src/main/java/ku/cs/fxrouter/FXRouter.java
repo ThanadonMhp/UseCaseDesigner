@@ -119,10 +119,7 @@ public class FXRouter {
 
         if(themeType == 1){
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/darkMode.css").toExternalForm());
-        } else if (themeType == 2) {
-            scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/kawaiiMode.css").toExternalForm());
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
         }
 
         window.setTitle(route.windowTitle);
@@ -145,7 +142,7 @@ public class FXRouter {
 
         if (themeType == 1){
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/darkMode.css").toExternalForm());
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
         } else if (themeType == 2) {
             scene.getStylesheets().clear();
             scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/kawaiiMode.css").toExternalForm());

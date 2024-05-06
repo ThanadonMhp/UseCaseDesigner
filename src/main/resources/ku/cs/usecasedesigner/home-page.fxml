@@ -13,10 +13,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="homePageVBox" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomePageController">
+<VBox fx:id="homePageVBox" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.HomePageController">
 
   <children>
-    <MenuBar style="-fx-background-color: #f3f4f6;" stylesheets="@../../../style/application.css" VBox.vgrow="NEVER">
+    <MenuBar style="-fx-background-color: #f3f4f6;" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -88,7 +88,7 @@
       </TitledPane>
         <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="664.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
                <children>
-              <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" stylesheets="@../../../style/application.css" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
+              <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
                 <font>
                   <Font size="18.0" />
                 </font>
