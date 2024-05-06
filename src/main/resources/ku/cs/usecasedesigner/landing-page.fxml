@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #e2e8f0;" styleClass="noto-sans-thai" stylesheets="@../../../style/application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.LandingPageController">
+<AnchorPane fx:id="anchorPane" maxHeight="200.0" maxWidth="300.0" minHeight="200.0" minWidth="300.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #e2e8f0; -fx-border-color: black;" styleClass="noto-sans-thai" stylesheets="@../../../style/application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.LandingPageController">
    <children>
       <Button layoutX="170.0" layoutY="109.0" mnemonicParsing="false" onAction="#handleOpenButton" prefHeight="30.0" prefWidth="53.0" stylesheets="@../../../style/application.css" text="Open" textFill="WHITE">
          <styleClass>
@@ -21,9 +21,9 @@
             <String fx:value="noto-sans-thai" />
             <String fx:value="new-button" />
          </styleClass></Button>
-      <Text layoutX="63.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Noto Sans Thai;" styleClass="noto-sans-thai" text="ยินดีต้องรับสู่ to Use Case Designer!">
+      <Text fill="#3b3232" layoutX="63.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Noto Sans Thai;" styleClass="roboto-black" text="ยินดีต้องรับสู่ to Use Case Designer!">
          <font>
-            <Font name="Noto Sans Thai Regular" size="12.0" />
+            <Font name="SansSerif Regular" size="12.0" />
          </font>
       </Text>
    </children>

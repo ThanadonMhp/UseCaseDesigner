@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -100,7 +101,9 @@ public class FXRouter {
     public static void popup(String routeLabel) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
         popupNewRoute(route);
+
     }
+
     public static void popup(String routeLabel, Object data) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
         route.data = data;
@@ -138,6 +141,7 @@ public class FXRouter {
 
         Stage stage = new Stage();
         Scene scene = new Scene(resource);
+        stage.initStyle(StageStyle.UNDECORATED);
 
         if (themeType == 1){
             scene.getStylesheets().clear();
