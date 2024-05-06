@@ -1,3 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap');
+.noto-sans-thai {
+    font-family: "Noto Sans Thai", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+.bg-colour{
+    -fx-background-color: #e2e8f0;
+}
+.input_box{
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 100;
+}
+#anchorPane {
+    -fx-background-position: fixed;
+}
+
 .dragicon {
     -fx-background-radius: 10;
 }
@@ -61,42 +79,24 @@
     -fx-border-style: solid;
 }
 .new-button{
-    -fx-background-color: #70B17F;
-    -fx-background-radius: 50;
-    -fx-border-radius: 50;
-}
-.new-button:hover{
-    -fx-background-color: #3cb371;
+    -fx-background-color: #FFCCA7;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
 .open-button{
-    -fx-background-color: #0082E6;
+    -fx-background-color: #D09E72;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
-.open-button:hover{
-    -fx-background-color: #3cb371;
-    -fx-background-radius: 50;
-    -fx-border-radius: 50;
-}
+
 .select-button{
-    -fx-background-color: #0077DF;
+    -fx-background-color: #16A34A;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
-.select-button:hover{
-    -fx-background-color: #0180EF;
-    -fx-background-radius: 50;
-    -fx-border-radius: 50;
-}
+
 .confirm-button{
-    -fx-background-color: #00A3C0;
-    -fx-background-radius: 50;
-    -fx-border-radius: 50;
-}
-.confirm-button:hover{
-    -fx-background-color: #019CB4;
+    -fx-background-color: #006ADC;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }

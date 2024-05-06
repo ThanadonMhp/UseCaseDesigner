@@ -49,14 +49,9 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label fx:id="guideLabel" alignment="CENTER" layoutX="250.0" layoutY="25.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
-      <TitledPane fx:id="componentsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0" text="Components">
+      <TitledPane fx:id="componentsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0" text="Components" textAlignment="CENTER">
         <content>
-          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0" styleClass="title-plane" stylesheets="@../../../style/application.css">
+          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0" style="-fx-background-color: white;">
             <children>
               <!-- ImageView for oval.jpg with drag-and-drop functionality -->
               <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
@@ -87,8 +82,18 @@
             </children>
           </AnchorPane>
         </content>
+               <font>
+                  <Font name="Noto Sans Thai Regular" size="12.0" />
+               </font>
       </TitledPane>
-        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="664.0" prefWidth="1027.0" style="-fx-border-color: silver;" />
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#PaneDragDropped" onDragOver="#PaneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="664.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
+               <children>
+              <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" stylesheets="@../../../style/application.css" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
+                <font>
+                  <Font size="18.0" />
+                </font>
+              </Label>
+               </children></Pane>
       </children>
     </AnchorPane>
   </children>
