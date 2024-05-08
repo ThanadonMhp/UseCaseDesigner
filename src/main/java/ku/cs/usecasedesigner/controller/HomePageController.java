@@ -25,8 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
 
-    @FXML private VBox homePageVBox;
-
     @FXML private ImageView ovalImageView, actorImageView, systemImageView, lineImageView, arrowImageView;
 
     @FXML private Pane designPane;
@@ -39,13 +37,7 @@ public class HomePageController {
     private Node startNodeForLink;
 
     @FXML void initialize() {
-        // Check if the data is not null
-        if (FXRouter.getData() == null) {
-            // Disable the home page
-            homePageVBox.setDisable(true);
-            System.out.println("Home Page Disabled");
-        }
-        else if(FXRouter.getData() != null){
+        if(FXRouter.getData() != null){
             // Recieve data from New Project Page
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -53,10 +45,8 @@ public class HomePageController {
             {
                 directory = (String) objects.get(1);
             }
-            homePageVBox.setDisable(false);
             loadProject();
             saveProject();
-            System.out.println("Home Page Enabled");
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
