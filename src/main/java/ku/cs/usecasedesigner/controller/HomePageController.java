@@ -293,10 +293,12 @@ public class HomePageController {
         MenuItem resizeItem = new MenuItem("Resize");
         MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem connectItem = new MenuItem("Connect");
+        MenuItem bringToFront = new MenuItem("Bring to Front");
+        MenuItem sendToBack = new MenuItem("Send to Back");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, bringToFront, sendToBack, deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -354,6 +356,20 @@ public class HomePageController {
             alert.showAndWait();
 
             System.out.println("Connect Clicked");
+        });
+
+        // Set the action for bring to front menu item
+        bringToFront.setOnAction(e -> {
+            System.out.println("Bring to Front Clicked");
+            designPane.getChildren().remove(node);
+            designPane.getChildren().add(node);
+        });
+
+        // Set the action for send to back menu item
+        sendToBack.setOnAction(e -> {
+            System.out.println("Send to Back Clicked");
+            designPane.getChildren().remove(node);
+            designPane.getChildren().add(0, node);
         });
 
         // Set the action for delete menu item
@@ -673,6 +689,9 @@ public class HomePageController {
             Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
             Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
             String text = connection.getLabel();
+            if (text.equals("none")) {
+                text = "";
+            }
             if (startNode != null && endNode != null) {
                 // Create a new Line object that connects the start and end nodes
                 Line line = getLine(startNode, endNode, text);
@@ -754,6 +773,11 @@ public class HomePageController {
                             break;
                         }
                     }
+                }
+
+                if (text.isEmpty())
+                {
+                    text = "none";
                 }
 
                 // Save connection to the list
