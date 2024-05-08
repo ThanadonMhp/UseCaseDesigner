@@ -724,7 +724,6 @@ public class HomePageController {
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
         useCaseSystemList.addSystem(useCaseSystem);
-        useCaseSystemListDataSource.writeData(useCaseSystemList);
 
         // Save position and symbol
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
@@ -787,6 +786,7 @@ public class HomePageController {
         });
 
         // Write data to CSV
+        useCaseSystemListDataSource.writeData(useCaseSystemList);
         positionListDataSource.writeData(positionList);
         symbolListDataSource.writeData(symbolList);
         connectionListDataSource.writeData(connectionList);
