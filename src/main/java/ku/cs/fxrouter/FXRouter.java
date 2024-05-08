@@ -128,6 +128,11 @@ public class FXRouter {
         window.setScene(scene);
         window.show();
         routeAnimation(resource);
+
+        //when close the window, close the application
+        window.setOnCloseRequest(e ->{
+            System.exit(0);
+        });
     }
 
     public static void popupNewRoute(RouteScene route) throws IOException {
@@ -150,6 +155,7 @@ public class FXRouter {
             scene.getStylesheets().clear();
         }
 
+        stage.setTitle(route.windowTitle);
         stage.setScene(scene);
         stage.show();
         routeAnimation(resource);
