@@ -38,7 +38,7 @@ public class HomePageController {
 
     @FXML void initialize() {
         if(FXRouter.getData() != null){
-            // Recieve data from New Project Page
+            // Receive data from New Project Page
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             if (objects.size() > 1)
@@ -633,19 +633,8 @@ public class HomePageController {
                         if (!symbol.getLabel().equals("none")) {
                             label.setText(symbol.getLabel());
                         }
-                    } else if (symbol.getSymbol_type().equals("line")) {
+                    } else {
                         isImage.set(false);
-                        Line line = new Line();
-                        line.setStartX(position.getX_position());
-                        line.setStartY(position.getY_position());
-                        line.setEndX(position.getFit_width());
-                        line.setEndY(position.getFit_height());
-                        line.setRotate(position.getRotation());
-                        designPane.getChildren().add(line);
-
-                        // Make the component draggable and selectable
-                        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
                     }
                 }
             });
