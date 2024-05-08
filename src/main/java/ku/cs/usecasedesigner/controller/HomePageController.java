@@ -310,8 +310,16 @@ public class HomePageController {
                         double newHeight = mouseEvent.getY() + 10;
 
                         if (newWidth > 0 && newHeight > 0) {
-                            ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
-                            ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
+                            if(node instanceof VBox)
+                            {
+                                ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
+                                ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
+                            }
+                            else if(node instanceof StackPane)
+                            {
+                                ((ImageView) ((StackPane) node).getChildren().get(0)).setFitWidth(newWidth);
+                                ((ImageView) ((StackPane) node).getChildren().get(0)).setFitHeight(newHeight);
+                            }
                         }
                     }
                 }
