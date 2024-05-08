@@ -366,6 +366,19 @@ public class HomePageController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 System.out.println("Item Deleted");
+
+                // If node is  a line, remove the label as well
+                if (node instanceof Line) {
+                    for (Node child : designPane.getChildren()) {
+                        if (child instanceof Label) {
+                            if (child.getLayoutX() == (((Line) node).getStartX() + ((Line) node).getEndX()) / 2 && child.getLayoutY() == (((Line) node).getStartY() + ((Line) node).getEndY()) / 2) {
+                                designPane.getChildren().remove(child);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 designPane.getChildren().remove(node);
                 System.out.println("Item Removed");
             }
@@ -376,6 +389,7 @@ public class HomePageController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 node.setOnMouseDragged(null);
+                node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
                 MakeDraggable(node);
             }
@@ -387,6 +401,7 @@ public class HomePageController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
                     System.out.println("Item Right Clicked");
+                    node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
             }
@@ -444,8 +459,19 @@ public class HomePageController {
 
     private void createLink(Node startNode, Node endNode) {
         System.out.println("Creating Link");
+        //Create a pop to get the text for the link
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Enter Link Text");
+        dialog.setHeaderText("Please enter the text for the link:");
+        dialog.setContentText("Text:");
+        // get text from the popup
+        Optional<String> result = dialog.showAndWait();
+        String text = "";
+        if (result.isPresent()) {
+            text = result.get();
+        }
         // Create a new line
-        Line line = getLine(startNode, endNode);
+        Line line = getLine(startNode, endNode, text);
         designPane.getChildren().add(line);
 
         // Make the component draggable
@@ -454,7 +480,7 @@ public class HomePageController {
         MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    private static Line getLine(Node startNode, Node endNode) {
+    private static Line getLine(Node startNode, Node endNode, String text) {
         Line line = new Line();
 
         // Bind the start and end points of the line to the center points of the nodes
@@ -462,6 +488,14 @@ public class HomePageController {
         line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInLocal().getHeight() / 2));
         line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
         line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
+
+        // Creare a label and postion it in the middle of the line
+        Label label = new Label(text);
+        label.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2));
+        label.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2));
+
+        // Add the label to the design pane
+        ((Pane) startNode.getParent()).getChildren().add(label);
 
         return line;
     }
@@ -617,9 +651,10 @@ public class HomePageController {
             // Find the start and end nodes of the connection from position in connection
             Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
             Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
+            String text = connection.getLabel();
             if (startNode != null && endNode != null) {
                 // Create a new Line object that connects the start and end nodes
-                Line line = getLine(startNode, endNode);
+                Line line = getLine(startNode, endNode, text);
                 designPane.getChildren().add(line);
 
                 // Make the component draggable and selectable
@@ -688,8 +723,20 @@ public class HomePageController {
             }
             else if (node instanceof Line)
             {
+                // Set the text for the connection
+                String text = "";
+                // Search for the text above the line's middle point
+                for (Node child : designPane.getChildren()) {
+                    if (child instanceof Label) {
+                        if (child.getLayoutX() == (((Line) node).getStartX() + ((Line) node).getEndX()) / 2 && child.getLayoutY() == (((Line) node).getStartY() + ((Line) node).getEndY()) / 2) {
+                            text = ((Label) child).getText();
+                            break;
+                        }
+                    }
+                }
+
                 // Save connection to the list
-                Connection connection = new Connection(((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY()); // Create a new Connection object                connectionList.addConnection(connection);
+                Connection connection = new Connection(((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), text); // Create a new Connection object                connectionList.addConnection(connection);
                 connectionList.addConnection(connection);
             }
         });

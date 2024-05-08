@@ -52,7 +52,8 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                             Double.parseDouble(data[1]), // startX
                             Double.parseDouble(data[2]), // startY
                             Double.parseDouble(data[3]), // endX
-                            Double.parseDouble(data[4])  // endY
+                            Double.parseDouble(data[4]), // endY
+                            data[5] // label
                     );
                     connectionList.addConnection(connection);
                 }
@@ -146,6 +147,7 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 + connection.getStartX() + ","
                 + connection.getStartY() + ","
                 + connection.getEndX() + ","
-                + connection.getEndY();
+                + connection.getEndY() + ","
+                + connection.getLabel();
     }
 }
