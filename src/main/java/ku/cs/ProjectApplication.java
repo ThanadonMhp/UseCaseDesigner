@@ -14,7 +14,7 @@ public class ProjectApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXRouter.bind(this, stage, 1280,720);
         configRoute();
-//        FXRouter.setTheme(1);
+        FXRouter.setTheme(1);
         FXRouter.goTo("HomePage");
         FXRouter.popup("LandingPage");
    }
