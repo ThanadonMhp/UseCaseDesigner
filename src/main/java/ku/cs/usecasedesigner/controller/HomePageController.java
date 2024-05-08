@@ -497,6 +497,27 @@ public class HomePageController {
         // Add the label to the design pane
         ((Pane) startNode.getParent()).getChildren().add(label);
 
+        // Add a double click event handler to the label
+        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Create a TextInputDialog
+                    TextInputDialog dialog = new TextInputDialog(label.getText());
+                    dialog.setTitle("Change Label");
+                    dialog.setHeaderText("Please enter the new text for the label:");
+                    dialog.setContentText("Label:");
+
+                    // Show the dialog and get the result
+                    Optional<String> result = dialog.showAndWait();
+                    // If a string was entered, use it as the new label text
+                    if (result.isPresent()) {
+                        label.setText(result.get());
+                    }
+                }
+            }
+        });
+
         return line;
     }
 
