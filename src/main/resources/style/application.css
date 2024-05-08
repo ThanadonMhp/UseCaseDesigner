@@ -15,6 +15,7 @@
 }
 #anchorPane {
     -fx-background-position: fixed;
+    -fx-background-color: #e2e8f0;
 }
 
 .dragicon {
@@ -79,25 +80,27 @@
     -fx-border-color: #00934C;
     -fx-border-style: solid;
 }
-.new-button{
+#newButton{
     -fx-background-color: #FFCCA7;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
-.open-button{
+#openButton{
     -fx-background-color: #D09E72;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
 }
 
-.select-button{
+#selectButton{
     -fx-background-color: #16A34A;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
+    -fx-text-fill: white;
 }
 
-.confirm-button{
+#confirmButton{
     -fx-background-color: #006ADC;
     -fx-background-radius: 50;
     -fx-border-radius: 50;
+    -fx-text-fill: white;
 }

@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -113,13 +114,14 @@ public class FXRouter {
     public static void loadNewRoute(RouteScene route) throws IOException {
         currentRoute = route;
         String scenePath = "/" + route.scenePath;
-        Parent resource = (Parent)FXMLLoader.load((new Object() {
-        }).getClass().getResource(scenePath));
+        Parent resource = (Parent)FXMLLoader.load((new Object() {}).getClass().getResource(scenePath));
         Scene scene = new Scene(resource, route.sceneWidth, route.sceneHeight);
 
         if(themeType == 1){
             scene.getStylesheets().clear();
             scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
+        } else {
+            scene.getStylesheets().clear();
         }
 
         window.setTitle(route.windowTitle);
@@ -133,24 +135,28 @@ public class FXRouter {
         String scenePath = "/" + route.scenePath;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation((new Object() {}).getClass().getResource(scenePath));
-        Parent resource = (Parent)fxmlLoader.load((new Object() {
-        }).getClass().getResource(scenePath));
+        Parent resource = (Parent)fxmlLoader.load((new Object() {}).getClass().getResource(scenePath));
 
         Stage stage = new Stage();
         Scene scene = new Scene(resource);
-        stage.initStyle(StageStyle.UNDECORATED);
+
+        // Set the modality
+        stage.initModality(Modality.APPLICATION_MODAL);
 
         if (themeType == 1){
             scene.getStylesheets().clear();
             scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
-        } else if (themeType == 2) {
+        } else {
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/kawaiiMode.css").toExternalForm());
         }
 
         stage.setScene(scene);
         stage.show();
         routeAnimation(resource);
+
+        stage.setOnCloseRequest(e ->{
+            window.close();
+        });
     }
 
 
@@ -196,6 +202,15 @@ public class FXRouter {
 
     public static Object getData() {
         return currentRoute.data;
+    }
+
+    public static void setData(Object data) {
+        if (currentRoute != null) {
+            currentRoute.data = data;
+        }
+    }
+
+    public static void closePopup() {
     }
 
     public static class RouteScene {
