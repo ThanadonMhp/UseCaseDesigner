@@ -2,10 +2,10 @@ package ku.cs.usecasedesigner.models;
 
 public class Subsystem {
     private String type;
-    private double subsystem_id;
+    private int subsystem_id;
     private String subsystem_name;
-    private double system_id;
-    public Subsystem(double subsystem_id, String subsystem_name, double system_id) {
+    private int system_id;
+    public Subsystem(int subsystem_id, String subsystem_name, int system_id) {
         this.type = "subsystem";
         this.subsystem_id = subsystem_id;
         this.subsystem_name = subsystem_name;
@@ -24,7 +24,7 @@ public class Subsystem {
         return system_id;
     }
 
-    public void setSubsystem_id(double subsystem_id) {
+    public void setSubsystem_id(int subsystem_id) {
         this.subsystem_id = subsystem_id;
     }
 
@@ -32,16 +32,16 @@ public class Subsystem {
         this.subsystem_name = subsystem_name;
     }
 
-    public void setSystem_id(double system_id) {
+    public void setSystem_id(int system_id) {
         this.system_id = system_id;
     }
 
-    public void setSubsystem(String subsystem_name, double system_id) {
+    public void setSubsystem(String subsystem_name, int system_id) {
         this.subsystem_name = subsystem_name;
         this.system_id = system_id;
     }
 
-    public void setSubsystem(double subsystem_id, String subsystem_name, double system_id) {
+    public void setSubsystem(int subsystem_id, String subsystem_name, int system_id) {
         this.subsystem_id = subsystem_id;
         this.subsystem_name = subsystem_name;
         this.system_id = system_id;

@@ -49,10 +49,12 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
                 String[] data = line.split(",");
                 if (data[0].trim().equals("symbol")) {
                     Symbol symbol = new Symbol(
-                            Double.parseDouble(data[1]), // symbol_id
-                            Double.parseDouble(data[2]), // subsystem_id
+                            Integer.parseInt(data[1]), // symbol_id
+                            Integer.parseInt(data[2]), // subsystem_id
                             data[3], // symbol_type
-                            data[4] // label
+                            Integer.parseInt(data[4]), // usecase_id
+                            data[4], // label
+                            data[5] // description
                     );
                     symbolList.addSymbol(symbol);
                 }
@@ -141,6 +143,8 @@ public class SymbolListFileDataSource implements DataSource<SymbolList>, ManageD
                 + symbol.getSymbol_id() + ","
                 + symbol.getSubsystem_id() + ","
                 + symbol.getSymbol_type() + ","
-                + symbol.getLabel();
+                + symbol.getUsecase_id() + ","
+                + symbol.getLabel() + ","
+                + symbol.getDescription();
     }
 }

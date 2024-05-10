@@ -39,8 +39,8 @@ public class PositionList {
         return null;
     }
 
-    public double findLastPositionId() {
-        double lastPositionId = 0;
+    public int findLastPositionId() {
+        int lastPositionId = 0;
         for (Position position : positionList) {
             if (position.getPosition_id() > lastPositionId) {
                 lastPositionId = position.getPosition_id();
