@@ -62,7 +62,7 @@ public class HomePageController {
         ellipse.setStyle("-fx-fill: transparent; -fx-stroke: black;");
 
         // Add hidden label to the system
-        Label type = new Label("usecase");
+        Label type = new Label("useCase");
         type.setVisible(false);
 
         // Add an oval and label to StackPane
@@ -514,7 +514,7 @@ public class HomePageController {
         line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
         line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
 
-        // Creare a label and postion it in the middle of the line
+        // Create a label and position it in the middle of the line
         Label label = new Label(text);
         label.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2));
         label.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2));
