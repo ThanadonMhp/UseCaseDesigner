@@ -54,7 +54,7 @@ public class HomePageController {
         }
     }
 
-    public void DrawUseCase(double width, double height, double layoutX, double layoutY, String label) {
+    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label) {
         // Draw a system
         Ellipse ellipse = new Ellipse();
         ellipse.setRadiusX(width);
@@ -76,11 +76,11 @@ public class HomePageController {
         designPane.getChildren().add(stackPane);
 
         // Make the component draggable and selectable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void DrawActor(double width, double height, double layoutX, double layoutY, String label) {
+    public void drawActor(double width, double height, double layoutX, double layoutY, String label) {
         // Draw an actor
         ImageView imageView = new ImageView();
         imageView.setImage(actorImageView.getImage());
@@ -102,11 +102,11 @@ public class HomePageController {
         designPane.getChildren().add(vbox);
 
         // Make the component draggable and selectable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void DrawSystem(double width, double height, double layoutX, double layoutY, String label) {
+    public void drawSystem(double width, double height, double layoutX, double layoutY, String label) {
         // Draw a system
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(width);
@@ -128,11 +128,11 @@ public class HomePageController {
         designPane.getChildren().add(vbox);
 
         // Make the component draggable and selectable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void DrawLine(double startX, double startY, double endX, double endY) {
+    public void drawLine(double startX, double startY, double endX, double endY) {
         // Create a new line
         Line line = new Line();
         line.setStartX(startX);
@@ -142,11 +142,11 @@ public class HomePageController {
         designPane.getChildren().add(line);
 
         // Make the component draggable and selectable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void DrawArrow(double startX, double startY, double endX, double endY) {
+    public void drawArrow(double startX, double startY, double endX, double endY) {
         // Create a new line with arrow head
         Line line = new Line();
         line.setStartX(startX);
@@ -180,11 +180,11 @@ public class HomePageController {
         designPane.getChildren().addAll(line, arrowHead, arrowHead2);
 
         // Make the component draggable and selectable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public String GetTextInput() {
+    public String getTextInput() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Enter Label");
         dialog.setHeaderText("Please enter a label for the object:");
@@ -216,7 +216,7 @@ public class HomePageController {
         return null;
     }
 
-    public void OvalDragDetected(MouseEvent mouseEvent) {
+    public void ovalDragDetected(MouseEvent mouseEvent) {
         System.out.println("Oval Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -224,7 +224,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void ActorDragDetected(MouseEvent mouseEvent) {
+    public void actorDragDetected(MouseEvent mouseEvent) {
         System.out.println("Actor Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -232,7 +232,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void SystemDragDetected(MouseEvent mouseEvent) {
+    public void systemDragDetected(MouseEvent mouseEvent) {
         System.out.println("System Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -240,7 +240,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void LineDragDetected(MouseEvent mouseEvent) {
+    public void lineDragDetected(MouseEvent mouseEvent) {
         System.out.println("Line Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -248,7 +248,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void ArrowDragDetected(MouseEvent mouseEvent) {
+    public void arrowDragDetected(MouseEvent mouseEvent) {
         System.out.println("Arrow Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -256,7 +256,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    private void MakeDraggable(Node node) {
+    private void makeDraggable(Node node) {
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getLayoutX();
             startY = e.getSceneY() - node.getLayoutY();
@@ -270,7 +270,7 @@ public class HomePageController {
         });
     }
 
-    private void MakeSelectable(Node node) {
+    private void makeSelectable(Node node) {
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
@@ -392,7 +392,7 @@ public class HomePageController {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
-                MakeDraggable(node);
+                makeDraggable(node);
             }
         });
 
@@ -442,25 +442,25 @@ public class HomePageController {
         }
     }
 
-    public void PaneDragOver(DragEvent dragEvent) {
+    public void paneDragOver(DragEvent dragEvent) {
         if(dragEvent.getDragboard().hasString()) {
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
     }
 
-    public void PaneDragDropped(DragEvent dragEvent) throws IOException {
+    public void paneDragDropped(DragEvent dragEvent) throws IOException {
         if(dragEvent.getDragboard().hasString()) {
             // Draw a component based on the string
             if(dragEvent.getDragboard().getString().equals("Oval")) {
-                DrawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+                drawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
-                DrawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+                drawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("System")) {
-                DrawSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+                drawSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                DrawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+                drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
-                DrawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+                drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             }
 
             if (!designPane.getChildren().isEmpty()) {guideLabel.setVisible(false); }
@@ -500,9 +500,9 @@ public class HomePageController {
         designPane.getChildren().add(line);
 
         // Make the component draggable
-        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
         // Make the component selectable
-        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
     private static Line getLine(Node startNode, Node endNode, String text) {
@@ -631,8 +631,8 @@ public class HomePageController {
                             designPane.getChildren().add(stackPane);
 
                             // Make the component draggable and selectable
-                            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                            MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                            makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                            makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
 
                             isImage.set(false);
                         }
@@ -671,8 +671,8 @@ public class HomePageController {
                 designPane.getChildren().add(vbox);
 
                 // Make the component draggable and selectable
-                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
             }
         });
 
@@ -695,8 +695,8 @@ public class HomePageController {
                 designPane.getChildren().add(line);
 
                 // Make the component draggable and selectable
-                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
             }
         });
 
