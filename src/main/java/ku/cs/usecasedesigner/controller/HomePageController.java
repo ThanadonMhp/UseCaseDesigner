@@ -11,7 +11,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
@@ -52,176 +54,169 @@ public class HomePageController {
         }
     }
 
-    public void PaneDragOver(DragEvent dragEvent) {
-        if(dragEvent.getDragboard().hasString()) {
-            dragEvent.acceptTransferModes(TransferMode.ANY);
-        }
+    public void DrawUseCase(double width, double height, double layoutX, double layoutY, String label) {
+        // Draw a system
+        Ellipse ellipse = new Ellipse();
+        ellipse.setRadiusX(width);
+        ellipse.setRadiusY(height);
+        ellipse.setStyle("-fx-fill: transparent; -fx-stroke: black;");
+
+        // Add hidden label to the system
+        Label type = new Label("usecase");
+        type.setVisible(false);
+
+        // Add an oval and label to StackPane
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(ellipse, new Label(label), type);
+        stackPane.setAlignment(Pos.CENTER);
+        stackPane.setLayoutX(layoutX);
+        stackPane.setLayoutY(layoutY);
+
+        // Add StackPane to designPane
+        designPane.getChildren().add(stackPane);
+
+        // Make the component draggable and selectable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void PaneDragDropped(DragEvent dragEvent) throws IOException {
-        if(dragEvent.getDragboard().hasString()) {
+    public void DrawActor(double width, double height, double layoutX, double layoutY, String label) {
+        // Draw an actor
+        ImageView imageView = new ImageView();
+        imageView.setImage(actorImageView.getImage());
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
 
-            ImageView imageView = new ImageView();
-            // Set the size and position of the component
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(90);
+        // Add hidden label to the system
+        Label type = new Label("actor");
+        type.setVisible(false);
 
-            Label label = new Label();
+        // Add an actor and label to VBox
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(imageView, type , new Label(label));
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setLayoutX(layoutX);
+        vbox.setLayoutY(layoutY);
 
-            // Set the image of the component
-            if(dragEvent.getDragboard().getString().equals("Oval")) {
-                imageView.setImage(ovalImageView.getImage());
-                System.out.println("Oval Dropped");
+        // Add VBox to designPane
+        designPane.getChildren().add(vbox);
 
-                // Create a TextInputDialog
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Enter Label");
-                dialog.setHeaderText("Please enter a label for the object:");
-                dialog.setContentText("Label:");
-
-                // Show the dialog and get the result
-                Optional<String> result = dialog.showAndWait();
-                // If a string was entered, use it as the label
-                if (result.isPresent()) {
-                    String enteredLabel = result.get();
-                    while (enteredLabel.isEmpty()) {
-                        // Show error message
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Dialog");
-                        alert.setHeaderText("Input Error");
-                        alert.setContentText("Please enter a non-empty label!");
-
-                        alert.showAndWait();
-
-                        // Re-prompt the user
-                        result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            enteredLabel = result.get();
-                        }
-                    }
-                    label.setText(enteredLabel);
-                }
-
-                // Put imageview and label into stackPane
-                StackPane stackPane = new StackPane();
-                stackPane.getChildren().addAll(imageView, label);
-                stackPane.setAlignment(Pos.CENTER);
-                stackPane.setLayoutX(dragEvent.getX() - 75);
-                stackPane.setLayoutY(dragEvent.getY() - 75);
-
-                designPane.getChildren().add(stackPane);
-                // Make the component draggable
-                MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                // Make the component selectable
-                MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-
-                // Check if designPane is not empty
-                if (!designPane.getChildren().isEmpty()) {
-                    // Make guideLabel invisible
-                    guideLabel.setVisible(false);
-                }
-
-                return;
-
-            } else if(dragEvent.getDragboard().getString().equals("Actor")) {
-                imageView.setImage(actorImageView.getImage());
-                System.out.println("Actor Dropped");
-
-                // Create a TextInputDialog
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Enter Label");
-                dialog.setHeaderText("Please enter a label for the object:");
-                dialog.setContentText("Label:");
-
-                // Show the dialog and get the result
-                Optional<String> result = dialog.showAndWait();
-                // If a string was entered, use it as the label
-                if (result.isPresent()) {
-                    String enteredLabel = result.get();
-                    while (enteredLabel.isEmpty()) {
-                        // Show error message
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Dialog");
-                        alert.setHeaderText("Input Error");
-                        alert.setContentText("Please enter a non-empty label!");
-
-                        alert.showAndWait();
-
-                        // Re-prompt the user
-                        result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            enteredLabel = result.get();
-                        }
-                    }
-                    label.setText(enteredLabel);
-                }
-
-            } else if (dragEvent.getDragboard().getString().equals("System")) {
-                imageView.setImage(systemImageView.getImage());
-                System.out.println("System Dropped");
-
-                // Create a TextInputDialog
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Enter Label");
-                dialog.setHeaderText("Please enter a label for the object:");
-                dialog.setContentText("Label:");
-
-                // Show the dialog and get the result
-                Optional<String> result = dialog.showAndWait();
-                // If a string was entered, use it as the label
-                if (result.isPresent()) {
-                    String enteredLabel = result.get();
-                    while (enteredLabel.isEmpty()) {
-                        // Show error message
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Dialog");
-                        alert.setHeaderText("Input Error");
-                        alert.setContentText("Please enter a non-empty label!");
-
-                        alert.showAndWait();
-
-                        // Re-prompt the user
-                        result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            enteredLabel = result.get();
-                        }
-                    }
-                    label.setText(enteredLabel);
-                }
-
-            } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                imageView.setImage(lineImageView.getImage());
-                System.out.println("Line Dropped");
-
-            } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
-                imageView.setImage(arrowImageView.getImage());
-                System.out.println("Arrow Dropped");
-            }
-
-            // Create a new VBox amd add the image and label
-            VBox vbox = new VBox();
-            vbox.getChildren().addAll(imageView, label);
-            vbox.setAlignment(Pos.CENTER);
-            vbox.setLayoutX(dragEvent.getX() - 75);
-            vbox.setLayoutY(dragEvent.getY() - 75);
-
-            // Add the component to the design pane
-            designPane.getChildren().add(vbox);
-
-            // Make the component draggable
-            MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-            // Make the component selectable
-            MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-
-            // Check if designPane is not empty
-            if (!designPane.getChildren().isEmpty()) {
-                // Make guideLabel invisible
-                guideLabel.setVisible(false);
-            }
-        }
+        // Make the component draggable and selectable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void ovalDragDetected(MouseEvent mouseEvent) {
+    public void DrawSystem(double width, double height, double layoutX, double layoutY, String label) {
+        // Draw a system
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(width);
+        rectangle.setHeight(height);
+        rectangle.setStyle("-fx-fill: transparent; -fx-stroke: black;");
+
+        // Add hidden label to the system
+        Label type = new Label("system");
+        type.setVisible(false);
+
+        // Add an image and label to VBox
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(rectangle, type, new Label(label));
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setLayoutX(layoutX);
+        vbox.setLayoutY(layoutY);
+
+        // Add VBox to designPane
+        designPane.getChildren().add(vbox);
+
+        // Make the component draggable and selectable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+    }
+
+    public void DrawLine(double startX, double startY, double endX, double endY) {
+        // Create a new line
+        Line line = new Line();
+        line.setStartX(startX);
+        line.setStartY(startY);
+        line.setEndX(endX);
+        line.setEndY(endY);
+        designPane.getChildren().add(line);
+
+        // Make the component draggable and selectable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+    }
+
+    public void DrawArrow(double startX, double startY, double endX, double endY) {
+        // Create a new line with arrow head
+        Line line = new Line();
+        line.setStartX(startX);
+        line.setStartY(startY);
+        line.setEndX(endX);
+        line.setEndY(endY);
+
+        // Create a new arrow head
+        double angle = Math.atan2((endY - startY), (endX - startX)) - Math.PI / 2.0;
+        double arrowLength = 10;
+        double arrowWidth = 5;
+        double arrowX = endX + arrowLength * Math.cos(angle);
+        double arrowY = endY + arrowLength * Math.sin(angle);
+        double arrowX1 = arrowX + arrowWidth * Math.cos(angle + Math.PI / 2.0);
+        double arrowY1 = arrowY + arrowWidth * Math.sin(angle + Math.PI / 2.0);
+        double arrowX2 = arrowX + arrowWidth * Math.cos(angle - Math.PI / 2.0);
+        double arrowY2 = arrowY + arrowWidth * Math.sin(angle - Math.PI / 2.0);
+
+        Line arrowHead = new Line();
+        arrowHead.setStartX(endX);
+        arrowHead.setStartY(endY);
+        arrowHead.setEndX(arrowX1);
+        arrowHead.setEndY(arrowY1);
+
+        Line arrowHead2 = new Line();
+        arrowHead2.setStartX(endX);
+        arrowHead2.setStartY(endY);
+        arrowHead2.setEndX(arrowX2);
+        arrowHead2.setEndY(arrowY2);
+
+        designPane.getChildren().addAll(line, arrowHead, arrowHead2);
+
+        // Make the component draggable and selectable
+        MakeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        MakeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+    }
+
+    public String GetTextInput() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Enter Label");
+        dialog.setHeaderText("Please enter a label for the object:");
+        dialog.setContentText("Label:");
+
+        Optional<String> result = dialog.showAndWait();
+        // If a string was entered, use it as the label
+        if (result.isPresent()) {
+            String enteredLabel = result.get();
+            while (enteredLabel.isEmpty()) {
+                // Show error message
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Input Error");
+                alert.setContentText("Please enter a non-empty label!");
+
+                alert.showAndWait();
+
+                // Re-prompt the user
+                result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    enteredLabel = result.get();
+                    return enteredLabel;
+                }
+            }
+            return enteredLabel;
+
+        }
+        return null;
+    }
+
+    public void OvalDragDetected(MouseEvent mouseEvent) {
         System.out.println("Oval Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
@@ -447,8 +442,32 @@ public class HomePageController {
         }
     }
 
-    @FXML
-    private void designPaneMouseClicked(MouseEvent mouseEvent) {
+    public void PaneDragOver(DragEvent dragEvent) {
+        if(dragEvent.getDragboard().hasString()) {
+            dragEvent.acceptTransferModes(TransferMode.ANY);
+        }
+    }
+
+    public void PaneDragDropped(DragEvent dragEvent) throws IOException {
+        if(dragEvent.getDragboard().hasString()) {
+            // Draw a component based on the string
+            if(dragEvent.getDragboard().getString().equals("Oval")) {
+                DrawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+            } else if (dragEvent.getDragboard().getString().equals("Actor")) {
+                DrawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+            } else if (dragEvent.getDragboard().getString().equals("System")) {
+                DrawSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, GetTextInput());
+            } else if (dragEvent.getDragboard().getString().equals("Line")) {
+                DrawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+            } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
+                DrawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+            }
+
+            if (!designPane.getChildren().isEmpty()) {guideLabel.setVisible(false); }
+        }
+    }
+
+    @FXML private void designPaneMouseClicked(MouseEvent mouseEvent) {
         if (startNodeForLink != null) {
             System.out.println("Creating Link");
             Node endNodeForLink = null;
@@ -565,8 +584,7 @@ public class HomePageController {
         saveProject();
     }
 
-    public void loadProject()
-    {
+    public void loadProject() {
         // Clear the design pane
         designPane.getChildren().clear();
 
@@ -691,8 +709,7 @@ public class HomePageController {
         System.out.println("Project Opened");
     }
 
-    public void saveProject()
-    {
+    public void saveProject() {
         // Create new lists
         UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
         SymbolList symbolList = new SymbolList();
@@ -716,13 +733,12 @@ public class HomePageController {
                 positionList.addPosition(position);
 
                 // Save symbol to the list
-                String label = ((Label) ((VBox) node).getChildren().get(1)).getText();
+                String label = ((Label) ((VBox) node).getChildren().get(2)).getText();
                 if(label.isEmpty())
                 {
                     label = "none";
                 }
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((VBox) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),0,label,"description");
-                symbolList.addSymbol(symbol);
+
             }
             else if (node instanceof StackPane)
             {
@@ -736,7 +752,7 @@ public class HomePageController {
                 {
                     label = "none";
                 }
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),0,label,"description");
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),label);
                 symbolList.addSymbol(symbol);
             }
             else if (node instanceof Line)

@@ -54,7 +54,7 @@
           <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0" style="-fx-background-color: white;">
             <children>
               <!-- ImageView for oval.jpg with drag-and-drop functionality -->
-              <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
+              <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#OvalDragDetected" pickOnBounds="true" preserveRatio="true">
                 <image>
                   <Image url="@../../../images/oval.png" />
                 </image>
