@@ -27,24 +27,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
 
-    @FXML private ImageView ovalImageView, actorImageView, systemImageView, lineImageView, arrowImageView;
+    @FXML
+    private ImageView ovalImageView, actorImageView, systemImageView, lineImageView, arrowImageView;
 
-    @FXML private Pane designPane;
+    @FXML
+    private Pane designPane;
 
-    @FXML private Label guideLabel;
+    @FXML
+    private Label guideLabel;
 
     private double startX;
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
 
-    @FXML void initialize() {
-        if(FXRouter.getData() != null){
+    @FXML
+    void initialize() {
+        if (FXRouter.getData() != null) {
             // Receive data from New Project Page
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            if (objects.size() > 1)
-            {
+            if (objects.size() > 1) {
                 directory = (String) objects.get(1);
             }
             loadProject();
@@ -93,7 +96,7 @@ public class HomePageController {
 
         // Add an actor and label to VBox
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(imageView, type , new Label(label));
+        vbox.getChildren().addAll(imageView, type, new Label(label));
         vbox.setAlignment(Pos.CENTER);
         vbox.setLayoutX(layoutX);
         vbox.setLayoutY(layoutY);
@@ -297,13 +300,10 @@ public class HomePageController {
                         double newHeight = mouseEvent.getY() + 10;
 
                         if (newWidth > 0 && newHeight > 0) {
-                            if(node instanceof VBox)
-                            {
+                            if (node instanceof VBox) {
                                 ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
                                 ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
-                            }
-                            else if(node instanceof StackPane)
-                            {
+                            } else if (node instanceof StackPane) {
                                 ((ImageView) ((StackPane) node).getChildren().get(0)).setFitWidth(newWidth);
                                 ((ImageView) ((StackPane) node).getChildren().get(0)).setFitHeight(newHeight);
                             }
@@ -323,7 +323,7 @@ public class HomePageController {
                     if (mouseEvent.isPrimaryButtonDown()) {
                         double newRotate = mouseEvent.getX() + 10;
                         if (newRotate > 0) {
-                            ((ImageView) ((VBox) node).getChildren().get(0)).setRotate(newRotate);
+                            ((VBox) node).getChildren().get(0).setRotate(newRotate);
                         }
                     }
                 }
@@ -400,7 +400,7 @@ public class HomePageController {
         node.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+                if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                     System.out.println("Item Right Clicked");
                     node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
@@ -418,8 +418,7 @@ public class HomePageController {
 
         Label finalLabel = label;
 
-        if (label != null)
-        {
+        if (label != null) {
             label.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -443,15 +442,15 @@ public class HomePageController {
     }
 
     public void paneDragOver(DragEvent dragEvent) {
-        if(dragEvent.getDragboard().hasString()) {
+        if (dragEvent.getDragboard().hasString()) {
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
     }
 
     public void paneDragDropped(DragEvent dragEvent) throws IOException {
-        if(dragEvent.getDragboard().hasString()) {
+        if (dragEvent.getDragboard().hasString()) {
             // Draw a component based on the string
-            if(dragEvent.getDragboard().getString().equals("Oval")) {
+            if (dragEvent.getDragboard().getString().equals("Oval")) {
                 drawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
                 drawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
@@ -463,11 +462,14 @@ public class HomePageController {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             }
 
-            if (!designPane.getChildren().isEmpty()) {guideLabel.setVisible(false); }
+            if (!designPane.getChildren().isEmpty()) {
+                guideLabel.setVisible(false);
+            }
         }
     }
 
-    @FXML private void designPaneMouseClicked(MouseEvent mouseEvent) {
+    @FXML
+    private void designPaneMouseClicked(MouseEvent mouseEvent) {
         if (startNodeForLink != null) {
             System.out.println("Creating Link");
             Node endNodeForLink = null;
@@ -552,7 +554,7 @@ public class HomePageController {
         FXRouter.popup("NewProjectPage");
     }
 
-    public void handleOpenMenuItem(ActionEvent actionEvent){
+    public void handleOpenMenuItem(ActionEvent actionEvent) {
         System.out.println("Project Opening");
 
         // Create a file chooser
@@ -656,7 +658,7 @@ public class HomePageController {
                     }
                 }
             });
-            if (isImage.get()){
+            if (isImage.get()) {
                 // Set the size and position of the component
                 imageView.setFitWidth(position.getFit_width());
                 imageView.setFitHeight(position.getFit_height());
@@ -677,7 +679,7 @@ public class HomePageController {
         });
 
         // Load connections
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         ConnectionList connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
 
         // Recreate each connection
@@ -717,46 +719,39 @@ public class HomePageController {
         ConnectionList connectionList = new ConnectionList();
 
         // Save project name
-        DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory , projectName + ".csv");
+        DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
         useCaseSystemList.addSystem(useCaseSystem);
 
         // Save position and symbol
-        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory , projectName + ".csv");
-        DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory , projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory , projectName + ".csv");
+        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         designPane.getChildren().forEach(node -> {
-            if (node instanceof VBox)
-            {
+            if (node instanceof VBox) {
                 // Save position to the list
                 Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(), ((VBox) node).getChildren().get(0).getRotate());
                 positionList.addPosition(position);
 
                 // Save symbol to the list
                 String label = ((Label) ((VBox) node).getChildren().get(2)).getText();
-                if(label.isEmpty())
-                {
+                if (label.isEmpty()) {
                     label = "none";
                 }
 
-            }
-            else if (node instanceof StackPane)
-            {
+            } else if (node instanceof StackPane) {
                 // Save position to the list
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitHeight(), ((ImageView) ((StackPane) node).getChildren().get(0)).getRotate());
+                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitHeight(), ((StackPane) node).getChildren().get(0).getRotate());
                 positionList.addPosition(position);
 
                 // Save symbol to the list
                 String label = ((Label) ((StackPane) node).getChildren().get(1)).getText();
-                if(label.isEmpty())
-                {
+                if (label.isEmpty()) {
                     label = "none";
                 }
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1),0, label, "none");
+                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1), 0, label, "none");
                 symbolList.addSymbol(symbol);
-            }
-            else if (node instanceof Line)
-            {
+            } else if (node instanceof Line) {
                 // Set the text for the connection
                 String text = "";
                 // Search for the text above the line's middle point
@@ -769,8 +764,7 @@ public class HomePageController {
                     }
                 }
 
-                if (text.isEmpty())
-                {
+                if (text.isEmpty()) {
                     text = "none";
                 }
 
