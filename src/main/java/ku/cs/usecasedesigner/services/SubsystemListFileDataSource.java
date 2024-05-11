@@ -49,9 +49,9 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
                 String[] data = line.split(",");
                 if (data[0].trim().equals("subsystem")) {
                     Subsystem subsystem = new Subsystem(
-                            Double.parseDouble(data[1]), // subsystem_id
+                            Integer.parseInt(data[1]), // subsystem_id
                             data[2], // subsystem_name
-                            Double.parseDouble(data[3]) // system_id
+                            Integer.parseInt(data[3]) // system_id
                     );
                     subsystemList.addSubsystem(subsystem);
                 }

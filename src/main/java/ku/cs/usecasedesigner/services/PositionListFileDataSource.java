@@ -49,8 +49,8 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
                 String[] data = line.split(",");
                 if (data[0].trim().equals("position")) {
                     Position position = new Position(
-                            Double.parseDouble(data[1]), // position_id
-                            Double.parseDouble(data[2]), // symbol_id
+                            Integer.parseInt(data[1]), // position_id
+                            Integer.parseInt(data[2]), // symbol_id
                             Double.parseDouble(data[3]), // x_position
                             Double.parseDouble(data[4]), // y_position
                             Double.parseDouble(data[5]), // fit_width
