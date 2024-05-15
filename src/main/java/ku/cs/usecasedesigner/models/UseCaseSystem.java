@@ -1,38 +1,28 @@
 package ku.cs.usecasedesigner.models;
 
 public class UseCaseSystem {
-    private String type;
-    private double system_id;
-    private String system_name;
-    public UseCaseSystem(double system_id, String system_name) {
-        this.type = "system";
-        this.system_id = system_id;
-        this.system_name = system_name;
+    private double systemID;
+    private String systemName;
+
+    public UseCaseSystem(double systemID, String systemName) {
+        this.systemID = systemID;
+        this.systemName = systemName;
     }
 
-    public double getSystem_id() {
-        return system_id;
+    public double getSystemID() {
+        return systemID;
     }
 
-    public String getSystem_name() {
-        return system_name;
+    public String getSystemName() {
+        return systemName;
     }
 
-    public void setSystem_id(double system_id) {
-        this.system_id = system_id;
+    public void setSystemID(double systemID) {
+        this.systemID = systemID;
     }
 
-    public void setSystem_name(String system_name) {
-        this.system_name = system_name;
-    }
-
-    public void setSystem(String system_name) {
-        this.system_name = system_name;
-    }
-
-    public void setSystem(double system_id, String system_name) {
-        this.system_id = system_id;
-        this.system_name = system_name;
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
     }
 
 }

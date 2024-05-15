@@ -1,49 +1,48 @@
 package ku.cs.usecasedesigner.models;
 
 public class Subsystem {
-    private String type;
-    private int subsystem_id;
-    private String subsystem_name;
-    private int system_id;
-    public Subsystem(int subsystem_id, String subsystem_name, int system_id) {
-        this.type = "subsystem";
-        this.subsystem_id = subsystem_id;
-        this.subsystem_name = subsystem_name;
-        this.system_id = system_id;
+    private int subSystemID;
+    private int systemID;
+    private String subSystemName;
+
+    public Subsystem(int subSystemID, int systemID, String subSystemName) {
+        this.subSystemID = subSystemID;
+        this.systemID = systemID;
+        this.subSystemName = subSystemName;
     }
 
-    public double getSubsystem_id() {
-        return subsystem_id;
+    public int getSubSystemID() {
+        return subSystemID;
     }
 
-    public String getSubsystem_name() {
-        return subsystem_name;
+    public int getSystemID() {
+        return systemID;
     }
 
-    public double getSystem_id() {
-        return system_id;
+    public String getSubSystemName() {
+        return subSystemName;
     }
 
-    public void setSubsystem_id(int subsystem_id) {
-        this.subsystem_id = subsystem_id;
+    public void setSubSystemID(int subSystemID) {
+        this.subSystemID = subSystemID;
     }
 
-    public void setSubsystem_name(String subsystem_name) {
-        this.subsystem_name = subsystem_name;
+    public void setSystemID(int systemID) {
+        this.systemID = systemID;
     }
 
-    public void setSystem_id(int system_id) {
-        this.system_id = system_id;
+    public void setSubSystemName(String subSystemName) {
+        this.subSystemName = subSystemName;
     }
 
-    public void setSubsystem(String subsystem_name, int system_id) {
-        this.subsystem_name = subsystem_name;
-        this.system_id = system_id;
+    public void setSubSystem(int systemID, String subSystemName) {
+        this.systemID = systemID;
+        this.subSystemName = subSystemName;
     }
 
-    public void setSubsystem(int subsystem_id, String subsystem_name, int system_id) {
-        this.subsystem_id = subsystem_id;
-        this.subsystem_name = subsystem_name;
-        this.system_id = system_id;
+    public void setSubSystem(int subSystemID, int systemID, String subSystemName) {
+        this.subSystemID = subSystemID;
+        this.systemID = systemID;
+        this.subSystemName = subSystemName;
     }
 }
