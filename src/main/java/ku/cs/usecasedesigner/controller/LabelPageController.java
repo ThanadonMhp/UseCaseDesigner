@@ -18,11 +18,6 @@ public class LabelPageController {
 
     @FXML private TextField labelTextField;
 
-    @FXML void initialize() {
-        String text = (String) FXRouter.getData();
-        labelText.setText(text);
-    }
-
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         if (labelTextField.getText().isEmpty()) {
             errorText.setText("Please enter a label.");
