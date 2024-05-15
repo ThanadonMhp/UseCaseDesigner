@@ -44,16 +44,16 @@ public class HomePageController {
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
-            // Receive data from New Project Page
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            projectName = (String) objects.get(0);
-            if (objects.size() > 1) {
-                directory = (String) objects.get(1);
+            if (objects.get(0).equals("loadProject")) {
+                // Load the project
+                projectName = (String) objects.get(1);
+                directory = (String) objects.get(2);
+                loadProject();
+                saveProject();
+                System.out.println("Project Name: " + projectName);
+                System.out.println("Directory: " + directory);
             }
-            loadProject();
-            saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
         }
     }
 
@@ -187,36 +187,14 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public String getTextInput() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter Label");
-        dialog.setHeaderText("Please enter a label for the object:");
-        dialog.setContentText("Label:");
+    public String getTextInput() throws IOException {
+        // Open the label page
+        FXRouter.popup("LabelPage", "Enter Label");
 
-        Optional<String> result = dialog.showAndWait();
-        // If a string was entered, use it as the label
-        if (result.isPresent()) {
-            String enteredLabel = result.get();
-            while (enteredLabel.isEmpty()) {
-                // Show error message
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialog");
-                alert.setHeaderText("Input Error");
-                alert.setContentText("Please enter a non-empty label!");
-
-                alert.showAndWait();
-
-                // Re-prompt the user
-                result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    enteredLabel = result.get();
-                    return enteredLabel;
-                }
-            }
-            return enteredLabel;
-
-        }
-        return null;
+        // Get the label from the label page
+        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+        String label = (String) objects.get(1);
+        return label;
     }
 
     public void ovalDragDetected(MouseEvent mouseEvent) {
