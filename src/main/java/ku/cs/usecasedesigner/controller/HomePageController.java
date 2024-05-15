@@ -281,12 +281,10 @@ public class HomePageController {
         MenuItem resizeItem = new MenuItem("Resize");
         MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem connectItem = new MenuItem("Connect");
-        MenuItem bringToFront = new MenuItem("Bring to Front");
-        MenuItem sendToBack = new MenuItem("Send to Back");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, bringToFront, sendToBack, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -343,20 +341,6 @@ public class HomePageController {
             System.out.println("Connect Clicked");
         });
 
-        // Set the action for bring to front menu item
-        bringToFront.setOnAction(e -> {
-            System.out.println("Bring to Front Clicked");
-            designPane.getChildren().remove(node);
-            designPane.getChildren().add(node);
-        });
-
-        // Set the action for send to back menu item
-        sendToBack.setOnAction(e -> {
-            System.out.println("Send to Back Clicked");
-            designPane.getChildren().remove(node);
-            designPane.getChildren().add(0, node);
-        });
-
         // Set the action for delete menu item
         deleteItem.setOnAction(e -> {
             // Pop up to confirm deletion
@@ -408,7 +392,7 @@ public class HomePageController {
             }
         });
 
-        // Double Click to change the label
+        // Check if label of node is not null
         Label label = null;
         if (node instanceof VBox) {
             label = (Label) ((VBox) node).getChildren().get(1);
