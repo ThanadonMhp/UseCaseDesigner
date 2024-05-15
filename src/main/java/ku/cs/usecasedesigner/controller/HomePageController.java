@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
@@ -187,14 +188,20 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public String getTextInput() throws IOException {
-        // Open the label page
-        FXRouter.popup("LabelPage", "Enter Label");
+    public String getTextInput(){
+        //Create a popup for text input that can't be empty
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Enter Label");
+        dialog.setHeaderText("Please enter the label for the component:");
+        dialog.setContentText("Label:");
 
-        // Get the label from the label page
-        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-        String label = (String) objects.get(1);
-        return label;
+
+        // Get the text from the popup
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            return result.get();
+        }
+        return "";
     }
 
     public void ovalDragDetected(MouseEvent mouseEvent) {
