@@ -23,20 +23,21 @@ public class SubsystemList {
 
     public Subsystem findBySubsystemId(double subsystemId) {
         for (Subsystem subsystem : subsystemList) {
-            if (subsystem.getSubsystem_id() == subsystemId) {
+            if (subsystem.getSubSystemID() == subsystemId) {
                 return subsystem;
             }
         }
         return null;
     }
 
-    public Subsystem findBySystemId(double systemId) {
+    public int findLastSubsystemId() {
+        int lastSubsystemId = 0;
         for (Subsystem subsystem : subsystemList) {
-            if (subsystem.getSystem_id() == systemId) {
-                return subsystem;
+            if (subsystem.getSubSystemID() > lastSubsystemId) {
+                lastSubsystemId = subsystem.getSubSystemID();
             }
         }
-        return null;
+        return lastSubsystemId;
     }
 
 }

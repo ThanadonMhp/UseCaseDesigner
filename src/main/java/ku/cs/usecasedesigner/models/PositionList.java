@@ -23,16 +23,7 @@ public class PositionList {
 
     public Position findByPositionId(double positionId) {
         for (Position position : positionList) {
-            if (position.getPosition_id() == positionId) {
-                return position;
-            }
-        }
-        return null;
-    }
-
-    public Position findBySymbolId(double symbolId) {
-        for (Position position : positionList) {
-            if (position.getSymbol_id() == symbolId) {
+            if (position.getPositionID() == positionId) {
                 return position;
             }
         }
@@ -42,11 +33,13 @@ public class PositionList {
     public int findLastPositionId() {
         int lastPositionId = 0;
         for (Position position : positionList) {
-            if (position.getPosition_id() > lastPositionId) {
-                lastPositionId = position.getPosition_id();
+            if (position.getPositionID() > lastPositionId) {
+                lastPositionId = position.getPositionID();
             }
         }
         return lastPositionId;
     }
+
+
 
 }

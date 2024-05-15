@@ -49,13 +49,12 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
                 String[] data = line.split(",");
                 if (data[0].trim().equals("position")) {
                     Position position = new Position(
-                            Integer.parseInt(data[1]), // position_id
-                            Integer.parseInt(data[2]), // symbol_id
-                            Double.parseDouble(data[3]), // x_position
-                            Double.parseDouble(data[4]), // y_position
-                            Double.parseDouble(data[5]), // fit_width
-                            Double.parseDouble(data[6]), // fit_height
-                            Double.parseDouble(data[7])  // rotation
+                            Integer.parseInt(data[1].trim()), // positionID
+                            Double.parseDouble(data[2].trim()), // xPosition
+                            Double.parseDouble(data[3].trim()), // yPosition
+                            Double.parseDouble(data[4].trim()), // fitWidth
+                            Double.parseDouble(data[5].trim()), // fitHeight
+                            Double.parseDouble(data[6].trim()) // rotation
                     );
                     positionList.addPosition(position);
                 }
@@ -79,18 +78,21 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
 
     @Override
     public void writeData(PositionList positionList) {
-        //Import UseCaseSystemList from CSV
-        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
-        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
-        //Import subsystemList from CSV
-        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
-        SubsystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import symbolList from CSV
-        SymbolListFileDataSource symbolListFileDataSource = new SymbolListFileDataSource(directory, fileName);
-        SymbolList symbolList = symbolListFileDataSource.readData();
+        // Import actorList to file
+        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
+        ActorList actorList = actorListFileDataSource.readData();
         //Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+        //Import subsystemList from CSV
+        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
+        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        //Import useCaseList from CSV
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+        //Import useCaseSystemList from CSV
+        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
+        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -101,23 +103,16 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            //Write UseCaseSystemList to CSV
-            for (UseCaseSystem useCaseSystem :useCaseSystemList.getSystemList()){
-                String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
+            //Write ActorList to CSV
+            for (Actor actor : actorList.getActorList()) {
+                String line = actorListFileDataSource.createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write SubSystemList to CSV
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
-                String line = subsystemListFileDataSource.createLine(subsystem);
-                buffer.append(line);
-                buffer.newLine();
-            }
-
-            //Write SymbolList to CSV
-            for (Symbol symbol : symbolList.getSymbolList()) {
-                String line = symbolListFileDataSource.createLine(symbol);
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -129,9 +124,23 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
                 buffer.newLine();
             }
 
-            //Write ConnectionList to CSV
-            for (Connection connection : connectionList.getConnectionList()) {
-                String line = connectionListFileDataSource.createLine(connection);
+            //Write subSystemList to CSV
+            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+                String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseList to CSV
+            for (UseCase useCase : useCaseList.getSymbolList()) {
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseSystemList to CSV
+            for (UseCaseSystem useCaseSystem :useCaseSystemList.getSystemList()){
+                String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -146,12 +155,11 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
     @Override
     public String createLine(Position position) {
         return "position" + ","
-                + position.getPosition_id() + ","
-                + position.getSymbol_id() + ","
-                + position.getX_position() + ","
-                + position.getY_position() + ","
-                + position.getFit_width() + ","
-                + position.getFit_height() + ","
+                + position.getPositionID() + ","
+                + position.getXPosition() + ","
+                + position.getYPosition() + ","
+                + position.getFitWidth() + ","
+                + position.getFitHeight() + ","
                 + position.getRotation();
     }
 }

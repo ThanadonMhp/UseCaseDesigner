@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
@@ -565,17 +564,17 @@ public class HomePageController {
         positionList = dataSource.readData();
 
         // Get symbol list
-        SymbolList symbolList = new SymbolList();
-        DataSource<SymbolList> dataSourceSymbol = new SymbolListFileDataSource(directory, projectName + ".csv");
-        symbolList = dataSourceSymbol.readData();
+        UseCaseList useCaseList = new UseCaseList();
+        DataSource<UseCaseList> dataSourceSymbol = new UseCaseListFileDataSource(directory, projectName + ".csv");
+        useCaseList = dataSourceSymbol.readData();
 
         // Add symbol to the design pane
-        SymbolList finalSymbolList = symbolList;
+        UseCaseList finalUseCaseList = useCaseList;
         positionList.getPositionList().forEach(position -> {
             ImageView imageView = new ImageView();
             Label label = new Label();
             AtomicBoolean isImage = new AtomicBoolean(true);
-            finalSymbolList.getSymbolList().forEach(symbol -> {
+            finalUseCaseList.getSymbolList().forEach(symbol -> {
                 if (symbol.getSymbol_id() == position.getSymbol_id()) {
                     if (symbol.getSymbol_type().equals("box.png")) {
                         imageView.setImage(systemImageView.getImage());
@@ -683,7 +682,7 @@ public class HomePageController {
     public void saveProject() {
         // Create new lists
         UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
-        SymbolList symbolList = new SymbolList();
+        UseCaseList useCaseList = new UseCaseList();
         PositionList positionList = new PositionList();
         ConnectionList connectionList = new ConnectionList();
 
@@ -694,7 +693,7 @@ public class HomePageController {
 
         // Save position and symbol
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<SymbolList> symbolListDataSource = new SymbolListFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> symbolListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         designPane.getChildren().forEach(node -> {
             if (node instanceof VBox) {
@@ -718,8 +717,8 @@ public class HomePageController {
                 if (label.isEmpty()) {
                     label = "none";
                 }
-                Symbol symbol = new Symbol(symbolList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1), 0, label, "none");
-                symbolList.addSymbol(symbol);
+                UseCase useCase = new UseCase(useCaseList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1), 0, label, "none");
+                useCaseList.addSymbol(useCase);
             } else if (node instanceof Line) {
                 // Set the text for the connection
                 String text = "";
@@ -746,7 +745,7 @@ public class HomePageController {
         // Write data to CSV
         useCaseSystemListDataSource.writeData(useCaseSystemList);
         positionListDataSource.writeData(positionList);
-        symbolListDataSource.writeData(symbolList);
+        symbolListDataSource.writeData(useCaseList);
         connectionListDataSource.writeData(connectionList);
 
         System.out.println("Project Saved");

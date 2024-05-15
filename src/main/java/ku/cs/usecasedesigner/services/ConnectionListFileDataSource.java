@@ -49,11 +49,12 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 String[] data = line.split(",");
                 if (data[0].trim().equals("connection")) {
                     Connection connection = new Connection(
-                            Double.parseDouble(data[1]), // startX
-                            Double.parseDouble(data[2]), // startY
-                            Double.parseDouble(data[3]), // endX
-                            Double.parseDouble(data[4]), // endY
-                            data[5] // label
+                            Integer.parseInt(data[1].trim()),
+                            data[2].trim(),
+                            Double.parseDouble(data[3].trim()),
+                            Double.parseDouble(data[4].trim()),
+                            Double.parseDouble(data[5].trim()),
+                            Double.parseDouble(data[6].trim())
                     );
                     connectionList.addConnection(connection);
                 }
@@ -77,18 +78,21 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
 
     @Override
     public void writeData(ConnectionList connectionList) {
-        //Import useCaseSystemList from CSV
-        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
-        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
-        //Import subsystemList from CSV
-        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
-        SubsystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import symbolList from CSV
-        SymbolListFileDataSource symbolListFileDataSource = new SymbolListFileDataSource(directory, fileName);
-        SymbolList symbolList = symbolListFileDataSource.readData();
+        // Import actorList from CSV
+        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
+        ActorList actorList = actorListFileDataSource.readData();
         //Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
+        //Import subsystemList from CSV
+        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
+        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        //Import useCaseList from CSV
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+        //Import useCaseSystemList from CSV
+        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
+        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -99,23 +103,16 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            //Write UseCaseSystemList to CSV
-            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
-                String line  = useCaseSystemListFileDataSource.createLine(useCaseSystem);
+            // Write ActorList to CSV
+            for (Actor actor : actorList.getActorList()) {
+                String line = actorListFileDataSource.createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write SubsystemList to CSV
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
-                String line = subsystemListFileDataSource.createLine(subsystem);
-                buffer.append(line);
-                buffer.newLine();
-            }
-
-            //Write SymbolList to CSV
-            for (Symbol symbol : symbolList.getSymbolList()) {
-                String line = symbolListFileDataSource.createLine(symbol);
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -127,9 +124,23 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 buffer.newLine();
             }
 
-            //Write ConnectionList to CSV
-            for (Connection connection : connectionList.getConnectionList()) {
-                String line = createLine(connection);
+            //Write SubsystemList to CSV
+            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+                String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseList to CSV
+            for (UseCase useCase : useCaseList.getSymbolList()) {
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseSystemList to CSV
+            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
+                String line  = useCaseSystemListFileDataSource.createLine(useCaseSystem);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -144,10 +155,11 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
     @Override
     public String createLine(Connection connection) {
         return "connection,"
+                + connection.getConnectionID() + ","
+                + connection.getConnectionType() + ","
                 + connection.getStartX() + ","
                 + connection.getStartY() + ","
                 + connection.getEndX() + ","
-                + connection.getEndY() + ","
-                + connection.getLabel();
+                + connection.getEndY();
     }
 }

@@ -75,18 +75,22 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
 
     @Override
     public void writeData(UseCaseSystemList useCaseSystemList) {
-        //Import subsystemList from CSV
-        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
-        SubsystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import symbolList from CSV
-        SymbolListFileDataSource symbolListFileDataSource = new SymbolListFileDataSource(directory, fileName);
-        SymbolList symbolList = symbolListFileDataSource.readData();
-        //Import positionList from CSV
-        PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
-        PositionList positionList = positionListFileDataSource.readData();
+        // Import ActorList to file
+        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
+        ActorList actorList = actorListFileDataSource.readData();
         //Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+        //Import positionList from CSV
+        PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
+        PositionList positionList = positionListFileDataSource.readData();
+        //Import subsystemList from CSV
+        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
+        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        //Import useCaseList from CSV
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+
 
         //File writer
         String filePath = directory + File.separator + fileName;
@@ -97,23 +101,16 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            //Write UseCaseSystemList to CSV
-            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
-                String line = createLine(useCaseSystem);
+            //Write ActorList to CSV
+            for (Actor actor : actorList.getActorList()) {
+                String line = actorListFileDataSource.createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write SubsystemList to CSV
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
-                String line = subsystemListFileDataSource.createLine(subsystem);
-                buffer.append(line);
-                buffer.newLine();
-            }
-
-            //Write SymbolList to CSV
-            for (Symbol symbol : symbolList.getSymbolList()) {
-                String line = symbolListFileDataSource.createLine(symbol);
+            //Write ConnectionList to CSV
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -125,9 +122,23 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
                 buffer.newLine();
             }
 
-            //Write ConnectionList to CSV
-            for (Connection connection : connectionList.getConnectionList()) {
-                String line = connectionListFileDataSource.createLine(connection);
+            //Write SubsystemList to CSV
+            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+                String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseList to CSV
+            for (UseCase useCase : useCaseList.getSymbolList()) {
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write UseCaseSystemList to CSV
+            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
+                String line = createLine(useCaseSystem);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -142,7 +153,7 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
     @Override
     public String createLine(UseCaseSystem useCaseSystem) {
         return "system,"
-                + useCaseSystem.getSystem_id() + ","
-                + useCaseSystem.getSystem_name();
+                + useCaseSystem.getSystemID() + ","
+                + useCaseSystem.getSystemName();
     }
 }

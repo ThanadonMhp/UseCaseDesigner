@@ -5,11 +5,11 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SubsystemListFileDataSource implements DataSource<SubsystemList>, ManageDataSource<Subsystem> {
+public class ActorListFileDataSource implements DataSource<ActorList>, ManageDataSource<Actor>{
     private String directory;
     private String fileName;
 
-    public SubsystemListFileDataSource(String directory, String fileName) {
+    public ActorListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -33,27 +33,27 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
     }
 
     @Override
-    public SubsystemList readData() {
-        SubsystemList subsystemList = new SubsystemList();
+    public ActorList readData() {
+        ActorList actorList = new ActorList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
         BufferedReader buffer = null;
 
         try {
-            reader = new FileReader(file);
+            reader = new FileReader(file, StandardCharsets.UTF_8);
             buffer = new BufferedReader(reader);
 
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("subsystem")) {
-                    Subsystem subsystem = new Subsystem(
-                            Integer.parseInt(data[1]), // subsystem_id
-                            Integer.parseInt(data[2]), // system_id
-                            data[3] // subsystem_name
+                if (data[0].trim().equals("actor")) {
+                    Actor actor = new Actor(
+                            Integer.parseInt(data[1].trim()),
+                            data[2].trim(),
+                            Integer.parseInt(data[3].trim())
                     );
-                    subsystemList.addSubsystem(subsystem);
+                    actorList.addActor(actor);
                 }
             }
         } catch (Exception e) {
@@ -71,28 +71,28 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
             }
         }
 
-        return subsystemList;
+        return actorList;
     }
 
     @Override
-    public void writeData(SubsystemList subsystemList) {
-        // Import ActorList to file
-        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
-        ActorList actorList = actorListFileDataSource.readData();
-        //Import connectionList from CSV
+    public void writeData(ActorList actorList) {
+        // Import connectionList to file
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        //Import positionList from CSV
+        // Import positionList to file
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        //Import useCaseList from CSV
+        // Import subSystemList to file
+        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
+        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        // Import useCaseList to file
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-        //Import UseCaseSystemList from CSV
+        // Import useCaseSystemList to file
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
-        //File writer
+        // File writer
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -101,42 +101,43 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            // Write ActorList to CSV
+            // Write actorList to file
             for (Actor actor : actorList.getActorList()) {
-                String line = actorListFileDataSource.createLine(actor);
+                String line = createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write ConnectionList to CSV
+            // Write connectionList to file
             for (Connection connection : connectionList.getConnectionList()) {
                 String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write PositionList to CSV
+            // Write positionList to file
             for (Position position : positionList.getPositionList()) {
                 String line = positionListFileDataSource.createLine(position);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write SubsystemList to CSV
+            // Write subSystemList to file
             for (Subsystem subsystem : subsystemList.getSubsystemList()) {
-                buffer.write(createLine(subsystem));
+                String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write useCaseList to CSV
+            // Write useCaseList to file
             for (UseCase useCase : useCaseList.getSymbolList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            //Write UseCaseSystemList to CSV
-            for (UseCaseSystem useCaseSystem :useCaseSystemList.getSystemList()){
+            // Write useCaseSystemList to file
+            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
                 String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
                 buffer.append(line);
                 buffer.newLine();
@@ -147,14 +148,13 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
-    public String createLine(Subsystem subsystem) {
-        return "subsystem" + ","
-                + subsystem.getSubSystemID() + ","
-                + subsystem.getSystemID() + ","
-                + subsystem.getSubSystemName();
+    public String createLine(Actor actor) {
+        return "actor,"
+                + actor.getActorID() + ","
+                + actor.getActorName() + ","
+                + actor.getPositionID();
     }
 }
