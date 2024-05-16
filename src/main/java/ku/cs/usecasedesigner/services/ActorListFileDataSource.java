@@ -130,7 +130,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
             }
 
             // Write useCaseList to file
-            for (UseCase useCase : useCaseList.getSymbolList()) {
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();

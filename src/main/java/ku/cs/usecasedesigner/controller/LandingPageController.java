@@ -33,6 +33,7 @@ public class LandingPageController {
 
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();
+            objects.add("loadProject");
             objects.add(projectName);
             objects.add(directory);
             FXRouter.goTo("HomePage", objects);

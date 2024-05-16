@@ -70,7 +70,7 @@ public class HomePageController {
 
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(ellipse, new Label(label), type);
+        stackPane.getChildren().addAll(ellipse, type, new Label(label));
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
@@ -109,7 +109,7 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public void drawSystem(double width, double height, double layoutX, double layoutY, String label) {
+    public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label) {
         // Draw a system
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(width);
@@ -117,7 +117,7 @@ public class HomePageController {
         rectangle.setStyle("-fx-fill: transparent; -fx-stroke: black;");
 
         // Add hidden label to the system
-        Label type = new Label("system");
+        Label type = new Label("subSystem");
         type.setVisible(false);
 
         // Add an image and label to VBox
@@ -423,7 +423,7 @@ public class HomePageController {
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
                 drawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("System")) {
-                drawSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
+                drawSubSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
@@ -558,91 +558,43 @@ public class HomePageController {
         // Clear the design pane
         designPane.getChildren().clear();
 
-        // Get position list
-        PositionList positionList = new PositionList();
-        DataSource<PositionList> dataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        positionList = dataSource.readData();
+        // Load positions
+        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+        PositionList positionList = positionListDataSource.readData(); // Read the PositionList from the CSV file
 
-        // Get symbol list
-        UseCaseList useCaseList = new UseCaseList();
-        DataSource<UseCaseList> dataSourceSymbol = new UseCaseListFileDataSource(directory, projectName + ".csv");
-        useCaseList = dataSourceSymbol.readData();
+        // Load actors
+        DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+        ActorList actorList = actorListDataSource.readData(); // Read the ActorList from the CSV file
+        // Recreate each actor
+        actorList.getActorList().forEach(actor -> {
+            // Find the position of the actor
+            Position position = positionList.findByPositionId(actor.getPositionID());
+            if (position != null) {
+                drawActor(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), actor.getActorName());
+            }
+        });
 
-        // Add symbol to the design pane
-        UseCaseList finalUseCaseList = useCaseList;
-        positionList.getPositionList().forEach(position -> {
-            ImageView imageView = new ImageView();
-            Label label = new Label();
-            AtomicBoolean isImage = new AtomicBoolean(true);
-            finalUseCaseList.getSymbolList().forEach(symbol -> {
-                if (symbol.getSymbol_id() == position.getSymbol_id()) {
-                    if (symbol.getSymbol_type().equals("box.png")) {
-                        imageView.setImage(systemImageView.getImage());
-                        if (!symbol.getLabel().equals("none")) {
-                            label.setText(symbol.getLabel());
-                        }
-                    } else if (symbol.getSymbol_type().equals("oval.png")) {
-                        // Set the size and position of the component
-                        imageView.setImage(ovalImageView.getImage());
-                        imageView.setFitWidth(position.getFit_width());
-                        imageView.setFitHeight(position.getFit_height());
-                        imageView.setRotate(position.getRotation());
+        // Load subsystems
+        DataSource<SubsystemList> subsystemListDataSource = new SubsystemListFileDataSource(directory, projectName + ".csv");
+        SubsystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
+        // Recreate each subsystem
+        subsystemList.getSubsystemList().forEach(subsystem -> {
+            // Find the position of the subsystem
+            Position position = positionList.findByPositionId(subsystem.getPositionID());
+            if (position != null) {
+                drawSubSystem(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), subsystem.getSubSystemName());
+            }
+        });
 
-                        if (!symbol.getLabel().equals("none")) {
-                            label.setText(symbol.getLabel());
-
-                            // Put imageview and label into stackPane
-                            StackPane stackPane = new StackPane();
-                            stackPane.getChildren().addAll(imageView, label);
-                            stackPane.setAlignment(Pos.CENTER);
-                            stackPane.setLayoutX(position.getX_position());
-                            stackPane.setLayoutY(position.getY_position());
-
-                            designPane.getChildren().add(stackPane);
-
-                            // Make the component draggable and selectable
-                            makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                            makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-
-                            isImage.set(false);
-                        }
-                    } else if (symbol.getSymbol_type().equals("human.png")) {
-                        imageView.setImage(actorImageView.getImage());
-                        if (!symbol.getLabel().equals("none")) {
-                            label.setText(symbol.getLabel());
-                        }
-                    } else if (symbol.getSymbol_type().equals("line.png")) {
-                        imageView.setImage(lineImageView.getImage());
-                        if (!symbol.getLabel().equals("none")) {
-                            label.setText(symbol.getLabel());
-                        }
-                    } else if (symbol.getSymbol_type().equals("directional.png")) {
-                        imageView.setImage(arrowImageView.getImage());
-                        if (!symbol.getLabel().equals("none")) {
-                            label.setText(symbol.getLabel());
-                        }
-                    } else {
-                        isImage.set(false);
-                    }
-                }
-            });
-            if (isImage.get()) {
-                // Set the size and position of the component
-                imageView.setFitWidth(position.getFit_width());
-                imageView.setFitHeight(position.getFit_height());
-                imageView.setRotate(position.getRotation());
-
-                VBox vbox = new VBox();
-                vbox.getChildren().addAll(imageView, label);
-                vbox.setAlignment(Pos.CENTER);
-                vbox.setLayoutX(position.getX_position());
-                vbox.setLayoutY(position.getY_position());
-
-                designPane.getChildren().add(vbox);
-
-                // Make the component draggable and selectable
-                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        // Load use cases
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+        UseCaseList useCaseList = useCaseListDataSource.readData(); // Read the UseCaseList from the CSV file
+        // Recreate each use case
+        useCaseList.getUseCaseList().forEach(useCase -> {
+            // Find the position of the use case
+            Position position = positionList.findByPositionId(useCase.getPositionID());
+            if (position != null) {
+                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName());
             }
         });
 
@@ -655,8 +607,8 @@ public class HomePageController {
             // Find the start and end nodes of the connection from position in connection
             Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
             Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
-            String text = connection.getLabel();
-            if (text.equals("none")) {
+            String text = connection.getConnectionType();
+            if (text.equals("!@#$%^&*()_+")) {
                 text = "";
             }
             if (startNode != null && endNode != null) {
@@ -680,73 +632,110 @@ public class HomePageController {
     }
 
     public void saveProject() {
-        // Create new lists
-        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
-        UseCaseList useCaseList = new UseCaseList();
-        PositionList positionList = new PositionList();
+        ActorList actorList = new ActorList();
         ConnectionList connectionList = new ConnectionList();
+        PositionList positionList = new PositionList();
+        SubsystemList subsystemList = new SubsystemList();
+        UseCaseList useCaseList = new UseCaseList();
+        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
 
-        // Save project name
+        // Save the project components
+        DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<SubsystemList> subsystemListDataSource = new SubsystemListFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
+
+        // Save the components to the data sources
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
         useCaseSystemList.addSystem(useCaseSystem);
 
-        // Save position and symbol
-        DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> symbolListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         designPane.getChildren().forEach(node -> {
             if (node instanceof VBox) {
-                // Save position to the list
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(), ((VBox) node).getChildren().get(0).getRotate());
-                positionList.addPosition(position);
+                // Check type of the node
+                Label label = (Label) ((VBox) node).getChildren().get(1);
+                String type = label.getText();
+                if (type.equals("actor")) {
+                    // Save the position of the actor
+                    Position position = new Position
+                            (positionList.findLastPositionId() + 1,  // positionID
+                            node.getLayoutX(), // xPosition
+                            node.getLayoutY(), // yPosition
+                            ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), // fitWidth
+                            ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(),  // fitHeight
+                            ((ImageView) ((VBox) node).getChildren().get(0)).getRotate()); // rotation
+                    positionList.addPosition(position);
 
-                // Save symbol to the list
-                String label = ((Label) ((VBox) node).getChildren().get(2)).getText();
-                if (label.isEmpty()) {
-                    label = "none";
+                    // Save the actor to actorList
+                    Actor actor = new Actor
+                            (actorList.findLastActorId() + 1, // actorID
+                            ((Label) ((VBox) node).getChildren().get(2)).getText(),  // actorName
+                            position.getPositionID()); // positionID
+                    actorList.addActor(actor);
+
+                } else if (type.equals("subSystem")) {
+                    // Save the position of the subsystem
+                    Position position = new Position(
+                            positionList.findLastPositionId() + 1,
+                            node.getLayoutX(), // xPosition
+                            node.getLayoutY(), // yPosition
+                            ((VBox) node).getChildren().get(0).getLayoutBounds().getWidth(), // fitWidth
+                            ((VBox) node).getChildren().get(0).getLayoutBounds().getHeight(),  // fitHeight
+                            ((VBox) node).getChildren().get(0).getRotate()); // rotation
+                    positionList.addPosition(position);
+
+                    // Save the subsystem to subsystemList
+                    Subsystem subsystem = new Subsystem
+                            (subsystemList.findLastSubsystemId() + 1, // subsystemID
+                            ((Label) ((VBox) node).getChildren().get(2)).getText(),  // subsystemName
+                            position.getPositionID()); // positionID
+                    subsystemList.addSubsystem(subsystem);
                 }
 
             } else if (node instanceof StackPane) {
-                // Save position to the list
-                Position position = new Position(positionList.findLastPositionId() + 1, positionList.findLastPositionId() + 1, node.getLayoutX(), node.getLayoutY(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitWidth(), ((ImageView) ((StackPane) node).getChildren().get(0)).getFitHeight(), ((StackPane) node).getChildren().get(0).getRotate());
-                positionList.addPosition(position);
+                // Check type of the node
+                Label label = (Label) ((StackPane) node).getChildren().get(1);
+                String type = label.getText();
+                if (type.equals("useCase")) {
+                    // Save the position of the use case
+                    Position position = new Position(
+                            positionList.findLastPositionId() + 1,  // positionID
+                            node.getLayoutX(), // xPosition
+                            node.getLayoutY(), // yPosition
+                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusX(), // fitWidth
+                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusY(),  // fitHeight
+                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRotate()); // rotation
+                    positionList.addPosition(position);
 
-                // Save symbol to the list
-                String label = ((Label) ((StackPane) node).getChildren().get(1)).getText();
-                if (label.isEmpty()) {
-                    label = "none";
+                    // Save the use case to useCaseList
+                    UseCase useCase = new UseCase(
+                            useCaseList.findLastUseCaseId() + 1, // useCaseID
+                            position.getPositionID(), // positionID
+                            ((Label) ((StackPane) node).getChildren().get(2)).getText()); // text
+                    useCaseList.addUseCase(useCase);
                 }
-                UseCase useCase = new UseCase(useCaseList.findLastSymbolId() + 1, 0, ((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().substring(((ImageView) ((StackPane) node).getChildren().get(0)).getImage().getUrl().lastIndexOf("/") + 1), 0, label, "none");
-                useCaseList.addSymbol(useCase);
+
             } else if (node instanceof Line) {
-                // Set the text for the connection
-                String text = "";
-                // Search for the text above the line's middle point
-                for (Node child : designPane.getChildren()) {
-                    if (child instanceof Label) {
-                        if (child.getLayoutX() == (((Line) node).getStartX() + ((Line) node).getEndX()) / 2 && child.getLayoutY() == (((Line) node).getStartY() + ((Line) node).getEndY()) / 2) {
-                            text = ((Label) child).getText();
-                            break;
-                        }
-                    }
-                }
-
-                if (text.isEmpty()) {
-                    text = "none";
-                }
-
-                // Save connection to the list
-                Connection connection = new Connection(((Line) node).getStartX(), ((Line) node).getStartY(), ((Line) node).getEndX(), ((Line) node).getEndY(), text); // Create a new Connection object                connectionList.addConnection(connection);
+                // Save the connection
+                Connection connection = new Connection(
+                        connectionList.findLastConnectionID(), // connectionID
+                        "!@#$%^&*()_+", // connectionType
+                        ((Line) node).getStartX(), // startX
+                        ((Line) node).getStartY(), // startY
+                        ((Line) node).getEndX(), // endX
+                        ((Line) node).getEndY()); // endY
                 connectionList.addConnection(connection);
             }
         });
 
         // Write data to CSV
-        useCaseSystemListDataSource.writeData(useCaseSystemList);
-        positionListDataSource.writeData(positionList);
-        symbolListDataSource.writeData(useCaseList);
+        actorListDataSource.writeData(actorList);
         connectionListDataSource.writeData(connectionList);
+        positionListDataSource.writeData(positionList);
+        subsystemListDataSource.writeData(subsystemList);
+        useCaseListFileDataSource.writeData(useCaseList);
+        useCaseSystemListDataSource.writeData(useCaseSystemList);
 
         System.out.println("Project Saved");
     }

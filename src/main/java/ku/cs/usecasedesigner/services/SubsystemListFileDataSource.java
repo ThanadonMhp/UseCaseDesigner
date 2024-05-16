@@ -47,11 +47,11 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("subsystem")) {
+                if (data[0].trim().equals("subSystem")) {
                     Subsystem subsystem = new Subsystem(
-                            Integer.parseInt(data[1]), // subsystem_id
-                            Integer.parseInt(data[2]), // system_id
-                            data[3] // subsystem_name
+                            Integer.parseInt(data[1]), // subsystemID
+                            data[2], // subsystemName
+                            Integer.parseInt(data[3]) // positionID
                     );
                     subsystemList.addSubsystem(subsystem);
                 }
@@ -129,7 +129,7 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
             }
 
             //Write useCaseList to CSV
-            for (UseCase useCase : useCaseList.getSymbolList()) {
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
@@ -152,9 +152,9 @@ public class SubsystemListFileDataSource implements DataSource<SubsystemList>, M
 
     @Override
     public String createLine(Subsystem subsystem) {
-        return "subsystem" + ","
+        return "subSystem" + ","
                 + subsystem.getSubSystemID() + ","
-                + subsystem.getSystemID() + ","
-                + subsystem.getSubSystemName();
+                + subsystem.getSubSystemName() + ","
+                + subsystem.getPositionID();
     }
 }

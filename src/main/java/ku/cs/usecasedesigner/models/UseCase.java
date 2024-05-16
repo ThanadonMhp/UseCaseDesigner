@@ -19,6 +19,16 @@ public class UseCase {
         this.positionID = positionID;
     }
 
+    public UseCase(int useCaseID, int positionID, String text) {
+        this.useCaseID = useCaseID;
+        this.positionID = positionID;
+        this.useCaseName = text;
+        this.actorID = 0;
+        this.preCondition = "!@#$%^&*()_+";
+        this.description = "!@#$%^&*()_+";
+        this.postCondition = "!@#$%^&*()_+";
+    }
+
     public int getUseCaseID() {
         return useCaseID;
     }

@@ -23,17 +23,17 @@ public class UseCaseSystemList {
 
     public UseCaseSystem findBySystemId(double systemId) {
         for (UseCaseSystem useCaseSystem : useCaseSystemList) {
-            if (useCaseSystem.getSystem_id() == systemId) {
+            if (useCaseSystem.getSystemID() == systemId) {
                 return useCaseSystem;
             }
         }
         return null;
     }
 
-    public double findLastUseCaseSystemId() {
+    public int findLastUseCaseSystemId() {
         if (useCaseSystemList.isEmpty()) {
             return 0;
         }
-        return useCaseSystemList.get(useCaseSystemList.size() - 1).getSystem_id();
+        return useCaseSystemList.get(useCaseSystemList.size() - 1).getSystemID();
     }
 }

@@ -31,19 +31,32 @@ public class ConnectionList {
         // search for an item in pane that is close to the given position (x, y) and return it as a Node
         for (Node node : pane.getChildren()) {
             if (node instanceof VBox) {
-                double nodeMinX = node.getLayoutX();
-                double nodeMaxX = node.getLayoutX() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth();
-                double nodeMinY = node.getLayoutY();
-                double nodeMaxY = node.getLayoutY() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight();
+                //if VBox contains an ImageView, then the VBox is an Actor
+                if (((VBox) node).getChildren().get(0) instanceof ImageView) {
+                    double nodeMinX = node.getLayoutX();
+                    double nodeMaxX = node.getLayoutX() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth();
+                    double nodeMinY = node.getLayoutY();
+                    double nodeMaxY = node.getLayoutY() + ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight();
 
-                if (x >= nodeMinX && x <= nodeMaxX && y >= nodeMinY && y <= nodeMaxY) {
-                    return node;
+                    if (x >= nodeMinX && x <= nodeMaxX && y >= nodeMinY && y <= nodeMaxY) {
+                        return node;
+                    }
+                //if VBox contains rectangle
+                } else {
+                    double nodeMinX = node.getLayoutX();
+                    double nodeMaxX = node.getLayoutX() + ((VBox) node).getPrefWidth();
+                    double nodeMinY = node.getLayoutY();
+                    double nodeMaxY = node.getLayoutY() + ((VBox) node).getPrefHeight();
+
+                    if (x >= nodeMinX && x <= nodeMaxX && y >= nodeMinY && y <= nodeMaxY) {
+                        return node;
+                    }
                 }
             } else if (node instanceof StackPane) {
                 double nodeMinX = node.getLayoutX();
-                double nodeMaxX = node.getLayoutX() + ((ImageView) ((StackPane) node).getChildren().get(0)).getFitWidth();
+                double nodeMaxX = node.getLayoutX() + ((StackPane) node).getPrefWidth();
                 double nodeMinY = node.getLayoutY();
-                double nodeMaxY = node.getLayoutY() + ((ImageView) ((StackPane) node).getChildren().get(0)).getFitHeight();
+                double nodeMaxY = node.getLayoutY() + ((StackPane) node).getPrefHeight();
 
                 if (x >= nodeMinX && x <= nodeMaxX && y >= nodeMinY && y <= nodeMaxY) {
                     return node;
@@ -51,5 +64,15 @@ public class ConnectionList {
             }
         }
         return null;
+    }
+
+    public int findLastConnectionID() {
+        int lastConnectionID = 0;
+        for (Connection connection : connectionList) {
+            if (connection.getConnectionID() > lastConnectionID) {
+                lastConnectionID = connection.getConnectionID();
+            }
+        }
+        return lastConnectionID;
     }
 }
