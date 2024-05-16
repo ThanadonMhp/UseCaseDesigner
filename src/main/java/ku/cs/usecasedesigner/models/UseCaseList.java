@@ -9,37 +9,40 @@ public class UseCaseList {
         useCaseList = new ArrayList<UseCase>();
     }
 
-    public ArrayList<UseCase> getSymbolList() {
-        return useCaseList;
-    }
-
-    public void addSymbol(UseCase useCase) {
+    public void addUseCase(UseCase useCase) {
         useCaseList.add(useCase);
     }
 
-    public void removeSymbol(UseCase useCase) {
+    public void removeUseCase(UseCase useCase) {
         useCaseList.remove(useCase);
     }
 
-    public UseCase findBySymbolId(double symbolId) {
+    public ArrayList<UseCase> getUseCaseList() {
+        return useCaseList;
+    }
+
+    public void setUseCaseList(ArrayList<UseCase> useCaseList) {
+        this.useCaseList = useCaseList;
+    }
+
+    public UseCase getUseCase(int useCaseID) {
         for (UseCase useCase : useCaseList) {
-            if (useCase.getUseCaseID() == symbolId) {
+            if (useCase.getUseCaseID() == useCaseID) {
                 return useCase;
             }
         }
         return null;
     }
 
-    public int findLastSymbolId() {
-        int lastSymbolId = 0;
+    public int findLastUseCaseId() {
+        int lastUseCaseId = 0;
         for (UseCase useCase : useCaseList) {
-            if (useCase.getUseCaseID() > lastSymbolId) {
-                lastSymbolId = useCase.getUseCaseID();
+            if (useCase.getUseCaseID() > lastUseCaseId) {
+                lastUseCaseId = useCase.getUseCaseID();
             }
         }
-        return lastSymbolId;
+        return lastUseCaseId;
     }
-
 }
 
 

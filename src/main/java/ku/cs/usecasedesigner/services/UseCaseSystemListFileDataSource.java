@@ -48,9 +48,9 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("system")) {
+                if (data[0].trim().equals("useCaseSystem")) {
                     UseCaseSystem useCaseSystem = new UseCaseSystem(
-                            Double.parseDouble(data[1]), // system_id
+                            Integer.parseInt(data[1]), // system_id
                             data[2] // system_name
                     );
                     useCaseSystemList.addSystem(useCaseSystem);
@@ -130,7 +130,7 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
             }
 
             //Write UseCaseList to CSV
-            for (UseCase useCase : useCaseList.getSymbolList()) {
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
@@ -152,7 +152,7 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
 
     @Override
     public String createLine(UseCaseSystem useCaseSystem) {
-        return "system,"
+        return "useCaseSystem,"
                 + useCaseSystem.getSystemID() + ","
                 + useCaseSystem.getSystemName();
     }

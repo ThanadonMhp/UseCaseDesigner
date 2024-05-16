@@ -1,15 +1,15 @@
 package ku.cs.usecasedesigner.models;
 
 public class UseCaseSystem {
-    private double systemID;
+    private int systemID;
     private String systemName;
 
-    public UseCaseSystem(double systemID, String systemName) {
+    public UseCaseSystem(int systemID, String systemName) {
         this.systemID = systemID;
         this.systemName = systemName;
     }
 
-    public double getSystemID() {
+    public int getSystemID() {
         return systemID;
     }
 
@@ -17,7 +17,7 @@ public class UseCaseSystem {
         return systemName;
     }
 
-    public void setSystemID(double systemID) {
+    public void setSystemID(int systemID) {
         this.systemID = systemID;
     }
 

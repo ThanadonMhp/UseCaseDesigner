@@ -47,7 +47,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("symbol")) {
+                if (data[0].trim().equals("useCase")) {
                     UseCase useCase = new UseCase(
                             Integer.parseInt(data[1].trim()), // useCaseID
                             data[2].trim(), // useCaseName
@@ -57,7 +57,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                             data[6].trim(), // postCondition
                             Integer.parseInt(data[7].trim()) // positionID
                     );
-                    useCaseList.addSymbol(useCase);
+                    useCaseList.addUseCase(useCase);
                 }
             }
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             }
 
             //Write useCaseList to CSV
-            for (UseCase useCase : useCaseList.getSymbolList()) {
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
                 buffer.write(createLine(useCase));
                 buffer.newLine();
             }
@@ -149,7 +149,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 
     @Override
     public String createLine(UseCase useCase) {
-        return "symbol" + ","
+        return "useCase" + ","
                 + useCase.getUseCaseID() + ","
                 + useCase.getUseCaseName() + ","
                 + useCase.getActorID() + ","

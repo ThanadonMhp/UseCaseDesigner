@@ -132,7 +132,7 @@ public class PositionListFileDataSource implements DataSource<PositionList>, Man
             }
 
             //Write UseCaseList to CSV
-            for (UseCase useCase : useCaseList.getSymbolList()) {
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
