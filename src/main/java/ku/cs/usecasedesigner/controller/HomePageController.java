@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomePageController {
 
@@ -40,6 +39,47 @@ public class HomePageController {
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
+
+    private static Line getLine(Node startNode, Node endNode, String text) {
+        Line line = new Line();
+
+        // Bind the start and end points of the line to the center points of the nodes
+        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
+        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInLocal().getHeight() / 2));
+        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
+        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
+
+        // Create a label and position it in the middle of the line
+        Label label = new Label(text);
+        label.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2));
+        label.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2));
+
+        // Add the label to the design pane
+        ((Pane) startNode.getParent()).getChildren().add(label);
+
+        // Add a double click event handler to the label
+        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Create a TextInputDialog
+                    TextInputDialog dialog = new TextInputDialog(label.getText());
+                    dialog.setTitle("Change Label");
+                    dialog.setHeaderText("Please enter the new text for the label:");
+                    dialog.setContentText("Label:");
+
+                    // Show the dialog and get the result
+                    Optional<String> result = dialog.showAndWait();
+                    // If a string was entered, use it as the new label text
+                    if (result.isPresent()) {
+                        label.setText(result.get());
+                    }
+                }
+            }
+        });
+
+        return line;
+    }
 
     @FXML
     void initialize() {
@@ -187,7 +227,7 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public String getTextInput(){
+    public String getTextInput() {
         //Create a popup for text input that can't be empty
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Enter Label");
@@ -475,47 +515,6 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    private static Line getLine(Node startNode, Node endNode, String text) {
-        Line line = new Line();
-
-        // Bind the start and end points of the line to the center points of the nodes
-        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
-        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInLocal().getHeight() / 2));
-        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
-        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
-
-        // Create a label and position it in the middle of the line
-        Label label = new Label(text);
-        label.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2));
-        label.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2));
-
-        // Add the label to the design pane
-        ((Pane) startNode.getParent()).getChildren().add(label);
-
-        // Add a double click event handler to the label
-        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
-                    // Create a TextInputDialog
-                    TextInputDialog dialog = new TextInputDialog(label.getText());
-                    dialog.setTitle("Change Label");
-                    dialog.setHeaderText("Please enter the new text for the label:");
-                    dialog.setContentText("Label:");
-
-                    // Show the dialog and get the result
-                    Optional<String> result = dialog.showAndWait();
-                    // If a string was entered, use it as the new label text
-                    if (result.isPresent()) {
-                        label.setText(result.get());
-                    }
-                }
-            }
-        });
-
-        return line;
-    }
-
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
         // Open the new project page
         System.out.println("New Project");
@@ -660,18 +659,18 @@ public class HomePageController {
                     // Save the position of the actor
                     Position position = new Position
                             (positionList.findLastPositionId() + 1,  // positionID
-                            node.getLayoutX(), // xPosition
-                            node.getLayoutY(), // yPosition
-                            ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), // fitWidth
-                            ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(),  // fitHeight
-                            ((ImageView) ((VBox) node).getChildren().get(0)).getRotate()); // rotation
+                                    node.getLayoutX(), // xPosition
+                                    node.getLayoutY(), // yPosition
+                                    ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), // fitWidth
+                                    ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(),  // fitHeight
+                                    ((VBox) node).getChildren().get(0).getRotate()); // rotation
                     positionList.addPosition(position);
 
                     // Save the actor to actorList
                     Actor actor = new Actor
                             (actorList.findLastActorId() + 1, // actorID
-                            ((Label) ((VBox) node).getChildren().get(2)).getText(),  // actorName
-                            position.getPositionID()); // positionID
+                                    ((Label) ((VBox) node).getChildren().get(2)).getText(),  // actorName
+                                    position.getPositionID()); // positionID
                     actorList.addActor(actor);
 
                 } else if (type.equals("subSystem")) {
@@ -688,8 +687,8 @@ public class HomePageController {
                     // Save the subsystem to subsystemList
                     Subsystem subsystem = new Subsystem
                             (subsystemList.findLastSubsystemId() + 1, // subsystemID
-                            ((Label) ((VBox) node).getChildren().get(2)).getText(),  // subsystemName
-                            position.getPositionID()); // positionID
+                                    ((Label) ((VBox) node).getChildren().get(2)).getText(),  // subsystemName
+                                    position.getPositionID()); // positionID
                     subsystemList.addSubsystem(subsystem);
                 }
 
@@ -705,7 +704,7 @@ public class HomePageController {
                             node.getLayoutY(), // yPosition
                             ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusX(), // fitWidth
                             ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusY(),  // fitHeight
-                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRotate()); // rotation
+                            ((StackPane) node).getChildren().get(0).getRotate()); // rotation
                     positionList.addPosition(position);
 
                     // Save the use case to useCaseList
