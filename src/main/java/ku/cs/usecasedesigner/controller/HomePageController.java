@@ -97,20 +97,43 @@ public class HomePageController {
         }
     }
 
-    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label) {
+    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label, int actorID, String preCondition, String description, String postCondition) {
         // Draw a system
         Ellipse ellipse = new Ellipse();
         ellipse.setRadiusX(width);
         ellipse.setRadiusY(height);
         ellipse.setStyle("-fx-fill: transparent; -fx-stroke: black;");
 
+        // Add useCaseName
+        Label useCaseName = new Label(label);
+
         // Add hidden label to the system
         Label type = new Label("useCase");
+        type.setMaxSize(0, 0);
         type.setVisible(false);
+
+        Label actorIDLabel = new Label(String.valueOf(actorID));
+        actorIDLabel.setMaxSize(0, 0);
+        actorIDLabel.setVisible(false);
+
+        Label preConditionLabel = new Label(preCondition);
+        preConditionLabel.setMaxSize(0, 0);
+        preConditionLabel.setVisible(false);
+
+        Label descriptionLabel = new Label(description);
+        descriptionLabel.setMaxSize(0, 0);
+        descriptionLabel.setVisible(false);
+
+        Label postConditionLabel = new Label(postCondition);
+        postConditionLabel.setMaxSize(0, 0);
+        postConditionLabel.setVisible(false);
+
+
+
 
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(ellipse, type, new Label(label));
+        stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, postConditionLabel);
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
@@ -459,7 +482,7 @@ public class HomePageController {
         if (dragEvent.getDragboard().hasString()) {
             // Draw a component based on the string
             if (dragEvent.getDragboard().getString().equals("Oval")) {
-                drawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
+                drawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput(), 0, "!@#$%^&*()_+", "!@#$%^&*()_+", "!@#$%^&*()_+");
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
                 drawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("System")) {
@@ -593,7 +616,7 @@ public class HomePageController {
             // Find the position of the use case
             Position position = positionList.findByPositionId(useCase.getPositionID());
             if (position != null) {
-                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName());
+                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(), useCase.getPostCondition());
             }
         });
 
