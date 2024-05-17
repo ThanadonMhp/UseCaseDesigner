@@ -5,11 +5,11 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SubsystemListFileDataSource implements DataSource<SubsystemList>, ManageDataSource<Subsystem> {
+public class SubSystemListFileDataSource implements DataSource<SubsystemList>, ManageDataSource<Subsystem> {
     private String directory;
     private String fileName;
 
-    public SubsystemListFileDataSource(String directory, String fileName) {
+    public SubSystemListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();

@@ -574,7 +574,7 @@ public class HomePageController {
         });
 
         // Load subsystems
-        DataSource<SubsystemList> subsystemListDataSource = new SubsystemListFileDataSource(directory, projectName + ".csv");
+        DataSource<SubsystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         SubsystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
         // Recreate each subsystem
         subsystemList.getSubsystemList().forEach(subsystem -> {
@@ -642,7 +642,7 @@ public class HomePageController {
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<SubsystemList> subsystemListDataSource = new SubsystemListFileDataSource(directory, projectName + ".csv");
+        DataSource<SubsystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
 

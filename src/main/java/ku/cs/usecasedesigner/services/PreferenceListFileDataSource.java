@@ -86,7 +86,7 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
         // Import subSystemList to file
-        SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
+        SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubsystemList subsystemList = subsystemListFileDataSource.readData();
         // Import useCaseList to file
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
