@@ -738,4 +738,9 @@ public class HomePageController {
 
         System.out.println("Project Saved");
     }
+
+    public void handlePreferenceMenuItem(ActionEvent actionEvent) throws IOException {
+        // Open the preference page
+        FXRouter.popup("PreferencePage");
+    }
 }

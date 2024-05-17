@@ -1,6 +1,6 @@
 
 @font-face {
-    src: url('Roboto-Thin.ttf');
+    src: url('font/Roboto-Thin.ttf');
 }
 .text {
     -fx-font-family: "Roboto";
