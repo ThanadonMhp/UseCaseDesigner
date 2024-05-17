@@ -22,7 +22,6 @@ public class PreferencePageController {
             directory = (String) objects.get(0);
             projectName = (String) objects.get(1);
         }
-
     }
 
     // Save the preference to the file
