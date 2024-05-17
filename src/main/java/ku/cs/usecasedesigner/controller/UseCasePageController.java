@@ -56,6 +56,10 @@ public class UseCasePageController {
             {
                 preConditionTextField.setText(useCase.getPreCondition());
             }
+            if (useCase.getPostCondition() != "!@#$%^&*()_+")
+            {
+                postConditionTextField.setText(useCase.getPostCondition());
+            }
         }
     }
 
