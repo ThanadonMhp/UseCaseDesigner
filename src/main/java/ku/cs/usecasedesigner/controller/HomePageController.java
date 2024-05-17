@@ -128,9 +128,6 @@ public class HomePageController {
         postConditionLabel.setMaxSize(0, 0);
         postConditionLabel.setVisible(false);
 
-
-
-
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, postConditionLabel);
