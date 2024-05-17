@@ -81,16 +81,19 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
         // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
-        //Import positionList from CSV
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        //Import subsystemList from CSV
+        // Import preferenceList from CSV
+        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
+        PreferenceList preferenceList = preferenceListFileDataSource.readData();
+        // Import subsystemList from CSV
         SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
         SubsystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import useCaseList from CSV
+        // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-        //Import useCaseSystemList from CSV
+        // Import useCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
@@ -120,6 +123,13 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
             //Write PositionList to CSV
             for (Position position : positionList.getPositionList()) {
                 String line = positionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write PreferenceList to CSV
+            for (Preference preference : preferenceList.getPreferenceList()) {
+                String line = preferenceListFileDataSource.createLine(preference);
                 buffer.append(line);
                 buffer.newLine();
             }

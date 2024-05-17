@@ -24,6 +24,7 @@
             <MenuItem mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#handlePreferenceMenuItem" text="Preference" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">

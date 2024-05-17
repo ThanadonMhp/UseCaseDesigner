@@ -88,6 +88,9 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         //Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
+        // Import preferenceList from CSV
+        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
+        PreferenceList preferenceList = preferenceListFileDataSource.readData();
         //Import subsystemList from CSV
         SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
         SubsystemList subsystemList = subsystemListFileDataSource.readData();
@@ -119,6 +122,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             //Write PositionList to CSV
             for (Position position : positionList.getPositionList()) {
                 buffer.write(positionListFileDataSource.createLine(position));
+                buffer.newLine();
+            }
+
+            //Write PreferenceList to CSV
+            for (Preference preference : preferenceList.getPreferenceList()) {
+                buffer.write(preferenceListFileDataSource.createLine(preference));
                 buffer.newLine();
             }
 

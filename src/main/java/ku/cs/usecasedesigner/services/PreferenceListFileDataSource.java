@@ -3,13 +3,12 @@ package ku.cs.usecasedesigner.services;
 import ku.cs.usecasedesigner.models.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
-public class ActorListFileDataSource implements DataSource<ActorList>, ManageDataSource<Actor>{
+public class PreferenceListFileDataSource implements DataSource<PreferenceList>, ManageDataSource<Preference>{
     private String directory;
     private String fileName;
 
-    public ActorListFileDataSource(String directory, String fileName) {
+    public PreferenceListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -33,27 +32,28 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
     }
 
     @Override
-    public ActorList readData() {
-        ActorList actorList = new ActorList();
+    public PreferenceList readData() {
+        PreferenceList preferenceList = new PreferenceList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
         BufferedReader buffer = null;
 
         try {
-            reader = new FileReader(file, StandardCharsets.UTF_8);
+            reader = new FileReader(file);
             buffer = new BufferedReader(reader);
 
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("actor")) {
-                    Actor actor = new Actor(
+                if (data[0].trim().equals("preference")) {
+                    Preference preference = new Preference(
                             Integer.parseInt(data[1].trim()),
                             data[2].trim(),
-                            Integer.parseInt(data[3].trim())
+                            Integer.parseInt(data[3].trim()),
+                            data[4].trim()
                     );
-                    actorList.addActor(actor);
+                    preferenceList.addPreference(preference);
                 }
             }
         } catch (Exception e) {
@@ -71,20 +71,20 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
             }
         }
 
-        return actorList;
+        return preferenceList;
     }
 
     @Override
-    public void writeData(ActorList actorList) {
+    public void writeData(PreferenceList preferenceList) {
+        // Import actorList to file
+        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
+        ActorList actorList = actorListFileDataSource.readData();
         // Import connectionList to file
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
         // Import positionList to file
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        // Import preferenceList to file
-        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
-        PreferenceList preferenceList = preferenceListFileDataSource.readData();
         // Import subSystemList to file
         SubsystemListFileDataSource subsystemListFileDataSource = new SubsystemListFileDataSource(directory, fileName);
         SubsystemList subsystemList = subsystemListFileDataSource.readData();
@@ -101,12 +101,12 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            writer = new FileWriter(file);
             buffer = new BufferedWriter(writer);
 
             // Write actorList to file
             for (Actor actor : actorList.getActorList()) {
-                String line = createLine(actor);
+                String line = actorListFileDataSource.createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -127,7 +127,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
 
             // Write preferenceList to file
             for (Preference preference : preferenceList.getPreferenceList()) {
-                String line = preferenceListFileDataSource.createLine(preference);
+                String line = createLine(preference);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -155,16 +155,17 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
 
             buffer.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String createLine(Actor actor) {
-        return "actor,"
-                + actor.getActorID() + ","
-                + actor.getActorName() + ","
-                + actor.getPositionID();
+    public String createLine(Preference preference) {
+        return "preference,"
+                + preference.getStrokeWidth() + ","
+                + preference.getFont() + ","
+                + preference.getFontSize() + ","
+                + preference.getTheme();
     }
 }
