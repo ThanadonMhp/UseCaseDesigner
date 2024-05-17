@@ -730,8 +730,12 @@ public class HomePageController {
                     // Save the use case to useCaseList
                     UseCase useCase = new UseCase(
                             useCaseList.findLastUseCaseId() + 1, // useCaseID
-                            position.getPositionID(), // positionID
-                            ((Label) ((StackPane) node).getChildren().get(2)).getText()); // text
+                            ((Label) ((StackPane) node).getChildren().get(2)).getText(),  // useCaseName
+                            Integer.parseInt(((Label) ((StackPane) node).getChildren().get(3)).getText()),  // actorID
+                            ((Label) ((StackPane) node).getChildren().get(4)).getText(),  // preCondition
+                            ((Label) ((StackPane) node).getChildren().get(5)).getText(),  // description
+                            ((Label) ((StackPane) node).getChildren().get(6)).getText(),  // postCondition
+                            position.getPositionID()); // positionID
                     useCaseList.addUseCase(useCase);
                 }
 
