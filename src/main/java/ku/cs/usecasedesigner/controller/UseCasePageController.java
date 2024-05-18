@@ -18,14 +18,15 @@ import ku.cs.usecasedesigner.services.UseCaseListFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class UseCasePageController {
 
-    @FXML private Label useCaseIDLabel, useCaseNameLabel;
+    @FXML private Label useCaseIDLabel, errorLabel;
 
     @FXML private ChoiceBox actorChoiceBox;
 
-    @FXML private TextField preConditionTextField, postConditionTextField;
+    @FXML private TextField useCaseNameTextField ,preConditionTextField, postConditionTextField;
 
     @FXML private TextArea descriptionTextArea;
 
@@ -55,7 +56,7 @@ public class UseCasePageController {
             useCase = useCaseList.findByUseCaseId(useCaseID);
 
             useCaseIDLabel.setText(useCase.getUseCaseID() + "");
-            useCaseNameLabel.setText(useCase.getUseCaseName());
+            useCaseNameTextField.setText(useCase.getUseCaseName());
 
             // Add actors to the choice box
             for (int i = 0; i < actorList.getActorList().size(); i++) {
@@ -67,15 +68,15 @@ public class UseCasePageController {
                 actorChoiceBox.setValue(actorList.findByActorId(useCase.getActorID()).getActorName());
 
             }
-            if (useCase.getDescription() != "!@#$%^&*()_+")
+            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+"))
             {
                 descriptionTextArea.setText(useCase.getDescription());
             }
-            if (useCase.getPreCondition() != "!@#$%^&*()_+")
+            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+"))
             {
                 preConditionTextField.setText(useCase.getPreCondition());
             }
-            if (useCase.getPostCondition() != "!@#$%^&*()_+")
+            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+"))
             {
                 postConditionTextField.setText(useCase.getPostCondition());
             }
@@ -89,6 +90,15 @@ public class UseCasePageController {
         if (actorChoiceBox.getValue() != null) {
             int actorID = actorList.findByActorName((String) actorChoiceBox.getValue()).getActorID();
             useCase.setActorID(actorID);
+        }
+
+        // Set value for useCaseName
+        if (!useCaseNameTextField.getText().isEmpty()) {
+            errorLabel.setText("");
+            useCase.setUseCaseName(useCaseNameTextField.getText());
+        } else {
+            errorLabel.setText("Please enter the use case name.");
+            return;
         }
 
         // Set value for description

@@ -500,7 +500,6 @@ public class HomePageController {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
-                makeDraggable(node);
             }
         });
 
@@ -512,41 +511,10 @@ public class HomePageController {
                     System.out.println("Item Right Clicked");
                     node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                    makeDraggable(node);
                 }
             }
         });
-
-        // Check if label of node is not null
-        Label label = null;
-        if (node instanceof VBox) {
-            label = (Label) ((VBox) node).getChildren().get(1);
-        } else if (node instanceof StackPane) {
-            label = (Label) ((StackPane) node).getChildren().get(1);
-        }
-
-        Label finalLabel = label;
-
-        if (label != null) {
-            label.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
-                        // Create a TextInputDialog
-                        TextInputDialog dialog = new TextInputDialog(finalLabel.getText());
-                        dialog.setTitle("Change Label");
-                        dialog.setHeaderText("Please enter the new text for the label:");
-                        dialog.setContentText("Label:");
-
-                        // Show the dialog and get the result
-                        Optional<String> result = dialog.showAndWait();
-                        // If a string was entered, use it as the new label text
-                        if (result.isPresent()) {
-                            finalLabel.setText(result.get());
-                        }
-                    }
-                }
-            });
-        }
     }
 
     public void paneDragOver(DragEvent dragEvent) {

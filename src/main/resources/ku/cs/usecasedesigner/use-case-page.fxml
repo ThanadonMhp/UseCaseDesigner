@@ -16,11 +16,12 @@
       <Label layoutX="95.0" layoutY="175.0" text="description" />
       <Label layoutX="96.0" layoutY="329.0" text="Post-Condition" />
       <Label fx:id="useCaseIDLabel" layoutX="356.0" layoutY="24.0" text="useCaseIDLabel" />
-      <Label fx:id="useCaseNameLabel" layoutX="356.0" layoutY="59.0" text="useCaseNameLabel" />
       <ChoiceBox fx:id="actorChoiceBox" layoutX="323.0" layoutY="95.0" prefWidth="150.0" />
       <TextField fx:id="preConditionTextField" layoutX="324.0" layoutY="131.0" />
       <TextArea fx:id="descriptionTextArea" layoutX="95.0" layoutY="192.0" prefHeight="120.0" prefWidth="462.0" />
       <TextField fx:id="postConditionTextField" layoutX="324.0" layoutY="325.0" />
       <Button layoutX="505.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
+      <TextField fx:id="useCaseNameTextField" layoutX="324.0" layoutY="55.0" />
+      <Label fx:id="errorLabel" layoutX="322.0" layoutY="41.0" prefHeight="17.0" prefWidth="149.0" textAlignment="CENTER" textFill="RED" />
    </children>
 </AnchorPane>
