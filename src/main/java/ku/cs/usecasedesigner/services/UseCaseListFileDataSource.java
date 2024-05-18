@@ -93,7 +93,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
         //Import subsystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
-        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        SubSystemList subsystemList = subsystemListFileDataSource.readData();
         //Import UseCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
@@ -132,7 +132,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             }
 
             //Write SubsystemList to CSV
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
                 buffer.write(subsystemListFileDataSource.createLine(subsystem));
                 buffer.newLine();
             }

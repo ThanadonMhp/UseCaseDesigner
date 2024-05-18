@@ -8,10 +8,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
-import ku.cs.usecasedesigner.services.ActorListFileDataSource;
-import ku.cs.usecasedesigner.services.DataSource;
-import ku.cs.usecasedesigner.services.PositionListFileDataSource;
-import ku.cs.usecasedesigner.services.UseCaseListFileDataSource;
+import ku.cs.usecasedesigner.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,11 +22,13 @@ public class LabelPageController {
     private ActorList actorList;
     private UseCaseList useCaseList;
     private PositionList positionList;
+    private SubSystemList subSystemList;
     private DataSource<ActorList> actorListDataSource;
     private DataSource<UseCaseList> useCaseListDataSource;
     private DataSource<PositionList> positionListDataSource;
+    private DataSource<SubSystemList> subSystemListDataSource;
 
-    @FXML private Text labelText, errorText;
+    @FXML private Text errorText;
 
     @FXML private TextField labelTextField;
 
@@ -51,6 +50,8 @@ public class LabelPageController {
             useCaseList = useCaseListDataSource.readData();
             positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
             positionList = positionListDataSource.readData();
+            subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+            subSystemList = subSystemListDataSource.readData();
         }
     }
 
@@ -95,6 +96,14 @@ public class LabelPageController {
                 );
                 useCaseList.addUseCase(useCase);
                 useCaseListDataSource.writeData(useCaseList);
+            } else if (type.equals("subSystem")) {
+                SubSystem subSystem = new SubSystem(
+                        subSystemList.findLastSubsystemId() + 1,
+                        label,
+                        position.getPositionID()
+                );
+                subSystemList.addSubsystem(subSystem);
+                subSystemListDataSource.writeData(subSystemList);
             }
 
             // Send the label to the previous page

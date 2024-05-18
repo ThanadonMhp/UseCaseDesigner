@@ -1,11 +1,11 @@
 package ku.cs.usecasedesigner.models;
 
-public class Subsystem {
+public class SubSystem {
     private int subSystemID;
     private String subSystemName;
     private int positionID;
 
-    public Subsystem(int subSystemID, String subSystemName, int positionID) {
+    public SubSystem(int subSystemID, String subSystemName, int positionID) {
         this.subSystemID = subSystemID;
         this.subSystemName = subSystemName;
         this.positionID = positionID;

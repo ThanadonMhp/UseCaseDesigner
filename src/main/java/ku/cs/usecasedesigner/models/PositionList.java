@@ -41,5 +41,12 @@ public class PositionList {
     }
 
 
-
+    public Position findByPosition(double layoutX, double layoutY) {
+        for (Position position : positionList) {
+            if (position.getXPosition() == layoutX && position.getYPosition() == layoutY) {
+                return position;
+            }
+        }
+        return null;
+    }
 }

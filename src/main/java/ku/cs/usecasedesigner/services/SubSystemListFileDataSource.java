@@ -5,7 +5,7 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SubSystemListFileDataSource implements DataSource<SubsystemList>, ManageDataSource<Subsystem> {
+public class SubSystemListFileDataSource implements DataSource<SubSystemList>, ManageDataSource<SubSystem> {
     private String directory;
     private String fileName;
 
@@ -33,8 +33,8 @@ public class SubSystemListFileDataSource implements DataSource<SubsystemList>, M
     }
 
     @Override
-    public SubsystemList readData() {
-        SubsystemList subsystemList = new SubsystemList();
+    public SubSystemList readData() {
+        SubSystemList subsystemList = new SubSystemList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
@@ -48,7 +48,7 @@ public class SubSystemListFileDataSource implements DataSource<SubsystemList>, M
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data[0].trim().equals("subSystem")) {
-                    Subsystem subsystem = new Subsystem(
+                    SubSystem subsystem = new SubSystem(
                             Integer.parseInt(data[1]), // subsystemID
                             data[2], // subsystemName
                             Integer.parseInt(data[3]) // positionID
@@ -75,7 +75,7 @@ public class SubSystemListFileDataSource implements DataSource<SubsystemList>, M
     }
 
     @Override
-    public void writeData(SubsystemList subsystemList) {
+    public void writeData(SubSystemList subsystemList) {
         // Import ActorList to file
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
@@ -133,7 +133,7 @@ public class SubSystemListFileDataSource implements DataSource<SubsystemList>, M
             }
 
             //Write SubsystemList to CSV
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
                 buffer.write(createLine(subsystem));
                 buffer.newLine();
             }
@@ -161,7 +161,7 @@ public class SubSystemListFileDataSource implements DataSource<SubsystemList>, M
     }
 
     @Override
-    public String createLine(Subsystem subsystem) {
+    public String createLine(SubSystem subsystem) {
         return "subSystem" + ","
                 + subsystem.getSubSystemID() + ","
                 + subsystem.getSubSystemName() + ","

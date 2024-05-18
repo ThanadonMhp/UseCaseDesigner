@@ -87,7 +87,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
         // Import subSystemList to file
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
-        SubsystemList subsystemList = subsystemListFileDataSource.readData();
+        SubSystemList subsystemList = subsystemListFileDataSource.readData();
         // Import useCaseList to file
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
@@ -133,7 +133,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
             }
 
             // Write subSystemList to file
-            for (Subsystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
                 String line = subsystemListFileDataSource.createLine(subsystem);
                 buffer.append(line);
                 buffer.newLine();

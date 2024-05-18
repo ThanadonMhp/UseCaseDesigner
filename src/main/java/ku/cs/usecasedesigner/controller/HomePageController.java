@@ -43,7 +43,7 @@ public class HomePageController {
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
     private PositionList positionList = new PositionList();
-    private SubsystemList subsystemList = new SubsystemList();
+    private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
 
     private static Line getLine(Node startNode, Node endNode, String text) {
@@ -264,7 +264,7 @@ public class HomePageController {
         positionList.addPosition(position);
 
         // Add the subsystem to subsystemList
-        Subsystem subsystem = new Subsystem
+        SubSystem subsystem = new SubSystem
                 (subsystemList.findLastSubsystemId() + 1, // subSystemID
                         label,  // subSystemName
                         position.getPositionID()); // positionID
@@ -327,22 +327,6 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
     }
 
-    public String getTextInput() {
-        //Create a popup for text input that can't be empty
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter Label");
-        dialog.setHeaderText("Please enter the label for the component:");
-        dialog.setContentText("Label:");
-
-
-        // Get the text from the popup
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            return result.get();
-        }
-        return "";
-    }
-
     public void ovalDragDetected(MouseEvent mouseEvent) {
         System.out.println("Oval Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
@@ -394,6 +378,8 @@ public class HomePageController {
             double newY = e.getSceneY() - startY;
             node.setLayoutX(newX);
             node.setLayoutY(newY);
+
+            //
         });
     }
 
@@ -500,6 +486,7 @@ public class HomePageController {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
+                makeDraggable(node);
             }
         });
 
@@ -542,14 +529,23 @@ public class HomePageController {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
-                objects.add("useCase");
+                objects.add("actor");
                 objects.add(75.00);
                 objects.add(75.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("System")) {
-                drawSubSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
+                // Create a popup for text input
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("subSystem");
+                objects.add(100.00);
+                objects.add(50.00);
+                objects.add(dragEvent.getX() - 75);
+                objects.add(dragEvent.getY() - 75);
+                FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
@@ -660,8 +656,8 @@ public class HomePageController {
         });
 
         // Load subsystems
-        DataSource<SubsystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
-        SubsystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
+        DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+        SubSystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
         // Recreate each subsystem
         subsystemList.getSubsystemList().forEach(subsystem -> {
             // Find the position of the subsystem
@@ -722,7 +718,7 @@ public class HomePageController {
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<SubsystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+        DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
 
