@@ -99,9 +99,16 @@ public class FXRouter {
         route.data = data;
         loadNewRoute(route);
     }
+
     public static void popup(String routeLabel) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
         popupNewRoute(route);
+
+    }
+
+    public static void popup(String routeLabel, boolean focus) throws IOException {
+        RouteScene route = (RouteScene)routes.get(routeLabel);
+        popupNewRoute(route, focus);
 
     }
 
@@ -111,50 +118,11 @@ public class FXRouter {
         popupNewRoute(route);
     }
 
-    public static void popup(String routeLabel, Runnable onClose) throws IOException {
-    RouteScene route = (RouteScene)routes.get(routeLabel);
-    route.data = null;
-    popupNewRoute(route, onClose);
-}
-
-public static void popup(String routeLabel, Object data, Runnable onClose) throws IOException {
-    RouteScene route = (RouteScene)routes.get(routeLabel);
-    route.data = data;
-    popupNewRoute(route, onClose);
-}
-
-public static void popupNewRoute(RouteScene route, Runnable onClose) throws IOException {
-    currentRoute = route;
-    String scenePath = "/" + route.scenePath;
-    FXMLLoader fxmlLoader = new FXMLLoader();
-    fxmlLoader.setLocation((new Object() {}).getClass().getResource(scenePath));
-    Parent resource = (Parent)fxmlLoader.load((new Object() {}).getClass().getResource(scenePath));
-
-    Stage stage = new Stage();
-    Scene scene = new Scene(resource);
-
-    // Set the modality
-    stage.initModality(Modality.APPLICATION_MODAL);
-
-    if (themeType == 1){
-        scene.getStylesheets().clear();
-        scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
-    } else {
-        scene.getStylesheets().clear();
+    public static void popup(String routeLabel, Object data, boolean focus) throws IOException {
+        RouteScene route = (RouteScene)routes.get(routeLabel);
+        route.data = data;
+        popupNewRoute(route, focus);
     }
-
-    stage.setTitle(route.windowTitle);
-    stage.setScene(scene);
-    stage.show();
-    routeAnimation(resource);
-
-    stage.setOnCloseRequest(e ->{
-        window.close();
-        if (onClose != null) {
-            onClose.run();
-        }
-    });
-}
 
     public static void loadNewRoute(RouteScene route) throws IOException {
         currentRoute = route;
@@ -190,8 +158,35 @@ public static void popupNewRoute(RouteScene route, Runnable onClose) throws IOEx
         Stage stage = new Stage();
         Scene scene = new Scene(resource);
 
+        if (themeType == 1){
+            scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
+        } else {
+            scene.getStylesheets().clear();
+        }
+
+        stage.setTitle(route.windowTitle);
+        stage.setScene(scene);
+        stage.show();
+        routeAnimation(resource);
+    }
+
+    public static void popupNewRoute(RouteScene route, boolean focus) throws IOException {
+        currentRoute = route;
+        String scenePath = "/" + route.scenePath;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation((new Object() {}).getClass().getResource(scenePath));
+        Parent resource = (Parent)fxmlLoader.load((new Object() {}).getClass().getResource(scenePath));
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(resource);
+
         // Set the modality
-        stage.initModality(Modality.APPLICATION_MODAL);
+        if (focus){
+            stage.initModality(Modality.APPLICATION_MODAL);
+        } else {
+            stage.initModality(Modality.NONE);
+        }
 
         if (themeType == 1){
             scene.getStylesheets().clear();

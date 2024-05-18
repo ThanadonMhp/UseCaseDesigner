@@ -43,6 +43,15 @@ public class UseCaseList {
         }
         return lastUseCaseId;
     }
+
+    public UseCase findByUseCaseId(int useCaseId) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseID() == useCaseId) {
+                return useCase;
+            }
+        }
+        return null;
+    }
 }
 
 

@@ -28,7 +28,7 @@ public class PreferencePageController {
     public void savePreference(int strokeWidth, String font, int fontSize, String theme) {
         // Save the preference to the file
         PreferenceList preferenceList = new PreferenceList();
-        DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName);
+        DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
         Preference preference = new Preference(strokeWidth, font, fontSize, theme);
         preferenceList.addPreference(preference);
 

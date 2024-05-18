@@ -16,7 +16,7 @@ public class ProjectApplication extends Application {
         configRoute();
         FXRouter.setTheme(1);
         FXRouter.goTo("HomePage");
-        FXRouter.popup("LandingPage");
+        FXRouter.popup("LandingPage", true);
    }
 
     private static void configRoute() {

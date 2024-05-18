@@ -33,7 +33,6 @@ public class LandingPageController {
 
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();
-            objects.add("loadProject");
             objects.add(projectName);
             objects.add(directory);
             FXRouter.goTo("HomePage", objects);
@@ -51,7 +50,7 @@ public class LandingPageController {
     public void handleNewButton(ActionEvent actionEvent) throws IOException {
         // Show new project window
         System.out.println("New project button clicked.");
-        FXRouter.popup("NewProjectPage");
+        FXRouter.popup("NewProjectPage", true);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();

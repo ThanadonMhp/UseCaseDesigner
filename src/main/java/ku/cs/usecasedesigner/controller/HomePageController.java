@@ -40,6 +40,12 @@ public class HomePageController {
     private String projectName, directory;
     private Node startNodeForLink;
 
+    private ActorList actorList = new ActorList();
+    private ConnectionList connectionList = new ConnectionList();
+    private PositionList positionList = new PositionList();
+    private SubsystemList subsystemList = new SubsystemList();
+    private UseCaseList useCaseList = new UseCaseList();
+
     private static Line getLine(Node startNode, Node endNode, String text) {
         Line line = new Line();
 
@@ -85,15 +91,13 @@ public class HomePageController {
     void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            if (objects.get(0).equals("loadProject")) {
-                // Load the project
-                projectName = (String) objects.get(1);
-                directory = (String) objects.get(2);
-                loadProject();
-                saveProject();
-                System.out.println("Project Name: " + projectName);
-                System.out.println("Directory: " + directory);
-            }
+            // Load the project
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            loadProject();
+            saveProject();
+            System.out.println("Project Name: " + projectName);
+            System.out.println("Directory: " + directory);
         }
     }
 
@@ -138,9 +142,51 @@ public class HomePageController {
         // Add StackPane to designPane
         designPane.getChildren().add(stackPane);
 
+        // Save the position of the use case
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        // Add the use case to useCaseList
+        UseCase useCase = new UseCase
+                (useCaseList.findLastUseCaseId() + 1, // useCaseID
+                        label,  // useCaseName
+                        actorID,  // actorID
+                        preCondition,  // preCondition
+                        description,  // description
+                        postCondition,  // postCondition
+                        position.getPositionID()); // positionID
+        useCaseList.addUseCase(useCase);
+
+        saveProject();
+
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+
+        // Double click to open the use case page and receive the use case details from the UseCasePage and Update the use case
+        stackPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Send the use case details to the UseCasePage
+                    ArrayList<Object> objects = new ArrayList<>();
+                    objects.add(projectName);
+                    objects.add(directory);
+                    objects.add(useCase.getUseCaseID());
+                    try {
+                        FXRouter.popup("UseCasePage", objects);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
     }
 
     public void drawActor(double width, double height, double layoutX, double layoutY, String label) {
@@ -163,6 +209,23 @@ public class HomePageController {
 
         // Add VBox to designPane
         designPane.getChildren().add(vbox);
+
+        // Save the position of the actor
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        // Add the actor to actorList
+        Actor actor = new Actor
+                (actorList.findLastActorId() + 1, // actorID
+                        label,  // actorName
+                        position.getPositionID()); // positionID
+        actorList.addActor(actor);
 
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
@@ -189,6 +252,23 @@ public class HomePageController {
 
         // Add VBox to designPane
         designPane.getChildren().add(vbox);
+
+        // Save the position of the subsystem
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        // Add the subsystem to subsystemList
+        Subsystem subsystem = new Subsystem
+                (subsystemList.findLastSubsystemId() + 1, // subSystemID
+                        label,  // subSystemName
+                        position.getPositionID()); // positionID
+        subsystemList.addSubsystem(subsystem);
 
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
@@ -479,9 +559,27 @@ public class HomePageController {
         if (dragEvent.getDragboard().hasString()) {
             // Draw a component based on the string
             if (dragEvent.getDragboard().getString().equals("Oval")) {
-                drawUseCase(50, 30, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput(), 0, "!@#$%^&*()_+", "!@#$%^&*()_+", "!@#$%^&*()_+");
+                // Create a popup for text input
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("useCase");
+                objects.add(50.00);
+                objects.add(30.00);
+                objects.add(dragEvent.getX() - 75);
+                objects.add(dragEvent.getY() - 75);
+                FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
-                drawActor(75, 75, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
+                // Create a popup for text input
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("useCase");
+                objects.add(75.00);
+                objects.add(75.00);
+                objects.add(dragEvent.getX() - 75);
+                objects.add(dragEvent.getY() - 75);
+                FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("System")) {
                 drawSubSystem(100, 50, dragEvent.getX() - 75, dragEvent.getY() - 75, getTextInput());
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
@@ -651,12 +749,6 @@ public class HomePageController {
     }
 
     public void saveProject() {
-        ActorList actorList = new ActorList();
-        ConnectionList connectionList = new ConnectionList();
-        PositionList positionList = new PositionList();
-        SubsystemList subsystemList = new SubsystemList();
-        UseCaseList useCaseList = new UseCaseList();
-        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
 
         // Save the project components
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
@@ -667,90 +759,9 @@ public class HomePageController {
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
 
         // Save the components to the data sources
+        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
         useCaseSystemList.addSystem(useCaseSystem);
-
-        designPane.getChildren().forEach(node -> {
-            if (node instanceof VBox) {
-                // Check type of the node
-                Label label = (Label) ((VBox) node).getChildren().get(1);
-                String type = label.getText();
-                if (type.equals("actor")) {
-                    // Save the position of the actor
-                    Position position = new Position
-                            (positionList.findLastPositionId() + 1,  // positionID
-                                    node.getLayoutX(), // xPosition
-                                    node.getLayoutY(), // yPosition
-                                    ((ImageView) ((VBox) node).getChildren().get(0)).getFitWidth(), // fitWidth
-                                    ((ImageView) ((VBox) node).getChildren().get(0)).getFitHeight(),  // fitHeight
-                                    ((VBox) node).getChildren().get(0).getRotate()); // rotation
-                    positionList.addPosition(position);
-
-                    // Save the actor to actorList
-                    Actor actor = new Actor
-                            (actorList.findLastActorId() + 1, // actorID
-                                    ((Label) ((VBox) node).getChildren().get(2)).getText(),  // actorName
-                                    position.getPositionID()); // positionID
-                    actorList.addActor(actor);
-
-                } else if (type.equals("subSystem")) {
-                    // Save the position of the subsystem
-                    Position position = new Position(
-                            positionList.findLastPositionId() + 1,
-                            node.getLayoutX(), // xPosition
-                            node.getLayoutY(), // yPosition
-                            ((VBox) node).getChildren().get(0).getLayoutBounds().getWidth(), // fitWidth
-                            ((VBox) node).getChildren().get(0).getLayoutBounds().getHeight(),  // fitHeight
-                            ((VBox) node).getChildren().get(0).getRotate()); // rotation
-                    positionList.addPosition(position);
-
-                    // Save the subsystem to subsystemList
-                    Subsystem subsystem = new Subsystem
-                            (subsystemList.findLastSubsystemId() + 1, // subsystemID
-                                    ((Label) ((VBox) node).getChildren().get(2)).getText(),  // subsystemName
-                                    position.getPositionID()); // positionID
-                    subsystemList.addSubsystem(subsystem);
-                }
-
-            } else if (node instanceof StackPane) {
-                // Check type of the node
-                Label label = (Label) ((StackPane) node).getChildren().get(1);
-                String type = label.getText();
-                if (type.equals("useCase")) {
-                    // Save the position of the use case
-                    Position position = new Position(
-                            positionList.findLastPositionId() + 1,  // positionID
-                            node.getLayoutX(), // xPosition
-                            node.getLayoutY(), // yPosition
-                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusX(), // fitWidth
-                            ((Ellipse) ((StackPane) node).getChildren().get(0)).getRadiusY(),  // fitHeight
-                            ((StackPane) node).getChildren().get(0).getRotate()); // rotation
-                    positionList.addPosition(position);
-
-                    // Save the use case to useCaseList
-                    UseCase useCase = new UseCase(
-                            useCaseList.findLastUseCaseId() + 1, // useCaseID
-                            ((Label) ((StackPane) node).getChildren().get(2)).getText(),  // useCaseName
-                            Integer.parseInt(((Label) ((StackPane) node).getChildren().get(3)).getText()),  // actorID
-                            ((Label) ((StackPane) node).getChildren().get(4)).getText(),  // preCondition
-                            ((Label) ((StackPane) node).getChildren().get(5)).getText(),  // description
-                            ((Label) ((StackPane) node).getChildren().get(6)).getText(),  // postCondition
-                            position.getPositionID()); // positionID
-                    useCaseList.addUseCase(useCase);
-                }
-
-            } else if (node instanceof Line) {
-                // Save the connection
-                Connection connection = new Connection(
-                        connectionList.findLastConnectionID(), // connectionID
-                        "!@#$%^&*()_+", // connectionType
-                        ((Line) node).getStartX(), // startX
-                        ((Line) node).getStartY(), // startY
-                        ((Line) node).getEndX(), // endX
-                        ((Line) node).getEndY()); // endY
-                connectionList.addConnection(connection);
-            }
-        });
 
         // Write data to CSV
         actorListDataSource.writeData(actorList);

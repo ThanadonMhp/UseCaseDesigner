@@ -7,15 +7,52 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.usecasedesigner.models.*;
+import ku.cs.usecasedesigner.services.ActorListFileDataSource;
+import ku.cs.usecasedesigner.services.DataSource;
+import ku.cs.usecasedesigner.services.PositionListFileDataSource;
+import ku.cs.usecasedesigner.services.UseCaseListFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class LabelPageController {
 
+    private double width, height, layoutX, layoutY;
+    private String type;
+    private String projectName, directory;
+
+    private ActorList actorList;
+    private UseCaseList useCaseList;
+    private PositionList positionList;
+    private DataSource<ActorList> actorListDataSource;
+    private DataSource<UseCaseList> useCaseListDataSource;
+    private DataSource<PositionList> positionListDataSource;
+
     @FXML private Text labelText, errorText;
 
     @FXML private TextField labelTextField;
+
+    @FXML void initialize() {
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            type = (String) objects.get(2);
+            width = (double) objects.get(3);
+            height = (double) objects.get(4);
+            layoutX = (double) objects.get(5);
+            layoutY = (double) objects.get(6);
+
+            // Read the actor, use case, and position list from the file
+            actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+            actorList = actorListDataSource.readData();
+            useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+            useCaseList = useCaseListDataSource.readData();
+            positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+            positionList = positionListDataSource.readData();
+        }
+    }
 
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         if (labelTextField.getText().isEmpty()) {
@@ -23,10 +60,47 @@ public class LabelPageController {
         } else {
             errorText.setText("");
 
+            // Get the label from the text field
+            String label = labelTextField.getText();
+
+            // Save the position of the component
+            Position position = new Position(
+                    positionList.findLastPositionId() + 1,
+                    layoutX,
+                    layoutY,
+                    width,
+                    height,
+                    0
+            );
+            positionList.addPosition(position);
+            positionListDataSource.writeData(positionList);
+
+            if (type.equals("actor")) {
+                Actor actor = new Actor(
+                        actorList.findLastActorId() + 1,
+                        label,
+                        position.getPositionID()
+                );
+                actorList.addActor(actor);
+                actorListDataSource.writeData(actorList);
+            } else if (type.equals("useCase")) {
+                UseCase useCase = new UseCase(
+                        useCaseList.findLastUseCaseId() + 1,
+                        label,
+                        0,
+                        "!@#$%^&*()_+",
+                        "!@#$%^&*()_+",
+                        "!@#$%^&*()_+",
+                        position.getPositionID()
+                );
+                useCaseList.addUseCase(useCase);
+                useCaseListDataSource.writeData(useCaseList);
+            }
+
             // Send the label to the previous page
             ArrayList<Object> objects = new ArrayList<>();
-            objects.add("label");
-            objects.add(labelTextField.getText());
+            objects.add(projectName);
+            objects.add(directory);
 
             FXRouter.goTo("HomePage", objects);
 
