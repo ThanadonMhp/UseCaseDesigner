@@ -1,10 +1,13 @@
 package ku.cs.usecasedesigner.controller;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.Preference;
 import ku.cs.usecasedesigner.models.PreferenceList;
@@ -35,8 +38,8 @@ public class PreferencePageController {
 
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            directory = (String) objects.get(0);
-            projectName = (String) objects.get(1);
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
         }
         fontComboBox.setItems(FXCollections.observableArrayList("LINE Seed Sans TH App", "Arial", "Tahoma"));
         sizeComboBox.setItems(FXCollections.observableArrayList("12", "14", "16"));
@@ -51,15 +54,21 @@ public class PreferencePageController {
         preferenceList.addPreference(preference);
 
         preferenceListDataSource.writeData(preferenceList);
+
     }
     @FXML
-    public void handleSaveButtonAction() {
+    public void handleSaveButtonAction(ActionEvent actionEvent) {
         RadioButton selectedThemeRadioButton = (RadioButton) themeGroup.getSelectedToggle();
         String theme = selectedThemeRadioButton.getText();
         String font = fontComboBox.getValue();
         int size = Integer.parseInt(sizeComboBox.getValue());
 
         savePreference(1, font + " " , size, theme);
+
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
 

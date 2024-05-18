@@ -776,6 +776,9 @@ public class HomePageController {
 
     public void handlePreferenceMenuItem(ActionEvent actionEvent) throws IOException {
         // Open the preference page
-        FXRouter.popup("PreferencePage");
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        FXRouter.popup("PreferencePage", objects);
     }
 }
