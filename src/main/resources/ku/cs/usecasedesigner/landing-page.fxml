@@ -21,9 +21,9 @@
             <String fx:value="noto-sans-thai" />
             <String fx:value="new-button" />
          </styleClass></Button>
-      <Text fill="#3b3232" layoutX="63.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Noto Sans Thai;" styleClass="roboto-black" text="ยินดีต้องรับสู่ to Use Case Designer!">
+      <Text fill="#3b3232" layoutX="63.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Noto Sans Thai;" styleClass="roboto-black" text="Welcome to Use Case Designer!">
          <font>
-            <Font name="SansSerif Regular" size="12.0" />
+            <Font name="Roboto Thin" size="12.0" />
          </font>
       </Text>
    </children>

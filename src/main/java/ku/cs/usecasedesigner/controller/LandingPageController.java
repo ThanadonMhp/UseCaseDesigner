@@ -35,7 +35,7 @@ public class LandingPageController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            FXRouter.goTo("HomePage", objects);
+            FXRouter.goTo("HomePage" ,objects);
 
             // Close the current window
             Node source = (Node) actionEvent.getSource();
