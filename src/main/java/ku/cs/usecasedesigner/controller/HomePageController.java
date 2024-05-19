@@ -22,6 +22,7 @@ import ku.cs.usecasedesigner.services.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 public class HomePageController {
@@ -166,10 +167,10 @@ public class HomePageController {
         saveProject();
 
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
 
-        // Double click to open the use case page and receive the use case details from the UseCasePage and Update the use case
+        // Double click to open the use case page
         stackPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -180,6 +181,7 @@ public class HomePageController {
                     objects.add(directory);
                     objects.add(useCase.getUseCaseID());
                     try {
+                        saveProject();
                         FXRouter.popup("UseCasePage", objects);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -228,8 +230,8 @@ public class HomePageController {
         actorList.addActor(actor);
 
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
     }
 
     public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label) {
@@ -271,8 +273,8 @@ public class HomePageController {
         subsystemList.addSubsystem(subsystem);
 
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
     }
 
     public void drawLine(double startX, double startY, double endX, double endY) {
@@ -285,8 +287,8 @@ public class HomePageController {
         designPane.getChildren().add(line);
 
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void drawArrow(double startX, double startY, double endX, double endY) {
@@ -323,8 +325,8 @@ public class HomePageController {
         designPane.getChildren().addAll(line, arrowHead, arrowHead2);
 
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void ovalDragDetected(MouseEvent mouseEvent) {
@@ -367,7 +369,7 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    private void makeDraggable(Node node) {
+    private void makeDraggable(Node node, String type, int ID) {
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getLayoutX();
             startY = e.getSceneY() - node.getLayoutY();
@@ -379,11 +381,15 @@ public class HomePageController {
             node.setLayoutX(newX);
             node.setLayoutY(newY);
 
-            //
+            if(Objects.equals(type, "connection")) {
+                connectionList.updateConnection(ID, newX, newY);
+            } else {
+                positionList.updatePosition(ID, newX, newY);
+            }
         });
     }
 
-    private void makeSelectable(Node node) {
+    private void makeSelectable(Node node, String type, int ID){
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
@@ -486,7 +492,7 @@ public class HomePageController {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
-                makeDraggable(node);
+                makeDraggable(node, type, ID);
             }
         });
 
@@ -498,7 +504,7 @@ public class HomePageController {
                     System.out.println("Item Right Clicked");
                     node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-                    makeDraggable(node);
+                    makeDraggable(node, type, ID);
                 }
             }
         });
@@ -514,6 +520,7 @@ public class HomePageController {
         if (dragEvent.getDragboard().hasString()) {
             // Draw a component based on the string
             if (dragEvent.getDragboard().getString().equals("Oval")) {
+                saveProject();
                 // Create a popup for text input
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -525,6 +532,7 @@ public class HomePageController {
                 objects.add(dragEvent.getY() - 75);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
+                saveProject();
                 // Create a popup for text input
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -536,6 +544,7 @@ public class HomePageController {
                 objects.add(dragEvent.getY() - 75);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("System")) {
+                saveProject();
                 // Create a popup for text input
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -592,9 +601,9 @@ public class HomePageController {
         designPane.getChildren().add(line);
 
         // Make the component draggable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
         // Make the component selectable
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
@@ -698,8 +707,8 @@ public class HomePageController {
                 designPane.getChildren().add(line);
 
                 // Make the component draggable and selectable
-                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1));
-                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1));
+                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connection.getConnectionID());
+                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connection.getConnectionID());
             }
         });
 

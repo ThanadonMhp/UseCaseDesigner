@@ -40,4 +40,12 @@ public class Connection {
     public double getEndY() {
         return endY;
     }
+
+    public void setStartX(double startX) {
+        this.startX = startX;
+    }
+
+    public void setStartY(double startY) {
+        this.startY = startY;
+    }
 }

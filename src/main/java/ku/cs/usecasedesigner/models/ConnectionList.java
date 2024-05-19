@@ -75,4 +75,13 @@ public class ConnectionList {
         }
         return lastConnectionID;
     }
+
+    public void updateConnection(int id, double newX, double newY) {
+        for (Connection connection : connectionList) {
+            if (connection.getConnectionID() == id) {
+                connection.setStartX(newX);
+                connection.setStartY(newY);
+            }
+        }
+    }
 }

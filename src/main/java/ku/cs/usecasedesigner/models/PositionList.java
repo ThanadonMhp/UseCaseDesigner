@@ -49,4 +49,13 @@ public class PositionList {
         }
         return null;
     }
+
+    public void updatePosition(int id, double newX, double newY) {
+        for (Position position : positionList) {
+            if (position.getPositionID() == id) {
+                position.setXPosition(newX);
+                position.setYPosition(newY);
+            }
+        }
+    }
 }
