@@ -164,8 +164,6 @@ public class HomePageController {
                         position.getPositionID()); // positionID
         useCaseList.addUseCase(useCase);
 
-        saveProject();
-
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
