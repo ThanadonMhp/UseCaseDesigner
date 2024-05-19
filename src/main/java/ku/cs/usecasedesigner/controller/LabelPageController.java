@@ -12,21 +12,15 @@ import ku.cs.usecasedesigner.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LabelPageController {
 
     private double width, height, layoutX, layoutY;
     private String type;
     private String projectName, directory;
-
-    private ActorList actorList;
-    private UseCaseList useCaseList;
-    private PositionList positionList;
-    private SubSystemList subSystemList;
-    private DataSource<ActorList> actorListDataSource;
-    private DataSource<UseCaseList> useCaseListDataSource;
-    private DataSource<PositionList> positionListDataSource;
-    private DataSource<SubSystemList> subSystemListDataSource;
+    private String editType;
+    private int editID;
 
     @FXML private Text errorText;
 
@@ -38,20 +32,26 @@ public class LabelPageController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             type = (String) objects.get(2);
-            width = (double) objects.get(3);
-            height = (double) objects.get(4);
-            layoutX = (double) objects.get(5);
-            layoutY = (double) objects.get(6);
-
-            // Read the actor, use case, and position list from the file
-            actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
-            actorList = actorListDataSource.readData();
-            useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-            useCaseList = useCaseListDataSource.readData();
-            positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-            positionList = positionListDataSource.readData();
-            subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
-            subSystemList = subSystemListDataSource.readData();
+            if (Objects.equals(type, "editLabel")) {
+                editType = (String) objects.get(3);
+                editID = (int) objects.get(4);
+                if (Objects.equals(editType, "actor")) {
+                    DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+                    ActorList actorList = actorListDataSource.readData();
+                    Actor actor = actorList.findByActorId(editID);
+                    labelTextField.setText(actor.getActorName());
+                } else if (Objects.equals(editType, "subSystem")) {
+                    DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+                    SubSystemList subSystemList = subSystemListDataSource.readData();
+                    SubSystem subSystem = subSystemList.findBySubsystemId(editID);
+                    labelTextField.setText(subSystem.getSubSystemName());
+                }
+            } else {
+                width = (double) objects.get(3);
+                height = (double) objects.get(4);
+                layoutX = (double) objects.get(5);
+                layoutY = (double) objects.get(6);
+            }
         }
     }
 
@@ -65,45 +65,71 @@ public class LabelPageController {
             String label = labelTextField.getText();
 
             // Save the position of the component
-            Position position = new Position(
-                    positionList.findLastPositionId() + 1,
-                    layoutX,
-                    layoutY,
-                    width,
-                    height,
-                    0
-            );
-            positionList.addPosition(position);
-            positionListDataSource.writeData(positionList);
+            if (!Objects.equals(type, "editLabel")){
+                DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+                PositionList positionList = positionListDataSource.readData();
+                Position position = new Position(
+                        positionList.findLastPositionId() + 1,
+                        layoutX,
+                        layoutY,
+                        width,
+                        height,
+                        0
+                );
+                positionList.addPosition(position);
+                positionListDataSource.writeData(positionList);
 
-            if (type.equals("actor")) {
-                Actor actor = new Actor(
-                        actorList.findLastActorId() + 1,
-                        label,
-                        position.getPositionID()
-                );
-                actorList.addActor(actor);
-                actorListDataSource.writeData(actorList);
-            } else if (type.equals("useCase")) {
-                UseCase useCase = new UseCase(
-                        useCaseList.findLastUseCaseId() + 1,
-                        label,
-                        0,
-                        "!@#$%^&*()_+",
-                        "!@#$%^&*()_+",
-                        "!@#$%^&*()_+",
-                        position.getPositionID()
-                );
-                useCaseList.addUseCase(useCase);
-                useCaseListDataSource.writeData(useCaseList);
-            } else if (type.equals("subSystem")) {
-                SubSystem subSystem = new SubSystem(
-                        subSystemList.findLastSubsystemId() + 1,
-                        label,
-                        position.getPositionID()
-                );
-                subSystemList.addSubsystem(subSystem);
-                subSystemListDataSource.writeData(subSystemList);
+                if (type.equals("actor")) {
+                    DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+                    ActorList actorList = actorListDataSource.readData();
+                    Actor actor = new Actor(
+                            actorList.findLastActorId() + 1,
+                            label,
+                            position.getPositionID()
+                    );
+                    actorList.addActor(actor);
+                    actorListDataSource.writeData(actorList);
+
+                } else if (type.equals("useCase")) {
+                    DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+                    UseCaseList useCaseList = useCaseListDataSource.readData();
+                    UseCase useCase = new UseCase(
+                            useCaseList.findLastUseCaseId() + 1,
+                            label,
+                            0,
+                            "!@#$%^&*()_+",
+                            "!@#$%^&*()_+",
+                            "!@#$%^&*()_+",
+                            position.getPositionID()
+                    );
+                    useCaseList.addUseCase(useCase);
+                    useCaseListDataSource.writeData(useCaseList);
+                } else if (type.equals("subSystem")) {
+                    DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+                    SubSystemList subSystemList = subSystemListDataSource.readData();
+                    SubSystem subSystem = new SubSystem(
+                            subSystemList.findLastSubsystemId() + 1,
+                            label,
+                            position.getPositionID()
+                    );
+                    subSystemList.addSubsystem(subSystem);
+                    subSystemListDataSource.writeData(subSystemList);
+                }
+
+            } else if (type.equals("editLabel")) {
+                if (Objects.equals(editType, "actor")) {
+                    DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
+                    ActorList actorList = actorListDataSource.readData();
+                    Actor actor = actorList.findByActorId(editID);
+                    actor.setActorName(label);
+                    actorListDataSource.writeData(actorList);
+                } else if (Objects.equals(editType, "subSystem")) {
+                    DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+                    SubSystemList subSystemList = subSystemListDataSource.readData();
+                    SubSystem subSystem = subSystemList.findBySubsystemId(editID);
+                    subSystem.setSubSystemName(label);
+                    subSystemListDataSource.writeData(subSystemList);
+                }
             }
 
             // Send the label to the previous page

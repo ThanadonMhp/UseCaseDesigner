@@ -40,4 +40,12 @@ public class SubSystemList {
         return lastSubsystemId;
     }
 
+    public void removeSubsystemByPositionID(int id) {
+        for (SubSystem subsystem : subSystemList) {
+            if (subsystem.getPositionID() == id) {
+                subSystemList.remove(subsystem);
+                break;
+            }
+        }
+    }
 }

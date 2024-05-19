@@ -57,4 +57,13 @@ public class ActorList {
         }
         return null;
     }
+
+    public void removeActorByPositionID(int id) {
+        for (Actor actor : actorList) {
+            if (actor.getPositionID() == id) {
+                actorList.remove(actor);
+                break;
+            }
+        }
+    }
 }

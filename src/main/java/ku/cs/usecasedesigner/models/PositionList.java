@@ -58,4 +58,13 @@ public class PositionList {
             }
         }
     }
+
+    public void removePositionByID(int id) {
+        for (Position position : positionList) {
+            if (position.getPositionID() == id) {
+                positionList.remove(position);
+                break;
+            }
+        }
+    }
 }

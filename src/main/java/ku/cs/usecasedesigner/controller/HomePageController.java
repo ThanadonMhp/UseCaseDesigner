@@ -232,6 +232,28 @@ public class HomePageController {
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
+
+        // Double click to open the label page
+        vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Send the actor details to the LabelPage
+                    ArrayList<Object> objects = new ArrayList<>();
+                    objects.add(projectName);
+                    objects.add(directory);
+                    objects.add("editLabel");
+                    objects.add("actor");
+                    objects.add(actor.getActorID());
+                    try {
+                        saveProject();
+                        FXRouter.popup("LabelPage", objects);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
     }
 
     public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label) {
@@ -275,6 +297,28 @@ public class HomePageController {
         // Make the component draggable and selectable
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
+
+        // Double click to open the label page
+        vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Send the actor details to the LabelPage
+                    ArrayList<Object> objects = new ArrayList<>();
+                    objects.add(projectName);
+                    objects.add(directory);
+                    objects.add("editLabel");
+                    objects.add("subSystem");
+                    objects.add(subsystem.getSubSystemID());
+                    try {
+                        saveProject();
+                        FXRouter.popup("LabelPage", objects);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
     }
 
     public void drawLine(double startX, double startY, double endX, double endY) {
@@ -465,9 +509,8 @@ public class HomePageController {
             alert.setHeaderText("Are you sure you want to delete this item?");
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                System.out.println("Item Deleted");
 
+            if (result.get() == ButtonType.OK) {
                 // If node is  a line, remove the label as well
                 if (node instanceof Line) {
                     for (Node child : designPane.getChildren()) {
@@ -479,8 +522,21 @@ public class HomePageController {
                         }
                     }
                 }
-
                 designPane.getChildren().remove(node);
+                // Remove the item from the list
+                if(Objects.equals(type, "connection")) {
+                    connectionList.removeConnectionByID(ID);
+                } else if(Objects.equals(type, "useCase")) {
+                    useCaseList.removeUseCaseByPositionID(ID);
+                } else if(Objects.equals(type, "actor")) {
+                    actorList.removeActorByPositionID(ID);
+                } else if(Objects.equals(type, "subSystem")) {
+                    subsystemList.removeSubsystemByPositionID(ID);
+                }
+                // remove the position from the list
+                positionList.removePositionByID(ID);
+                saveProject();
+
                 System.out.println("Item Removed");
             }
         });
@@ -551,7 +607,7 @@ public class HomePageController {
                 objects.add(directory);
                 objects.add("subSystem");
                 objects.add(100.00);
-                objects.add(50.00);
+                objects.add(100.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
                 FXRouter.popup("LabelPage",objects);

@@ -52,6 +52,15 @@ public class UseCaseList {
         }
         return null;
     }
+
+    public void removeUseCaseByPositionID(int id) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getPositionID() == id) {
+                useCaseList.remove(useCase);
+                break;
+            }
+        }
+    }
 }
 
 

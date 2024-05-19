@@ -27,6 +27,16 @@ public class ConnectionList {
         connectionList.remove(connection);
     }
 
+    //remove connection by id
+    public void removeConnectionByID(int id) {
+        for (Connection connection : connectionList) {
+            if (connection.getConnectionID() == id) {
+                connectionList.remove(connection);
+                break;
+            }
+        }
+    }
+
     public Node findNodeByPosition(double x, double y, Pane pane) {
         // search for an item in pane that is close to the given position (x, y) and return it as a Node
         for (Node node : pane.getChildren()) {
