@@ -456,12 +456,22 @@ public class HomePageController {
                         double newHeight = mouseEvent.getY() + 10;
 
                         if (newWidth > 0 && newHeight > 0) {
-                            if (node instanceof VBox) {
+                            if (Objects.equals(type, "actor")){
                                 ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
                                 ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
-                            } else if (node instanceof StackPane) {
-                                ((ImageView) ((StackPane) node).getChildren().get(0)).setFitWidth(newWidth);
-                                ((ImageView) ((StackPane) node).getChildren().get(0)).setFitHeight(newHeight);
+                                // Update the position of the actor
+                                positionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+
+                            } else if (Objects.equals(type, "useCase")) {
+                                ((Ellipse) ((StackPane) node).getChildren().get(0)).setRadiusX(newWidth);
+                                ((Ellipse) ((StackPane) node).getChildren().get(0)).setRadiusY(newHeight);
+                                // Update the position of the use case
+                                positionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                            } else if (Objects.equals(type, "subSystem")) {
+                                ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
+                                ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                                // Update the position of the subsystem
+                                positionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
                             }
                         }
                     }
@@ -546,6 +556,7 @@ public class HomePageController {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
                 System.out.println("Editing Finished");
+                saveProject();
                 makeDraggable(node, type, ID);
             }
         });
