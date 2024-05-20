@@ -67,4 +67,12 @@ public class PositionList {
             }
         }
     }
+
+    public void updateRotation(int id, double angle) {
+        for (Position position : positionList) {
+            if (position.getPositionID() == id) {
+                position.setRotation(angle);
+            }
+        }
+    }
 }

@@ -437,11 +437,12 @@ public class HomePageController {
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
+        MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem connectItem = new MenuItem("Connect");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, connectItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -474,6 +475,21 @@ public class HomePageController {
                             }
                         }
                     }
+                }
+            });
+        });
+
+        // Set the action for rotate menu item
+        rotateItem.setOnAction(e -> {
+            System.out.println("Rotate Clicked");
+            // Make the node rotatable by dragging
+            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    double angle = Math.atan2(mouseEvent.getY() - node.getLayoutY(), mouseEvent.getX() - node.getLayoutX());
+                    node.setRotate(Math.toDegrees(angle));
+                    // Update the position of the component
+                    positionList.updateRotation(ID, Math.toDegrees(angle));
                 }
             });
         });
