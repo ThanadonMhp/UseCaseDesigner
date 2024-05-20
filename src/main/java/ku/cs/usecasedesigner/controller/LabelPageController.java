@@ -3,6 +3,7 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,7 +23,7 @@ public class LabelPageController {
     private String editType;
     private int editID;
 
-    @FXML private Text errorText;
+    @FXML private Text errorText, labelText;
 
     @FXML private TextField labelTextField;
 
@@ -46,12 +47,15 @@ public class LabelPageController {
                     SubSystem subSystem = subSystemList.findBySubsystemId(editID);
                     labelTextField.setText(subSystem.getSubSystemName());
                 }
+                labelText.setText("Edit " + editType + " name :");
             } else {
                 width = (double) objects.get(3);
                 height = (double) objects.get(4);
                 layoutX = (double) objects.get(5);
                 layoutY = (double) objects.get(6);
+                labelText.setText("Enter " + type + " name :");
             }
+
         }
     }
 

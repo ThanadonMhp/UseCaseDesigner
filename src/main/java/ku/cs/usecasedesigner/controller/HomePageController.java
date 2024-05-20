@@ -437,12 +437,11 @@ public class HomePageController {
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
-        MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem connectItem = new MenuItem("Connect");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, connectItem, deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -479,23 +478,6 @@ public class HomePageController {
             });
         });
 
-        // Set the action for rotate menu item
-        rotateItem.setOnAction(e -> {
-            System.out.println("Rotate Clicked");
-            //Make the node rotatable
-            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.isPrimaryButtonDown()) {
-                        double newRotate = mouseEvent.getX() + 10;
-                        if (newRotate > 0) {
-                            ((VBox) node).getChildren().get(0).setRotate(newRotate);
-                        }
-                    }
-                }
-            });
-        });
-
         // Set the action for connect menu item
         connectItem.setOnAction(e -> {
             startNodeForLink = node;
@@ -519,17 +501,6 @@ public class HomePageController {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.get() == ButtonType.OK) {
-                // If node is  a line, remove the label as well
-                if (node instanceof Line) {
-                    for (Node child : designPane.getChildren()) {
-                        if (child instanceof Label) {
-                            if (child.getLayoutX() == (((Line) node).getStartX() + ((Line) node).getEndX()) / 2 && child.getLayoutY() == (((Line) node).getStartY() + ((Line) node).getEndY()) / 2) {
-                                designPane.getChildren().remove(child);
-                                break;
-                            }
-                        }
-                    }
-                }
                 designPane.getChildren().remove(node);
                 // Remove the item from the list
                 if(Objects.equals(type, "connection")) {
