@@ -61,6 +61,10 @@ public class UseCaseList {
             }
         }
     }
+
+    public void clear() {
+        useCaseList.clear();
+    }
 }
 
 

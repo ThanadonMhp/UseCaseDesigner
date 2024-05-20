@@ -48,4 +48,8 @@ public class SubSystemList {
             }
         }
     }
+
+    public void clear() {
+        subSystemList.clear();
+    }
 }

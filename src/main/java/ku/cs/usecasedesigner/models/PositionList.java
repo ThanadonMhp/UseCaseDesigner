@@ -75,4 +75,8 @@ public class PositionList {
             }
         }
     }
+
+    public void clear() {
+        positionList.clear();
+    }
 }

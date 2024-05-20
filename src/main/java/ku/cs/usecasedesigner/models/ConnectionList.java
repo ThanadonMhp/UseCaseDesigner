@@ -94,4 +94,8 @@ public class ConnectionList {
             }
         }
     }
+
+    public void clear() {
+        connectionList.clear();
+    }
 }

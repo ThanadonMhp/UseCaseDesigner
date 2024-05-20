@@ -66,4 +66,8 @@ public class ActorList {
             }
         }
     }
+
+    public void clear() {
+        actorList.clear();
+    }
 }

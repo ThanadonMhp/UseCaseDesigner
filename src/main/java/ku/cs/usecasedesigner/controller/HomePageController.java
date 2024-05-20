@@ -799,6 +799,13 @@ public class HomePageController {
         // Clear the design pane
         designPane.getChildren().clear();
 
+        // Clear the lists
+        actorList.clear();
+        connectionList.clear();
+        positionList.clear();
+        subsystemList.clear();
+        useCaseList.clear();
+
         // Load positions
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
         PositionList positionList = positionListDataSource.readData(); // Read the PositionList from the CSV file
