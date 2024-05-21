@@ -48,9 +48,12 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
                 String[] data = line.split(",");
                 if (data[0].trim().equals("preference")) {
                     Preference preference = new Preference(
-                            Integer.parseInt(data[1].trim()),
-                            data[2].trim(),
-                            Integer.parseInt(data[3].trim()),
+                            Integer.parseInt(data[1].trim()), // strokeWidth
+                            data[2].trim(), // font
+                            Integer.parseInt(data[3].trim()), // fontSize
+                            Boolean.parseBoolean(data[4].trim()), // bold
+                            Boolean.parseBoolean(data[5].trim()), // italic
+                            Boolean.parseBoolean(data[6].trim()), // underline
                             data[4].trim()
                     );
                     preferenceList.addPreference(preference);
@@ -76,22 +79,22 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
 
     @Override
     public void writeData(PreferenceList preferenceList) {
-        // Import actorList to file
+        // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
-        // Import connectionList to file
+        // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        // Import positionList to file
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        // Import subSystemList to file
+        // Import subSystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        // Import useCaseList to file
+        // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-        // Import useCaseSystemList to file
+        // Import useCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
@@ -166,6 +169,9 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
                 + preference.getStrokeWidth() + ","
                 + preference.getFont() + ","
                 + preference.getFontSize() + ","
+                + preference.isBold() + ","
+                + preference.isItalic() + ","
+                + preference.isUnderline() + ","
                 + preference.getTheme();
     }
 }

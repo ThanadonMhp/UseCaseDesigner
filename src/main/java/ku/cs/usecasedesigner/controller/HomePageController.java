@@ -102,7 +102,7 @@ public class HomePageController {
         }
     }
 
-    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label, int actorID, String preCondition, String description, String postCondition) {
+    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition) {
         // Draw a system
         Ellipse ellipse = new Ellipse();
         ellipse.setRadiusX(width);
@@ -129,13 +129,21 @@ public class HomePageController {
         descriptionLabel.setMaxSize(0, 0);
         descriptionLabel.setVisible(false);
 
+        Label actorActionLabel = new Label(actorAction);
+        actorActionLabel.setMaxSize(0, 0);
+        actorActionLabel.setVisible(false);
+
+        Label systemActionLabel = new Label(systemAction);
+        systemActionLabel.setMaxSize(0, 0);
+        systemActionLabel.setVisible(false);
+
         Label postConditionLabel = new Label(postCondition);
         postConditionLabel.setMaxSize(0, 0);
         postConditionLabel.setVisible(false);
 
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, postConditionLabel);
+        stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, actorActionLabel, systemActionLabel, postConditionLabel);
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
@@ -160,6 +168,8 @@ public class HomePageController {
                         actorID,  // actorID
                         preCondition,  // preCondition
                         description,  // description
+                        actorAction, // actorAction
+                        systemAction, // systemAction
                         postCondition,  // postCondition
                         position.getPositionID()); // positionID
         useCaseList.addUseCase(useCase);
@@ -842,7 +852,7 @@ public class HomePageController {
             // Find the position of the use case
             Position position = positionList.findByPositionId(useCase.getPositionID());
             if (position != null) {
-                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(), useCase.getPostCondition());
+                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(),useCase.getActorAction(), useCase.getSystemAction(), useCase.getPostCondition());
             }
         });
 

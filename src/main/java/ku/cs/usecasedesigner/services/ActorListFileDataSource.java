@@ -49,9 +49,11 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
                 String[] data = line.split(",");
                 if (data[0].trim().equals("actor")) {
                     Actor actor = new Actor(
-                            Integer.parseInt(data[1].trim()),
-                            data[2].trim(),
-                            Integer.parseInt(data[3].trim())
+                            Integer.parseInt(data[1].trim()), // actorID
+                            data[2].trim(), // actorName
+                            data[3].trim(), // alias
+                            data[4].trim(), // description
+                            Integer.parseInt(data[5].trim()) // positionID
                     );
                     actorList.addActor(actor);
                 }
@@ -76,22 +78,25 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
 
     @Override
     public void writeData(ActorList actorList) {
-        // Import connectionList to file
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
+        // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        // Import positionList to file
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        // Import preferenceList to file
+        // Import preferenceList from CSV
         PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
-        // Import subSystemList to file
+        // Import subSystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        // Import useCaseList to file
+        // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-        // Import useCaseSystemList to file
+        // Import useCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
@@ -107,6 +112,13 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
             // Write actorList to file
             for (Actor actor : actorList.getActorList()) {
                 String line = createLine(actor);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            // Write componentPreferenceList to file
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -165,6 +177,8 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
         return "actor,"
                 + actor.getActorID() + ","
                 + actor.getActorName() + ","
+                + actor.getAlias() + ","
+                + actor.getDescription() + ","
                 + actor.getPositionID();
     }
 }

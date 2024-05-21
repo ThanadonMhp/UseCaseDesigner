@@ -49,12 +49,13 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 String[] data = line.split(",");
                 if (data[0].trim().equals("connection")) {
                     Connection connection = new Connection(
-                            Integer.parseInt(data[1].trim()),
-                            data[2].trim(),
-                            Double.parseDouble(data[3].trim()),
-                            Double.parseDouble(data[4].trim()),
-                            Double.parseDouble(data[5].trim()),
-                            Double.parseDouble(data[6].trim())
+                            Integer.parseInt(data[1].trim()), // connectionID
+                            data[2].trim(), // connectionType
+                            Double.parseDouble(data[3].trim()), // startX
+                            Double.parseDouble(data[4].trim()), // startY
+                            Double.parseDouble(data[5].trim()), // endX
+                            Double.parseDouble(data[6].trim()), // endY
+                            Integer.parseInt(data[7].trim()) // subsystemID
                     );
                     connectionList.addConnection(connection);
                 }
@@ -81,6 +82,9 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
         // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
         // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
@@ -109,6 +113,13 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
             // Write ActorList to CSV
             for (Actor actor : actorList.getActorList()) {
                 String line = actorListFileDataSource.createLine(actor);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write ComponentPreferenceList to CSV
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -170,6 +181,7 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 + connection.getStartX() + ","
                 + connection.getStartY() + ","
                 + connection.getEndX() + ","
-                + connection.getEndY();
+                + connection.getEndY() + ","
+                + connection.getSubSystemID();
     }
 }

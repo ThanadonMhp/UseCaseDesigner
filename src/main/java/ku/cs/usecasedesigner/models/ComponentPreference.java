@@ -1,32 +1,32 @@
 package ku.cs.usecasedesigner.models;
 
-public class Preference {
+public class ComponentPreference {
     private int strokeWidth;
     private String font;
     private int fontSize;
     private boolean bold;
     private boolean italic;
     private boolean underline;
-    private String theme;
+    private double positionID;
 
-    public Preference(int strokeWidth, String font, int fontSize, String theme) {
+    public ComponentPreference(int strokeWidth, String font, int fontSize, double positionID) {
         this.strokeWidth = strokeWidth;
         this.font = font;
         this.fontSize = fontSize;
         this.bold = false;
         this.italic = false;
         this.underline = false;
-        this.theme = theme;
+        this.positionID = positionID;
     }
 
-    public Preference(int strokeWidth, String font, int fontSize, boolean bold, boolean italic, boolean underline, String theme) {
+    public ComponentPreference(int strokeWidth, String font, int fontSize, boolean bold, boolean italic, boolean underline, double positionID) {
         this.strokeWidth = strokeWidth;
         this.font = font;
         this.fontSize = fontSize;
         this.bold = bold;
         this.italic = italic;
         this.underline = underline;
-        this.theme = theme;
+        this.positionID = positionID;
     }
 
     public int getStrokeWidth() {
@@ -53,8 +53,8 @@ public class Preference {
         return underline;
     }
 
-    public String getTheme() {
-        return theme;
+    public double getPositionID() {
+        return positionID;
     }
 
     public void setStrokeWidth(int strokeWidth) {
@@ -69,7 +69,20 @@ public class Preference {
         this.fontSize = fontSize;
     }
 
-    public void setTheme(String theme) {
-        this.theme = theme;
+    public void setBold(boolean bold) {
+        this.bold = bold;
     }
+
+    public void setItalic(boolean italic) {
+        this.italic = italic;
+    }
+
+    public void setUnderline(boolean underline) {
+        this.underline = underline;
+    }
+
+    public void setPositionID(double positionID) {
+        this.positionID = positionID;
+    }
+
 }

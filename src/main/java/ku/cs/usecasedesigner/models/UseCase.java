@@ -6,27 +6,33 @@ public class UseCase {
     private int actorID;
     private String preCondition;
     private String description;
+    private String actorAction;
+    private String systemAction;
     private String postCondition;
     private int positionID;
 
-    public UseCase(int useCaseID, String useCaseName, int actorID, String preCondition, String description, String postCondition, int positionID) {
+    public UseCase(int useCaseID, String useCaseName, int actorID, String preCondition, String description,String actorAction, String systemAction, String postCondition, int positionID) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
         this.actorID = actorID;
         this.preCondition = preCondition;
         this.description = description;
+        this.actorAction = actorAction;
+        this.systemAction = systemAction;
         this.postCondition = postCondition;
         this.positionID = positionID;
     }
 
-    public UseCase(int useCaseID, int positionID, String text) {
+    public UseCase(int useCaseID, String useCaseName, int positionID) {
         this.useCaseID = useCaseID;
-        this.positionID = positionID;
-        this.useCaseName = text;
+        this.useCaseName = useCaseName;
         this.actorID = 0;
         this.preCondition = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
+        this.actorAction = "!@#$%^&*()_+";
+        this.systemAction = "!@#$%^&*()_+";
         this.postCondition = "!@#$%^&*()_+";
+        this.positionID = positionID;
     }
 
     public int getUseCaseID() {
@@ -57,6 +63,14 @@ public class UseCase {
         return positionID;
     }
 
+    public String getActorAction() {
+        return actorAction;
+    }
+
+    public String getSystemAction() {
+        return systemAction;
+    }
+
     public void setUseCaseID(int useCaseID) {
         this.useCaseID = useCaseID;
     }
@@ -83,5 +97,13 @@ public class UseCase {
 
     public void setPositionID(int positionID) {
         this.positionID = positionID;
+    }
+
+    public void setActorAction(String actorAction) {
+        this.actorAction = actorAction;
+    }
+
+    public void setSystemAction(String systemAction) {
+        this.systemAction = systemAction;
     }
 }

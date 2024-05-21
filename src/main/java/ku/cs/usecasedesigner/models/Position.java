@@ -7,6 +7,7 @@ public class Position {
     private double fitWidth;
     private double fitHeight;
     private double rotation;
+    private int subSystemID;
 
     public Position(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation) {
         this.positionID = positionID;
@@ -15,6 +16,17 @@ public class Position {
         this.fitWidth = fitWidth;
         this.fitHeight = fitHeight;
         this.rotation = rotation;
+        this.subSystemID = 0;
+    }
+
+    public Position(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation, int subSystemID) {
+        this.positionID = positionID;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.fitWidth = fitWidth;
+        this.fitHeight = fitHeight;
+        this.rotation = rotation;
+        this.subSystemID = subSystemID;
     }
 
     public int getPositionID() {
@@ -39,6 +51,10 @@ public class Position {
 
     public double getRotation() {
         return rotation;
+    }
+
+    public int getSubSystemID() {
+        return subSystemID;
     }
 
     public void setPositionID(int positionID) {

@@ -76,9 +76,12 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
 
     @Override
     public void writeData(SubSystemList subsystemList) {
-        // Import ActorList to file
+        // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
         // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
@@ -107,6 +110,13 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
             // Write ActorList to CSV
             for (Actor actor : actorList.getActorList()) {
                 String line = actorListFileDataSource.createLine(actor);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write ComponentPreferenceList to CSV
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
                 buffer.append(line);
                 buffer.newLine();
             }

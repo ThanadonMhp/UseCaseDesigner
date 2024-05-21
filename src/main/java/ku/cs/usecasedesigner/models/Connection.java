@@ -7,6 +7,7 @@ public class Connection {
     private double startY;
     private double endX;
     private double endY;
+    private int subSystemID;
 
     public Connection(int connectionID, String connectionType, double startX, double startY, double endX, double endY) {
         this.connectionID = connectionID;
@@ -15,6 +16,17 @@ public class Connection {
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
+        this.subSystemID = 0;
+    }
+
+    public Connection(int connectionID, String connectionType, double startX, double startY, double endX, double endY, int subSystemID) {
+        this.connectionID = connectionID;
+        this.connectionType = connectionType;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
+        this.subSystemID = subSystemID;
     }
 
     public int getConnectionID() {
@@ -41,11 +53,27 @@ public class Connection {
         return endY;
     }
 
+    public int getSubSystemID() {
+        return subSystemID;
+    }
+
     public void setStartX(double startX) {
         this.startX = startX;
     }
 
     public void setStartY(double startY) {
         this.startY = startY;
+    }
+
+    public void setEndX(double endX) {
+        this.endX = endX;
+    }
+
+    public void setEndY(double endY) {
+        this.endY = endY;
+    }
+
+    public void setSubSystemID(int subSystemID) {
+        this.subSystemID = subSystemID;
     }
 }

@@ -100,10 +100,6 @@ public class LabelPageController {
                     UseCase useCase = new UseCase(
                             useCaseList.findLastUseCaseId() + 1,
                             label,
-                            0,
-                            "!@#$%^&*()_+",
-                            "!@#$%^&*()_+",
-                            "!@#$%^&*()_+",
                             position.getPositionID()
                     );
                     useCaseList.addUseCase(useCase);

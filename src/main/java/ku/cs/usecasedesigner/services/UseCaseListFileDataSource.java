@@ -54,8 +54,10 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                             Integer.parseInt(data[3].trim()), // actorID
                             data[4].trim(), // preCondition
                             data[5].trim(), // description
-                            data[6].trim(), // postCondition
-                            Integer.parseInt(data[7].trim()) // positionID
+                            data[6].trim(), // actorAction
+                            data[7].trim(), // systemAction
+                            data[8].trim(), // postCondition
+                            Integer.parseInt(data[9].trim()) // positionID
                     );
                     useCaseList.addUseCase(useCase);
                 }
@@ -79,22 +81,25 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 
     @Override
     public void writeData(UseCaseList useCaseList) {
-        // Import ActorList from CSV
+        // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
-        //Import connectionList from CSV
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
+        // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        //Import positionList from CSV
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
         // Import preferenceList from CSV
         PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
-        //Import subsystemList from CSV
+        // Import subsystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import UseCaseSystemList from CSV
+        // Import UseCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
@@ -110,6 +115,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             // Write ActorList to CSV
             for (Actor actor : actorList.getActorList()) {
                 buffer.write(actorListFileDataSource.createLine(actor));
+                buffer.newLine();
+            }
+
+            //Write ComponentPreferenceList to CSV
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                buffer.write(componentPreferenceListFileDataSource.createLine(componentPreference));
                 buffer.newLine();
             }
 
@@ -164,6 +175,8 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 + useCase.getActorID() + ","
                 + useCase.getPreCondition() + ","
                 + useCase.getDescription() + ","
+                + useCase.getActorAction() + ","
+                + useCase.getSystemAction() + ","
                 + useCase.getPostCondition() + ","
                 + useCase.getPositionID();
     }

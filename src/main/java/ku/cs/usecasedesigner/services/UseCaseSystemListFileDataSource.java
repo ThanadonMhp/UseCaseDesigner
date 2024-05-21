@@ -75,22 +75,25 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
 
     @Override
     public void writeData(UseCaseSystemList useCaseSystemList) {
-        // Import ActorList to file
+        // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
-        //Import connectionList from CSV
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
+        // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        //Import positionList from CSV
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
         // Import preferenceList from CSV
         PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
-        //Import subsystemList from CSV
+        // Import subsystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        //Import useCaseList from CSV
+        // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
 
@@ -107,6 +110,13 @@ public class UseCaseSystemListFileDataSource implements DataSource<UseCaseSystem
             //Write ActorList to CSV
             for (Actor actor : actorList.getActorList()) {
                 String line = actorListFileDataSource.createLine(actor);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            //Write ComponentPreferenceList to CSV
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
                 buffer.append(line);
                 buffer.newLine();
             }
