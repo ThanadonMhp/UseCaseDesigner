@@ -18,15 +18,15 @@
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
             <children>
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Setting" />
+                <Label fx:id="SettingLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Setting" />
                 <VBox spacing="10">
-                    <Label style="-fx-font-size: 18px;" text="ThemeApp" />
+                    <Label fx:id="ThemeAppLabel" style="-fx-font-size: 18px;" text="ThemeApp" />
                     <RadioButton fx:id="lightThemeRadioButton" onAction="#handleLightThemeSelected" selected="true" text="Light" />
                     <RadioButton fx:id="darkThemeRadioButton" onAction="#handleDarkThemeSelected" text="Dark" />
 
                 </VBox>
                 <VBox spacing="10">
-                    <Label style="-fx-font-size: 18px;" text="Text formatting" />
+                    <Label fx:id="TextformatLabel" style="-fx-font-size: 18px;" text="Text formatting" />
                     <HBox spacing="10">
                         <Label text="Fonts" />
                         <ComboBox fx:id="fontComboBox">

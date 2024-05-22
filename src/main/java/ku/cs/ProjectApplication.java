@@ -27,10 +27,12 @@ public class ProjectApplication extends Application {
         FXRouter.goTo("HomePage");
         FXRouter.popup("LandingPage", true);
         setWindowTitle("UseCaseDesigner/////////////");
+
     }
     private void setWindowTitle(String title) {
         Stage stage = FXRouter.getStage();
         stage.setTitle(title);
+
     }
 
     private static void configRoute() {

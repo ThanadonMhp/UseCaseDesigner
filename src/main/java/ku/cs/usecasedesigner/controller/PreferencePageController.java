@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.Preference;
@@ -32,6 +33,13 @@ public class PreferencePageController {
     @FXML private AnchorPane pane;
     @FXML private Button mode;
     private Alert alert;
+    @FXML
+    private Label SettingLabel;
+    @FXML
+    private Label ThemeAppLabel;
+    @FXML
+    private Label TextformatLabel;
+
 
     // This method is called when the FXML file is loaded
     // Load the data from the previous page
@@ -48,7 +56,25 @@ public class PreferencePageController {
         }
         fontComboBox.setItems(FXCollections.observableArrayList("LINE Seed Sans TH App", "Arial", "Tahoma"));
         sizeComboBox.setItems(FXCollections.observableArrayList("12", "14", "16"));
+        fontComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(fontComboBox);
+            if (newValue.equals("LINE Seed Sans TH App")) {
+                // Load and set LINE Seed Sans TH App font
+                Font font1 = Font.loadFont(getClass().getResourceAsStream("/style/font/LINESeedSansTH_A_Bd.ttf"), 14);
+                SettingLabel.setFont(font1);
+                ThemeAppLabel.setFont(font1);
+                TextformatLabel.setFont(font1);
+                System.out.println(font1);
+
+            } else {
+                // Set default font for other options (Arial, Tahoma)
+                SettingLabel.setFont(Font.getDefault());
+                ThemeAppLabel.setFont(Font.getDefault());
+                TextformatLabel.setFont(Font.getDefault());
+            }
+        });
     }
+
 
     // Save the preference to the file
     public void savePreference(int strokeWidth, String font, int fontSize, String theme) {
