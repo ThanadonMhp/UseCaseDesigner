@@ -7,23 +7,24 @@
 }
 
 #designPane {
-    -fx-background-color: #e2f3e2;
+    -fx-background-color: #1e1e1e; /* Dark background */
     -fx-background-position: fixed;
 }
 
 #ComponentAnchor {
-    -fx-background-color: #cdeacb;
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
     -fx-background-position: fixed;
 }
 
 .input_box {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #3a3a3a; /* Darker input box background */
     -fx-background-radius: 100;
+    -fx-text-fill: #ffffff; /* Light text color */
 }
 
 #anchorPane {
     -fx-background-position: fixed;
-    -fx-background-color: #e2f3e2;
+    -fx-background-color: #1e1e1e; /* Dark background */
 }
 
 #dragicon {
@@ -31,23 +32,23 @@
 }
 
 #cubic-icon {
-    -fx-fill: rgba(80.0, 80.0, 80.0, 0.0);
-    -fx-stroke: black;
+    -fx-fill: rgba(200, 200, 200, 0.0); /* Light fill color with transparency */
+    -fx-stroke: white; /* Light stroke color */
 }
 
 #node-overlay {
     -fx-background-radius: 10 10 0 0;
-    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.7) 15%, rgba(50,100,150,0.45) 100%);
+    -fx-background-color: linear-gradient(to bottom, rgba(50, 50, 50, 0.7) 15%, rgba(100, 100, 150, 0.45) 100%); /* Darker overlay gradient */
 }
 
 #right-link-handle:hover {
     -fx-background-radius: 0 0 10 0;
-    -fx-background-color: rgba(255, 255, 255, 0.35);
+    -fx-background-color: rgba(50, 50, 50, 0.35); /* Darker hover color */
 }
 
 #left-link-handle:hover {
     -fx-background-radius: 0 0 0 10;
-    -fx-background-color: rgba(255, 255, 255, 0.35);
+    -fx-background-color: rgba(50, 50, 50, 0.35); /* Darker hover color */
 }
 
 #icon-blue {
@@ -67,11 +68,11 @@
 }
 
 #icon-grey {
-    -fx-background-color: #9ca3af;
+    -fx-background-color: #4b5563; /* Darker grey */
 }
 
 #icon-yellow {
-    -fx-background-color: #f59e0b;
+    -fx-background-color: #fbbf24; /* Slightly darker yellow */
 }
 
 #icon-purple {
@@ -79,32 +80,33 @@
 }
 
 #title-plane {
-    -fx-border-width: 2px;
-    -fx-border-color: #22c55e;
+    -fx-border-color: #4ade80; /* Lighter green border color */
     -fx-border-style: solid;
 }
 
 #newButton {
-    -fx-background-color: #d1fae5;
+    -fx-background-color: #065f46; /* Darker background */
     -fx-background-radius: 50;
     -fx-border-radius: 50;
+    -fx-text-fill: #d1fae5; /* Light text color */
 }
 
 #openButton {
-    -fx-background-color: #a7f3d0;
+    -fx-background-color: #065f46; /* Darker background */
     -fx-background-radius: 50;
     -fx-border-radius: 50;
+    -fx-text-fill: #a7f3d0; /* Light text color */
 }
 
 #selectButton {
-    -fx-background-color: #34d399;
+    -fx-background-color: #059669; /* Darker green background */
     -fx-background-radius: 50;
     -fx-border-radius: 50;
     -fx-text-fill: white;
 }
 
 #confirmButton {
-    -fx-background-color: #10b981;
+    -fx-background-color: #047857; /* Darker green background */
     -fx-background-radius: 50;
     -fx-border-radius: 50;
     -fx-text-fill: white;
@@ -112,32 +114,15 @@
 
 #pane {
     -fx-background-position: fixed;
-    -fx-background-color: #cdeacb;
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
 }
 #labelTextField{
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 100;
 }
 #SaveConfirmSetting{
-    -fx-background-color: #10b981;
+    -fx-background-color: #193b32;
     -fx-background-radius: 50;
-    -fx-border-radius: 20;
+    -fx-border-radius: 50;
     -fx-text-fill: white;
 }
-/* For the Font Combo Box */
-#fontComboBox {
-    -fx-background-color: #f5f5f5; /* Set the background color */
-    -fx-border-color: #cccccc; /* Set the border color */
-    -fx-border-radius: 4px; /* Set the border radius for rounded corners */
-    -fx-font-size: 14px; /* Set the font size */
-
-}
-#sizeComboBox {
-    -fx-background-color: #f5f5f5; /* Set the background color */
-    -fx-border-color: #cccccc; /* Set the border color */
-    -fx-border-radius: 4px; /* Set the border radius for rounded corners */
-    -fx-font-size: 14px; /* Set the font size */
-
-}
-
-

@@ -4,9 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.Preference;
@@ -14,6 +13,7 @@ import ku.cs.usecasedesigner.models.PreferenceList;
 import ku.cs.usecasedesigner.services.DataSource;
 import ku.cs.usecasedesigner.services.PreferenceListFileDataSource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PreferencePageController {
@@ -28,6 +28,10 @@ public class PreferencePageController {
 
     private String directory;
     private String projectName;
+    public static boolean isLightMode = true;
+    @FXML private AnchorPane pane;
+    @FXML private Button mode;
+    private Alert alert;
 
     // This method is called when the FXML file is loaded
     // Load the data from the previous page
@@ -35,6 +39,7 @@ public class PreferencePageController {
         themeGroup = new ToggleGroup();
         lightThemeRadioButton.setToggleGroup(themeGroup);
         darkThemeRadioButton.setToggleGroup(themeGroup);
+        alert = new Alert(Alert.AlertType.NONE);
 
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -57,19 +62,82 @@ public class PreferencePageController {
 
     }
     @FXML
-    public void handleSaveButtonAction(ActionEvent actionEvent) {
+    public void handleSaveButtonAction(ActionEvent actionEvent) throws IOException {
+
         RadioButton selectedThemeRadioButton = (RadioButton) themeGroup.getSelectedToggle();
+
+        if (selectedThemeRadioButton == null) {
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please select a theme.");
+            alert.show();
+            return; // Exit the method if no theme is selected
+        }
+
         String theme = selectedThemeRadioButton.getText();
         String font = fontComboBox.getValue();
-        int size = Integer.parseInt(sizeComboBox.getValue());
+
+        if (font == null || font.isBlank()) {
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please select a font.");
+            alert.show();
+            return;
+        }
+
+        String sizeValue = sizeComboBox.getValue();
+
+        if (sizeValue == null || sizeValue.isBlank()) {
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please select a font size.");
+            alert.show();
+            return; // Exit the method if no size is selected
+        }
+
+        int size;
+        try {
+            size = Integer.parseInt(sizeValue);
+
+
+            if (size <= 0) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please enter a valid font size greater than 0.");
+                alert.show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please enter a valid number for the font size.");
+            alert.show();
+            return;
+        }
+
 
         savePreference(1, font + " " , size, theme);
+        FXRouter.goTo("HomePage");
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+
     }
+    @FXML
+    private void handleLightThemeSelected(ActionEvent event) throws IOException {
+        FXRouter.setTheme(1);
+        FXRouter.popup("PreferencePage");
+        FXRouter.closePopup();
+
+    }
+
+    @FXML
+    private void handleDarkThemeSelected(ActionEvent event) throws IOException {
+        FXRouter.setTheme(2);
+        FXRouter.popup("PreferencePage");
+        FXRouter.closePopup();
+    }
+
+
+
+
 
 
 }

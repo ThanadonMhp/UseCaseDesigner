@@ -47,6 +47,7 @@ public class HomePageController {
     private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
 
+
     private static Line getLine(Node startNode, Node endNode, String text) {
         Line line = new Line();
 
