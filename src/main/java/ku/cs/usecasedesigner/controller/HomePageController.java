@@ -732,8 +732,25 @@ public class HomePageController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                     System.out.println("Item Right Clicked");
-                    node.setStyle("-fx-border-color: black");
+//                    node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+
+                    // Show conTextMenu if node is actor
+                    if (Objects.equals(type, "actor")) {
+                        subsystemList.getSubSystemList().forEach(subSystem -> {
+                            MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
+                            subSystemItem.setOnAction(e -> {
+                                Position position = positionList.findByPositionId(ID);
+                                position.setSubSystemID(subSystem.getSubSystemID());
+                                saveProject();
+                                loadProject();
+                                subSystemID = subSystem.getSubSystemID();
+                            });
+                            // Add the subSystemItem to the sendToSubSystemItem
+                            sendToSubSystemItem.getItems().add(subSystemItem);
+                        });
+                    }
+
                     makeDraggable(node, type, ID);
                 }
             }
@@ -1019,9 +1036,9 @@ public class HomePageController {
         for (Node node : subSystemHBox.getChildren()) {
             if (node instanceof Button) {
                 if (subSystemID == 0 && ((Button) node).getText().equals("Main")) {
-                    ((Button) node).setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+                    ((Button) node).setStyle("-fx-background-color: #10b981; -fx-text-fill: white;");
                 } else if (subsystemList.findBySubSystemId(subSystemID) != null && ((Button) node).getText().equals(subsystemList.findBySubSystemId(subSystemID).getSubSystemName())) {
-                    ((Button) node).setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+                    ((Button) node).setStyle("-fx-background-color: #10b981; -fx-text-fill: white;");
                 } else {
                     ((Button) node).setStyle("");
                 }
