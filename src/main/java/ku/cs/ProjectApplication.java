@@ -24,7 +24,7 @@ public class ProjectApplication extends Application {
         FXRouter.bind(this, stage, 1280,720);
         configRoute();
         FXRouter.setTheme(1);
-        FXRouter.goTo("HomePage");
+        FXRouter.goTo("TempHomePage");
         FXRouter.popup("LandingPage", true);
 
     }
@@ -38,7 +38,7 @@ public class ProjectApplication extends Application {
         String packageStr = "ku/cs/usecasedesigner/";
 
         // Config route
-        FXRouter.when("HomePage", packageStr + "home-page.fxml", "UseCaseDesigner");
+        FXRouter.when("TempHomePage", packageStr + "home-page.fxml", "UseCaseDesigner");
         FXRouter.when("LandingPage", packageStr + "landing-page.fxml", "Welcome!");
         FXRouter.when("NewProjectPage", packageStr + "new-project-page.fxml", "New Project");
         FXRouter.when("LabelPage", packageStr + "label-page.fxml", "Label");

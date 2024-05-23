@@ -41,6 +41,9 @@ public class HomePageController {
     @FXML
     private HBox subSystemHBox;
 
+    @FXML
+    private VBox homePageVBox;
+
     private double startX;
     private double startY;
     private String projectName, directory;
@@ -54,12 +57,11 @@ public class HomePageController {
     private UseCaseList useCaseList = new UseCaseList();
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
-            setWinTitle();
             directory = (String) objects.get(1);
             if(objects.size() == 3) {
                 subSystemID = (int) objects.get(2);
@@ -70,11 +72,6 @@ public class HomePageController {
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
-    }
-
-    private void setWinTitle(){
-        String packageStr = "ku/cs/usecasedesigner/";
-        FXRouter.when("HomePage", packageStr + "home-page.fxml", "UseCaseDesigner | " + projectName);
     }
 
     private static Line getLine(Node startNode, Node endNode, String text) {

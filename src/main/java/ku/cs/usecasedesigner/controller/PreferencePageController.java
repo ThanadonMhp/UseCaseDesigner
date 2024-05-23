@@ -54,8 +54,8 @@ public class PreferencePageController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             if (((ArrayList<?>) FXRouter.getData()).size() > 2){
-                int Selected_theme = (int)objects.get(2);
-                if (Selected_theme == 2){
+                int selectedTheme = (int)objects.get(2);
+                if (selectedTheme == 2){
                     darkThemeRadioButton.setSelected(true);
                 }
             }

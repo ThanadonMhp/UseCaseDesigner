@@ -35,6 +35,7 @@ public class LandingPageController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            FXRouter.when("HomePage", "ku/cs/usecasedesigner/home-page.fxml", "UseCaseDesigner | " + projectName);
             FXRouter.goTo("HomePage" ,objects);
 
             // Close the current window
