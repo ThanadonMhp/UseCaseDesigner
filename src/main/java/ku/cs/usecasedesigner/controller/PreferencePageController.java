@@ -70,7 +70,6 @@ public class PreferencePageController {
                 SettingLabel.setFont(font1);
                 ThemeAppLabel.setFont(font1);
                 TextformatLabel.setFont(font1);
-                System.out.println(font1);
 
             } else {
                 // Set default font for other options (Arial, Tahoma)

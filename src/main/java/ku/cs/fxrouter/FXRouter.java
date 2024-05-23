@@ -143,7 +143,6 @@ public class FXRouter {
         } else {
             scene.getStylesheets().clear();
         }
-        System.out.print(themeType);
 
         window.setTitle(route.windowTitle);
         window.setScene(scene);

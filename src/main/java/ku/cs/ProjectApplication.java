@@ -26,7 +26,6 @@ public class ProjectApplication extends Application {
         FXRouter.setTheme(1);
         FXRouter.goTo("HomePage");
         FXRouter.popup("LandingPage", true);
-        setWindowTitle("UseCaseDesigner/////////////");
 
     }
     private void setWindowTitle(String title) {
