@@ -46,6 +46,8 @@ public class NewProjectPageController {
         // Set value for projectName
         String projectName = SystemNameTextField.getText();
 
+        setWindowTitle(projectName);
+
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
@@ -73,5 +75,9 @@ public class NewProjectPageController {
         } else {
             System.out.println("No directory selected.");
         }
+    }
+    private void setWindowTitle(String projectName) {
+        Stage stage = (Stage) SystemNameTextField.getScene().getWindow();
+        stage.setTitle(projectName);
     }
 }

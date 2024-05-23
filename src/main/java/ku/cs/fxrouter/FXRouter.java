@@ -133,9 +133,17 @@ public class FXRouter {
         if(themeType == 1){
             scene.getStylesheets().clear();
             scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
+        }
+        else {
+            scene.getStylesheets().clear();
+        }
+        if(themeType == 2){
+            scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/dark-mode.css").toExternalForm());
         } else {
             scene.getStylesheets().clear();
         }
+        System.out.print(themeType);
 
         window.setTitle(route.windowTitle);
         window.setScene(scene);
@@ -257,6 +265,10 @@ public class FXRouter {
     }
 
     public static void closePopup() {
+    }
+
+    public static Stage getStage() {
+        return window;
     }
 
     public static class RouteScene {

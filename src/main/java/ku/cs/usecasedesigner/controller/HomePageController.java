@@ -16,6 +16,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
 import ku.cs.usecasedesigner.services.*;

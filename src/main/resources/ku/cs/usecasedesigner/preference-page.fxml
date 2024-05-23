@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -9,24 +11,22 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.PreferencePageController">
+<AnchorPane fx:id="pane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.PreferencePageController">
     <children>
         <VBox spacing="10">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
             <children>
-                <Label text="Setting" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                <Label fx:id="SettingLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Setting" />
                 <VBox spacing="10">
-                    <Label text="ThemeApp" style="-fx-font-size: 18px;" />
-                    <RadioButton fx:id="lightThemeRadioButton" text="Light" selected="true" />
-                    <RadioButton fx:id="darkThemeRadioButton" text="Dark" />
+                    <Label fx:id="ThemeAppLabel" style="-fx-font-size: 18px;" text="ThemeApp" />
+                    <RadioButton fx:id="lightThemeRadioButton" onAction="#handleLightThemeSelected" selected="true" text="Light" />
+                    <RadioButton fx:id="darkThemeRadioButton" onAction="#handleDarkThemeSelected" text="Dark" />
 
                 </VBox>
                 <VBox spacing="10">
-                    <Label text="Text formatting" style="-fx-font-size: 18px;" />
+                    <Label fx:id="TextformatLabel" style="-fx-font-size: 18px;" text="Text formatting" />
                     <HBox spacing="10">
                         <Label text="Fonts" />
                         <ComboBox fx:id="fontComboBox">
@@ -53,7 +53,7 @@
                         </ComboBox>
                     </HBox>
                 </VBox>
-                <Button text="Save" onAction="#handleSaveButtonAction" />
+                <Button fx:id="SaveConfirmSetting" onAction="#handleSaveButtonAction" text="Save" />
             </children>
         </VBox>
     </children>
