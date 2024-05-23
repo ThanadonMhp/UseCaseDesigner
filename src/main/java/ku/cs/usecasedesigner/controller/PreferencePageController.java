@@ -53,6 +53,12 @@ public class PreferencePageController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
+            if (((ArrayList<?>) FXRouter.getData()).size() > 2){
+                int Selected_theme = (int)objects.get(2);
+                if (Selected_theme == 2){
+                    darkThemeRadioButton.setSelected(true);
+                }
+            }
         }
         fontComboBox.setItems(FXCollections.observableArrayList("LINE Seed Sans TH App", "Arial", "Tahoma"));
         sizeComboBox.setItems(FXCollections.observableArrayList("12", "14", "16"));
@@ -146,19 +152,28 @@ public class PreferencePageController {
         stage.close();
 
     }
+
     @FXML
     private void handleLightThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(1);
-        FXRouter.popup("PreferencePage");
-        FXRouter.closePopup();
+        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+
+        FXRouter.popup("PreferencePage", objects);
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
 
     }
 
     @FXML
     private void handleDarkThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(2);
-        FXRouter.popup("PreferencePage");
-        FXRouter.closePopup();
+        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+        objects.add(2);
+        FXRouter.popup("PreferencePage", objects);
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
 
