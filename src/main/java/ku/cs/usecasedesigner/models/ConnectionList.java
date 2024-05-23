@@ -98,4 +98,12 @@ public class ConnectionList {
     public void clear() {
         connectionList.clear();
     }
+
+    public void removeConnectionBySubSystemID(int id) {
+        for (Connection connection : connectionList) {
+            if (connection.getSubSystemID() == id) {
+                connectionList.remove(connection);
+            }
+        }
+    }
 }

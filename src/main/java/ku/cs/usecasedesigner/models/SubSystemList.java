@@ -9,19 +9,19 @@ public class SubSystemList {
         subSystemList = new ArrayList<SubSystem>();
     }
 
-    public ArrayList<SubSystem> getSubsystemList() {
+    public ArrayList<SubSystem> getSubSystemList() {
         return subSystemList;
     }
 
-    public void addSubsystem(SubSystem subsystem) {
+    public void addSubSystem(SubSystem subsystem) {
         subSystemList.add(subsystem);
     }
 
-    public void removeSubsystem(SubSystem subsystem) {
+    public void removeSubSystem(SubSystem subsystem) {
         subSystemList.remove(subsystem);
     }
 
-    public SubSystem findBySubsystemId(double subsystemId) {
+    public SubSystem findBySubSystemId(double subsystemId) {
         for (SubSystem subsystem : subSystemList) {
             if (subsystem.getSubSystemID() == subsystemId) {
                 return subsystem;
@@ -30,7 +30,7 @@ public class SubSystemList {
         return null;
     }
 
-    public int findLastSubsystemId() {
+    public int findLastSubSystemId() {
         int lastSubsystemId = 0;
         for (SubSystem subsystem : subSystemList) {
             if (subsystem.getSubSystemID() > lastSubsystemId) {
@@ -40,7 +40,7 @@ public class SubSystemList {
         return lastSubsystemId;
     }
 
-    public void removeSubsystemByPositionID(int id) {
+    public void removeSubSystemByPositionID(int id) {
         for (SubSystem subsystem : subSystemList) {
             if (subsystem.getPositionID() == id) {
                 subSystemList.remove(subsystem);
@@ -51,5 +51,14 @@ public class SubSystemList {
 
     public void clear() {
         subSystemList.clear();
+    }
+
+    public Integer findSubSystemIDByPositionID(int id) {
+        for (SubSystem subsystem : subSystemList) {
+            if (subsystem.getPositionID() == id) {
+                return subsystem.getSubSystemID();
+            }
+        }
+        return null;
     }
 }

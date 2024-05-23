@@ -50,6 +50,16 @@ public class PositionList {
         return null;
     }
 
+    public ArrayList<Position> findBySubSystemID(int subSystemID) {
+        ArrayList<Position> positions = new ArrayList<Position>();
+        for (Position position : positionList) {
+            if (position.getSubSystemID() == subSystemID) {
+                positions.add(position);
+            }
+        }
+        return positions;
+    }
+
     public void updatePosition(int id, double newX, double newY) {
         for (Position position : positionList) {
             if (position.getPositionID() == id) {

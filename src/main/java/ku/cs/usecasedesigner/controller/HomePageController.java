@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -36,16 +37,38 @@ public class HomePageController {
     @FXML
     private Label guideLabel;
 
+    @FXML
+    private HBox subSystemHBox;
+
     private double startX;
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
+    private int subSystemID;
 
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
     private PositionList positionList = new PositionList();
     private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
+
+    @FXML
+    void initialize() {
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            // Load the project
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            if(objects.size() == 3) {
+                subSystemID = (int) objects.get(2);
+            }
+            loadProject();
+            loadSubSystemButton();
+            saveProject();
+            System.out.println("Project Name: " + projectName);
+            System.out.println("Directory: " + directory);
+        }
+    }
 
     private static Line getLine(Node startNode, Node endNode, String text) {
         Line line = new Line();
@@ -88,21 +111,9 @@ public class HomePageController {
         return line;
     }
 
-    @FXML
-    void initialize() {
-        if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            loadProject();
-            saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
-        }
-    }
-
-    public void drawUseCase(double width, double height, double layoutX, double layoutY, String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition) {
+    public void drawUseCase(double width, double height, double layoutX, double layoutY,
+                            String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition,
+                            int useCaseID, int positionID) {
         // Draw a system
         Ellipse ellipse = new Ellipse();
         ellipse.setRadiusX(width);
@@ -151,32 +162,9 @@ public class HomePageController {
         // Add StackPane to designPane
         designPane.getChildren().add(stackPane);
 
-        // Save the position of the use case
-        Position position = new Position
-                (positionList.findLastPositionId() + 1,  // positionID
-                        layoutX, // xPosition
-                        layoutY, // yPosition
-                        width, // fitWidth
-                        height,  // fitHeight
-                        0); // rotation
-        positionList.addPosition(position);
-
-        // Add the use case to useCaseList
-        UseCase useCase = new UseCase
-                (useCaseList.findLastUseCaseId() + 1, // useCaseID
-                        label,  // useCaseName
-                        actorID,  // actorID
-                        preCondition,  // preCondition
-                        description,  // description
-                        actorAction, // actorAction
-                        systemAction, // systemAction
-                        postCondition,  // postCondition
-                        position.getPositionID()); // positionID
-        useCaseList.addUseCase(useCase);
-
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", position.getPositionID());
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", positionID);
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "useCase", positionID);
 
         // Double click to open the use case page
         stackPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -187,7 +175,7 @@ public class HomePageController {
                     ArrayList<Object> objects = new ArrayList<>();
                     objects.add(projectName);
                     objects.add(directory);
-                    objects.add(useCase.getUseCaseID());
+                    objects.add(useCaseID);
                     try {
                         saveProject();
                         FXRouter.popup("UseCasePage", objects);
@@ -199,7 +187,40 @@ public class HomePageController {
         });
     }
 
-    public void drawActor(double width, double height, double layoutX, double layoutY, String label) {
+    public ArrayList<Integer> addToUseCaseList(double width, double height, double layoutX, double layoutY,
+                                               String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition) {
+        // Add the use case to useCaseList
+        UseCase useCase = new UseCase
+                (useCaseList.findLastUseCaseId() + 1, // useCaseID
+                        label,  // useCaseName
+                        actorID,  // actorID
+                        preCondition,  // preCondition
+                        description,  // description
+                        actorAction, // actorAction
+                        systemAction, // systemAction
+                        postCondition,  // postCondition
+                        positionList.findLastPositionId() + 1); // positionID
+        useCaseList.addUseCase(useCase);
+
+        // Add the position of the use case
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        ArrayList<Integer> objects = new ArrayList<>();
+        objects.add(position.getPositionID());
+        objects.add(useCase.getUseCaseID());
+
+        return objects;
+    }
+
+    public void drawActor(double width, double height, double layoutX, double layoutY, String label,
+                          int actorID, int positionID) {
         // Draw an actor
         ImageView imageView = new ImageView();
         imageView.setImage(actorImageView.getImage());
@@ -220,26 +241,9 @@ public class HomePageController {
         // Add VBox to designPane
         designPane.getChildren().add(vbox);
 
-        // Save the position of the actor
-        Position position = new Position
-                (positionList.findLastPositionId() + 1,  // positionID
-                        layoutX, // xPosition
-                        layoutY, // yPosition
-                        width, // fitWidth
-                        height,  // fitHeight
-                        0); // rotation
-        positionList.addPosition(position);
-
-        // Add the actor to actorList
-        Actor actor = new Actor
-                (actorList.findLastActorId() + 1, // actorID
-                        label,  // actorName
-                        position.getPositionID()); // positionID
-        actorList.addActor(actor);
-
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", position.getPositionID());
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", positionID);
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "actor", positionID);
 
         // Double click to open the label page
         vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -252,7 +256,7 @@ public class HomePageController {
                     objects.add(directory);
                     objects.add("editLabel");
                     objects.add("actor");
-                    objects.add(actor.getActorID());
+                    objects.add(actorID);
                     try {
                         saveProject();
                         FXRouter.popup("LabelPage", objects);
@@ -264,7 +268,33 @@ public class HomePageController {
         });
     }
 
-    public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label) {
+    public ArrayList<Integer> addToActorList(double width, double height, double layoutX, double layoutY, String label){
+        // Add the actor to actorList
+        Actor actor = new Actor
+                (actorList.findLastActorId() + 1, // actorID
+                        label,  // actorName
+                        positionList.findLastPositionId() + 1); // positionID
+        actorList.addActor(actor);
+
+        // Add the position of the actor
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        ArrayList<Integer> objects = new ArrayList<>();
+        objects.add(position.getPositionID());
+        objects.add(actor.getActorID());
+
+        return objects;
+    }
+
+    public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label,
+                              int subSystemID, int positionID) {
         // Draw a system
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(width);
@@ -285,26 +315,9 @@ public class HomePageController {
         // Add VBox to designPane
         designPane.getChildren().add(vbox);
 
-        // Save the position of the subsystem
-        Position position = new Position
-                (positionList.findLastPositionId() + 1,  // positionID
-                        layoutX, // xPosition
-                        layoutY, // yPosition
-                        width, // fitWidth
-                        height,  // fitHeight
-                        0); // rotation
-        positionList.addPosition(position);
-
-        // Add the subsystem to subsystemList
-        SubSystem subsystem = new SubSystem
-                (subsystemList.findLastSubsystemId() + 1, // subSystemID
-                        label,  // subSystemName
-                        position.getPositionID()); // positionID
-        subsystemList.addSubsystem(subsystem);
-
         // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", position.getPositionID());
+        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", positionID);
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "subSystem", positionID);
 
         // Double click to open the label page
         vbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -317,7 +330,7 @@ public class HomePageController {
                     objects.add(directory);
                     objects.add("editLabel");
                     objects.add("subSystem");
-                    objects.add(subsystem.getSubSystemID());
+                    objects.add(subSystemID);
                     try {
                         saveProject();
                         FXRouter.popup("LabelPage", objects);
@@ -327,6 +340,31 @@ public class HomePageController {
                 }
             }
         });
+    }
+
+    public ArrayList<Integer> addToSubSystemList(double width, double height, double layoutX, double layoutY, String label){
+        // Add the subsystem to subsystemList
+        SubSystem subsystem = new SubSystem
+                (subsystemList.findLastSubSystemId() + 1, // subSystemID
+                        label,  // subSystemName
+                        positionList.findLastPositionId() + 1); // positionID
+        subsystemList.addSubSystem(subsystem);
+
+        // Add the position of the subsystem
+        Position position = new Position
+                (positionList.findLastPositionId() + 1,  // positionID
+                        layoutX, // xPosition
+                        layoutY, // yPosition
+                        width, // fitWidth
+                        height,  // fitHeight
+                        0); // rotation
+        positionList.addPosition(position);
+
+        ArrayList<Integer> objects = new ArrayList<>();
+        objects.add(position.getPositionID());
+        objects.add(subsystem.getSubSystemID());
+
+        return objects;
     }
 
     public void drawLine(double startX, double startY, double endX, double endY) {
@@ -635,11 +673,22 @@ public class HomePageController {
                 } else if(Objects.equals(type, "actor")) {
                     actorList.removeActorByPositionID(ID);
                 } else if(Objects.equals(type, "subSystem")) {
-                    subsystemList.removeSubsystemByPositionID(ID);
+                    Integer subSystemIDToRemove = subsystemList.findSubSystemIDByPositionID(ID);
+                    // Remove all the components in the subsystem from the position list
+                    if (positionList.findBySubSystemID(subSystemIDToRemove) != null){
+                        positionList.findBySubSystemID(subSystemIDToRemove).forEach(position -> {
+                            positionList.removePositionByID(position.getPositionID());
+                            useCaseList.removeUseCaseByPositionID(position.getPositionID());
+                            actorList.removeActorByPositionID(position.getPositionID());
+                        });
+                    }
+                    connectionList.removeConnectionBySubSystemID(subSystemIDToRemove);
+                    subsystemList.removeSubSystemByPositionID(ID);
                 }
                 // remove the position from the list
                 positionList.removePositionByID(ID);
                 saveProject();
+                loadSubSystemButton();
 
                 System.out.println("Item Removed");
             }
@@ -691,6 +740,7 @@ public class HomePageController {
                 objects.add(30.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
+                objects.add(subSystemID);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Actor")) {
                 saveProject();
@@ -703,6 +753,7 @@ public class HomePageController {
                 objects.add(75.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
+                objects.add(subSystemID);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("System")) {
                 saveProject();
@@ -715,6 +766,7 @@ public class HomePageController {
                 objects.add(100.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
+                objects.add(0);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
@@ -765,6 +817,23 @@ public class HomePageController {
         makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
         // Make the component selectable
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
+    }
+
+    public void addNewSubSystemButton(ActionEvent actionEvent) throws IOException {
+        // Open LabelPage to create new subSystem
+        saveProject();
+        // Create a popup for text input
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add("subSystem");
+        objects.add(100.00);
+        objects.add(100.00);
+        // Add default position for subSystem
+        objects.add(10.00);
+        objects.add(10.00);
+        objects.add(subsystemList.findLastSubSystemId() + 1);
+        FXRouter.popup("LabelPage",objects);
     }
 
     public void handleNewMenuItem(ActionEvent actionEvent) throws IOException {
@@ -818,41 +887,41 @@ public class HomePageController {
 
         // Load positions
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-        PositionList positionList = positionListDataSource.readData(); // Read the PositionList from the CSV file
+        positionList = positionListDataSource.readData(); // Read the PositionList from the CSV file
 
         // Load actors
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
-        ActorList actorList = actorListDataSource.readData(); // Read the ActorList from the CSV file
+        actorList = actorListDataSource.readData(); // Read the ActorList from the CSV file
         // Recreate each actor
         actorList.getActorList().forEach(actor -> {
             // Find the position of the actor
             Position position = positionList.findByPositionId(actor.getPositionID());
-            if (position != null) {
-                drawActor(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), actor.getActorName());
+            if (position != null && position.getSubSystemID() == subSystemID) {
+                drawActor(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), actor.getActorName(), actor.getActorID(), actor.getPositionID());
             }
         });
 
         // Load subsystems
         DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
-        SubSystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
+        subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
         // Recreate each subsystem
-        subsystemList.getSubsystemList().forEach(subsystem -> {
+        subsystemList.getSubSystemList().forEach(subsystem -> {
             // Find the position of the subsystem
             Position position = positionList.findByPositionId(subsystem.getPositionID());
-            if (position != null) {
-                drawSubSystem(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), subsystem.getSubSystemName());
+            if (position != null && subSystemID == 0) {
+                drawSubSystem(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), subsystem.getSubSystemName(), subsystem.getSubSystemID(), subsystem.getPositionID());
             }
         });
 
         // Load use cases
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-        UseCaseList useCaseList = useCaseListDataSource.readData(); // Read the UseCaseList from the CSV file
+        useCaseList = useCaseListDataSource.readData(); // Read the UseCaseList from the CSV file
         // Recreate each use case
         useCaseList.getUseCaseList().forEach(useCase -> {
             // Find the position of the use case
             Position position = positionList.findByPositionId(useCase.getPositionID());
-            if (position != null) {
-                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(),useCase.getActorAction(), useCase.getSystemAction(), useCase.getPostCondition());
+            if (position != null && position.getSubSystemID() == subSystemID) {
+                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(),useCase.getActorAction(), useCase.getSystemAction(), useCase.getPostCondition(), useCase.getUseCaseID(), useCase.getPositionID());
             }
         });
 
@@ -862,7 +931,10 @@ public class HomePageController {
 
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
-            drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY());
+            if (connection.getSubSystemID() == subSystemID) {
+                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY());
+            }
+
 //            // Find the start and end nodes of the connection from position in connection
 //            Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
 //            Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
@@ -888,6 +960,53 @@ public class HomePageController {
         }
 
         System.out.println("Project Opened");
+    }
+
+    public void loadSubSystemButton() {
+        // Clear the subSystemHBox except for addNewSubSystemButton
+        subSystemHBox.getChildren().remove(0, subSystemHBox.getChildren().size()-1);
+        // Add a button for main subSystem
+        Button mainSubSystemButton = new Button("Main");
+        subSystemHBox.getChildren().add(subSystemHBox.getChildren().size() - 1, mainSubSystemButton);
+        // Set the action for the button
+        mainSubSystemButton.setOnAction(e -> {
+            // Set the subSystemID
+            subSystemID = 0;
+            // Load the project
+            System.out.println("Opening Main SubSystem");
+            loadProject();
+            loadSubSystemButton();
+        });
+
+        // Add a button for each subsystem
+        DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+        SubSystemList subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
+        subsystemList.getSubSystemList().forEach(subsystem -> {
+            Button button = new Button(subsystem.getSubSystemName());
+            subSystemHBox.getChildren().add(subSystemHBox.getChildren().size() - 1, button);
+            // Set the action for the button
+            button.setOnAction(e -> {
+                // Set the subSystemID
+                subSystemID = subsystem.getSubSystemID();
+                // Load the project
+                System.out.println("Opening SubSystem: " + subsystem.getSubSystemName());
+                loadProject();
+                loadSubSystemButton();
+            });
+        });
+
+        // Highlight the button if it is the current subSystem
+        for (Node node : subSystemHBox.getChildren()) {
+            if (node instanceof Button) {
+                if (subSystemID == 0 && ((Button) node).getText().equals("Main")) {
+                    ((Button) node).setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+                } else if (subsystemList.findBySubSystemId(subSystemID) != null && ((Button) node).getText().equals(subsystemList.findBySubSystemId(subSystemID).getSubSystemName())) {
+                    ((Button) node).setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+                } else {
+                    ((Button) node).setStyle("");
+                }
+            }
+        }
     }
 
     public void saveProject() {

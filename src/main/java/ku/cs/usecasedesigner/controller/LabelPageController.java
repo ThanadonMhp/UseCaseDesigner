@@ -3,7 +3,6 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -21,7 +20,7 @@ public class LabelPageController {
     private String type;
     private String projectName, directory;
     private String editType;
-    private int editID;
+    private int editID, subSystemID;
 
     @FXML private Text errorText, labelText;
 
@@ -44,7 +43,7 @@ public class LabelPageController {
                 } else if (Objects.equals(editType, "subSystem")) {
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
-                    SubSystem subSystem = subSystemList.findBySubsystemId(editID);
+                    SubSystem subSystem = subSystemList.findBySubSystemId(editID);
                     labelTextField.setText(subSystem.getSubSystemName());
                 }
                 labelText.setText("Edit " + editType + " name :");
@@ -53,6 +52,7 @@ public class LabelPageController {
                 height = (double) objects.get(4);
                 layoutX = (double) objects.get(5);
                 layoutY = (double) objects.get(6);
+                subSystemID = (int) objects.get(7);
                 labelText.setText("Enter " + type + " name :");
             }
 
@@ -79,6 +79,7 @@ public class LabelPageController {
                         width,
                         height,
                         0
+                        , subSystemID
                 );
                 positionList.addPosition(position);
                 positionListDataSource.writeData(positionList);
@@ -108,11 +109,11 @@ public class LabelPageController {
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
                     SubSystem subSystem = new SubSystem(
-                            subSystemList.findLastSubsystemId() + 1,
+                            subSystemList.findLastSubSystemId() + 1,
                             label,
                             position.getPositionID()
                     );
-                    subSystemList.addSubsystem(subSystem);
+                    subSystemList.addSubSystem(subSystem);
                     subSystemListDataSource.writeData(subSystemList);
                 }
 
@@ -126,7 +127,7 @@ public class LabelPageController {
                 } else if (Objects.equals(editType, "subSystem")) {
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
-                    SubSystem subSystem = subSystemList.findBySubsystemId(editID);
+                    SubSystem subSystem = subSystemList.findBySubSystemId(editID);
                     subSystem.setSubSystemName(label);
                     subSystemListDataSource.writeData(subSystemList);
                 }

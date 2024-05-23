@@ -145,7 +145,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
             }
 
             // Write subSystemList to file
-            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 String line = subsystemListFileDataSource.createLine(subsystem);
                 buffer.append(line);
                 buffer.newLine();

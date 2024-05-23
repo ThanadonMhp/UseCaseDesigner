@@ -53,7 +53,7 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
                             data[2], // subsystemName
                             Integer.parseInt(data[3]) // positionID
                     );
-                    subsystemList.addSubsystem(subsystem);
+                    subsystemList.addSubSystem(subsystem);
                 }
             }
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
             }
 
             //Write SubsystemList to CSV
-            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 buffer.write(createLine(subsystem));
                 buffer.newLine();
             }

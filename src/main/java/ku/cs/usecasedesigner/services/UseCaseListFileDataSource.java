@@ -143,7 +143,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             }
 
             //Write SubsystemList to CSV
-            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 buffer.write(subsystemListFileDataSource.createLine(subsystem));
                 buffer.newLine();
             }

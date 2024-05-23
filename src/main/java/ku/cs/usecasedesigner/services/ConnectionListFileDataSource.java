@@ -146,7 +146,7 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
             }
 
             //Write SubsystemList to CSV
-            for (SubSystem subsystem : subsystemList.getSubsystemList()) {
+            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 String line = subsystemListFileDataSource.createLine(subsystem);
                 buffer.append(line);
                 buffer.newLine();

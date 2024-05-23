@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -9,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -87,7 +89,7 @@
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
       </TitledPane>
-        <Pane fx:id="designPane" layoutX="233.0" layoutY="15.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="664.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
                <children>
               <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
                 <font>
@@ -95,6 +97,12 @@
                 </font>
               </Label>
                </children></Pane>
+            <HBox fx:id="subSystemHBox" layoutX="233.0" layoutY="15.0" prefHeight="25.0" prefWidth="1027.0">
+               <children>
+                  <Button fx:id="mainSystemButton" mnemonicParsing="false" text="Main" textAlignment="CENTER" />
+                  <Button fx:id="addNewSubSystemButton" mnemonicParsing="false" onAction="#addNewSubSystemButton" text="+" textAlignment="CENTER" />
+               </children>
+            </HBox>
       </children>
     </AnchorPane>
   </children>
