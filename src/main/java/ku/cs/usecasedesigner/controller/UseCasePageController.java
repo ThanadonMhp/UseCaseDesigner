@@ -10,10 +10,12 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.ActorList;
+import ku.cs.usecasedesigner.models.PositionList;
 import ku.cs.usecasedesigner.models.UseCase;
 import ku.cs.usecasedesigner.models.UseCaseList;
 import ku.cs.usecasedesigner.services.ActorListFileDataSource;
 import ku.cs.usecasedesigner.services.DataSource;
+import ku.cs.usecasedesigner.services.PositionListFileDataSource;
 import ku.cs.usecasedesigner.services.UseCaseListFileDataSource;
 
 import java.io.IOException;
@@ -36,8 +38,10 @@ public class UseCasePageController {
 
     private UseCaseList useCaseList;
     private ActorList actorList;
+    private PositionList positionList;
     private DataSource<UseCaseList> useCaseListDataSource;
     private DataSource<ActorList> actorListFileDataSource;
+    private DataSource<PositionList> positionListFileDataSource;
 
     @FXML void initialize() {
         if (FXRouter.getData() != null) {
@@ -46,11 +50,13 @@ public class UseCasePageController {
             directory = (String) objects.get(1);
             int useCaseID = (int) objects.get(2);
 
-            // Read the useCase and actor list from the file
+            // Read the data from the csv files
             useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
             useCaseList = useCaseListDataSource.readData();
             actorListFileDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
             actorList = actorListFileDataSource.readData();
+            positionListFileDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+            positionList = positionListFileDataSource.readData();
 
             // Find the use case by ID
             useCase = useCaseList.findByUseCaseId(useCaseID);
@@ -119,10 +125,11 @@ public class UseCasePageController {
         // Edit the useCase in the useCaseList
         useCaseListDataSource.writeData(useCaseList);
 
-        //send the project name and directory to HomePage
+        // send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(positionList.findByPositionId(useCase.getPositionID()).getSubSystemID());
 
         FXRouter.goTo("HomePage", objects);
 

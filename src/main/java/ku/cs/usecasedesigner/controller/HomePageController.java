@@ -58,6 +58,7 @@ public class HomePageController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
+            setWinTitle();
             directory = (String) objects.get(1);
             if(objects.size() == 3) {
                 subSystemID = (int) objects.get(2);
@@ -68,6 +69,11 @@ public class HomePageController {
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
+    }
+
+    private void setWinTitle(){
+        String packageStr = "ku/cs/usecasedesigner/";
+        FXRouter.when("HomePage", packageStr + "home-page.fxml", "UseCaseDesigner | " + projectName);
     }
 
     private static Line getLine(Node startNode, Node endNode, String text) {
@@ -588,8 +594,24 @@ public class HomePageController {
         MenuItem connectItem = new MenuItem("Connect");
         MenuItem deleteItem = new MenuItem("Delete");
 
+        // Create a menu item for sending the component to a subsystem
+        Menu sendToSubSystemItem = new Menu("Send to SubSystem");
+        subsystemList.getSubSystemList().forEach(subSystem -> {
+            MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
+            subSystemItem.setOnAction(e -> {
+                Position position = positionList.findByPositionId(ID);
+                position.setSubSystemID(subSystem.getSubSystemID());
+                saveProject();
+                loadProject();
+                subSystemID = subSystem.getSubSystemID();
+            });
+            // Add the subSystemItem to the sendToSubSystemItem
+            sendToSubSystemItem.getItems().add(subSystemItem);
+        });
+
+
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, sendToSubSystemItem, deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -766,7 +788,7 @@ public class HomePageController {
                 objects.add(100.00);
                 objects.add(dragEvent.getX() - 75);
                 objects.add(dragEvent.getY() - 75);
-                objects.add(0);
+                objects.add(subsystemList.findLastSubSystemId() + 1);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);

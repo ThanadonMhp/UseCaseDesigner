@@ -80,4 +80,8 @@ public class Position {
     public void setRotation(double rotation) {
         this.rotation = rotation;
     }
+
+    public void setSubSystemID(int subSystemID) {
+        this.subSystemID = subSystemID;
+    }
 }
