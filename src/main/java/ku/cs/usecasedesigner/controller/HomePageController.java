@@ -939,7 +939,7 @@ public class HomePageController {
 
             // Get the directory from the file path
             directory = file.getParent();
-
+            subSystemID = 0;
             loadProject();
         } else {
             System.out.println("Open command cancelled");
@@ -1036,7 +1036,6 @@ public class HomePageController {
             guideLabel.setVisible(false);
         }
 
-        subSystemID = 0;
         loadSubSystemButton();
 
         System.out.println("Project Opened");
