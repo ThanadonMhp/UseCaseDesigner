@@ -594,22 +594,48 @@ public class HomePageController {
 
         // Create a menu item for sending the component to a subsystem
         Menu sendToSubSystemItem = new Menu("Send to SubSystem");
-        subsystemList.getSubSystemList().forEach(subSystem -> {
-            MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
-            subSystemItem.setOnAction(e -> {
-                Position position = positionList.findByPositionId(ID);
-                position.setSubSystemID(subSystem.getSubSystemID());
-                saveProject();
-                loadProject();
-                subSystemID = subSystem.getSubSystemID();
-            });
-            // Add the subSystemItem to the sendToSubSystemItem
-            sendToSubSystemItem.getItems().add(subSystemItem);
-        });
+
+//        if (subSystemID != 0)
+//        {
+//            MenuItem mainSystemItem = new MenuItem("Main");
+//            mainSystemItem.setOnAction(e -> {
+//                Position position = positionList.findByPositionId(ID);
+//                position.setSubSystemID(0);
+//                saveProject();
+//                subSystemID = 0;
+//                loadProject();
+//                loadSubSystemButton();
+//            });
+//            // Add the Main to the sendToSubSystemItem
+//            sendToSubSystemItem.getItems().add(mainSystemItem);
+//        }
+//
+//        subsystemList.getSubSystemList().forEach(subSystem -> {
+//            if (subSystemID != subSystem.getSubSystemID())
+//            {
+//                MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
+//                subSystemItem.setOnAction(e -> {
+//                    Position position = positionList.findByPositionId(ID);
+//                    position.setSubSystemID(subSystem.getSubSystemID());
+//                    saveProject();
+//                    subSystemID = subSystem.getSubSystemID();
+//                    loadProject();
+//                    loadSubSystemButton();
+//                });
+//                // Add the subSystemItem to the sendToSubSystemItem
+//                sendToSubSystemItem.getItems().add(subSystemItem);
+//            }
+//        });
 
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem, sendToSubSystemItem, deleteItem);
+        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem);
+
+        if (!Objects.equals(type, "subSystem")) {
+            contextMenu.getItems().add(sendToSubSystemItem);
+        }
+
+        contextMenu.getItems().add(deleteItem);
 
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
@@ -735,22 +761,36 @@ public class HomePageController {
 //                    node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
-                    // Show conTextMenu if node is actor
-                    if (Objects.equals(type, "actor")) {
-                        subsystemList.getSubSystemList().forEach(subSystem -> {
+                    if (subSystemID != 0)
+                    {
+                        MenuItem mainSystemItem = new MenuItem("Main");
+                        mainSystemItem.setOnAction(e -> {
+                            Position position = positionList.findByPositionId(ID);
+                            position.setSubSystemID(0);
+                            saveProject();
+                            subSystemID = 0;
+                            loadProject();
+                            loadSubSystemButton();
+                        });
+                        // Add the Main to the sendToSubSystemItem
+                        sendToSubSystemItem.getItems().add(mainSystemItem);
+                    }
+
+                    subsystemList.getSubSystemList().forEach(subSystem -> {
+                        if (subSystemID != subSystem.getSubSystemID()) {
                             MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
                             subSystemItem.setOnAction(e -> {
                                 Position position = positionList.findByPositionId(ID);
                                 position.setSubSystemID(subSystem.getSubSystemID());
                                 saveProject();
-                                loadProject();
                                 subSystemID = subSystem.getSubSystemID();
+                                loadProject();
+                                loadSubSystemButton();
                             });
                             // Add the subSystemItem to the sendToSubSystemItem
                             sendToSubSystemItem.getItems().add(subSystemItem);
-                        });
-                    }
-
+                        }
+                    });
                     makeDraggable(node, type, ID);
                 }
             }
@@ -1077,6 +1117,7 @@ public class HomePageController {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(subSystemID);
         FXRouter.popup("PreferencePage", objects);
     }
 }

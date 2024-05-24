@@ -19,27 +19,21 @@ import java.util.ArrayList;
 
 public class PreferencePageController {
     @FXML private ToggleGroup themeGroup;
-
     @FXML private RadioButton lightThemeRadioButton;
     @FXML private RadioButton darkThemeRadioButton;
-
     @FXML private ComboBox<String> fontComboBox;
-
     @FXML private ComboBox<String> sizeComboBox;
-
-    private String directory;
-    private String projectName;
-    public static boolean isLightMode = true;
+    @FXML private Label SettingLabel;
+    @FXML private Label ThemeAppLabel;
+    @FXML private Label TextformatLabel;
     @FXML private AnchorPane pane;
     @FXML private Button mode;
-    private Alert alert;
-    @FXML
-    private Label SettingLabel;
-    @FXML
-    private Label ThemeAppLabel;
-    @FXML
-    private Label TextformatLabel;
 
+    private Alert alert;
+    private String directory;
+    private String projectName;
+    private Integer subSystemID;
+    public static boolean isLightMode = true;
 
     // This method is called when the FXML file is loaded
     // Load the data from the previous page
@@ -53,9 +47,18 @@ public class PreferencePageController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (((ArrayList<?>) FXRouter.getData()).size() > 2){
-                int selectedTheme = (int)objects.get(2);
-                if (selectedTheme == 2){
+            subSystemID = (Integer) objects.get(2);
+            if (objects.size() == 4) {
+                int theme = (int) objects.get(3);
+                if (theme == 1) {
+                    lightThemeRadioButton.setSelected(true);
+                } else if (theme == 2){
+                    darkThemeRadioButton.setSelected(true);
+                }
+            } else{
+                if (FXRouter.getTheme() == 1) {
+                    lightThemeRadioButton.setSelected(true);
+                } else if (FXRouter.getTheme() == 2) {
                     darkThemeRadioButton.setSelected(true);
                 }
             }
@@ -155,9 +158,12 @@ public class PreferencePageController {
     @FXML
     private void handleLightThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(1);
-        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
 
+        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+        objects.add(1);
         FXRouter.popup("PreferencePage", objects);
+
+        // Close the current window
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -167,17 +173,15 @@ public class PreferencePageController {
     @FXML
     private void handleDarkThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(2);
+
         ArrayList<Object> objects = (ArrayList) FXRouter.getData();
         objects.add(2);
         FXRouter.popup("PreferencePage", objects);
+
+        // Close the current window
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
-
-
-
-
-
 
 }

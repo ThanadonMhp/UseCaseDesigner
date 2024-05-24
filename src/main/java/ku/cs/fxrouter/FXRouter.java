@@ -270,6 +270,10 @@ public class FXRouter {
         return window;
     }
 
+    public static int getTheme() {
+        return themeType;
+    }
+
     public static class RouteScene {
         public String scenePath;
         private String windowTitle;
