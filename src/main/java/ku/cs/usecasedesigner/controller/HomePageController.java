@@ -1036,6 +1036,9 @@ public class HomePageController {
             guideLabel.setVisible(false);
         }
 
+        subSystemID = 0;
+        loadSubSystemButton();
+
         System.out.println("Project Opened");
     }
 
