@@ -30,6 +30,15 @@ public class UseCaseSystemList {
         return null;
     }
 
+    public boolean isSystemIDExist(double systemId) {
+        for (UseCaseSystem useCaseSystem : useCaseSystemList) {
+            if (useCaseSystem.getSystemID() == systemId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int findLastUseCaseSystemId() {
         if (useCaseSystemList.isEmpty()) {
             return 0;

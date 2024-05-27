@@ -67,6 +67,24 @@ public class ActorList {
         }
     }
 
+    public boolean isActorNameExist(String actorName) {
+        for (Actor actor : actorList) {
+            if (actor.getActorName().equals(actorName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isActorIDExist(int actorId) {
+        for (Actor actor : actorList) {
+            if (actor.getActorID() == actorId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void clear() {
         actorList.clear();
     }

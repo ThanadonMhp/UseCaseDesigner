@@ -62,6 +62,24 @@ public class UseCaseList {
         }
     }
 
+    public boolean isUseCaseIDExist(int useCaseID) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseID() == useCaseID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isUseCaseNameExist(String useCaseName) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseName().equals(useCaseName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void clear() {
         useCaseList.clear();
     }

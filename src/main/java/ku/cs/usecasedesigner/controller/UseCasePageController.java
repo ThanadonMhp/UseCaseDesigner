@@ -24,13 +24,13 @@ import java.util.Objects;
 
 public class UseCasePageController {
 
-    @FXML private Label useCaseIDLabel, errorLabel;
+    @FXML private Label errorLabel;
 
     @FXML private ChoiceBox actorChoiceBox;
 
-    @FXML private TextField useCaseNameTextField ,preConditionTextField, postConditionTextField;
+    @FXML private TextField useCaseIDTextField ,useCaseNameTextField ,preConditionTextField, postConditionTextField;
 
-    @FXML private TextArea descriptionTextArea;
+    @FXML private TextArea descriptionTextArea, actorActionTextArea, systemActionTextArea;
 
     private String directory;
     private String projectName;
@@ -61,7 +61,7 @@ public class UseCasePageController {
             // Find the use case by ID
             useCase = useCaseList.findByUseCaseId(useCaseID);
 
-            useCaseIDLabel.setText(useCase.getUseCaseID() + "");
+            useCaseIDTextField.setText(useCase.getUseCaseID() + "");
             useCaseNameTextField.setText(useCase.getUseCaseName());
 
             // Add actors to the choice box
@@ -82,6 +82,14 @@ public class UseCasePageController {
             {
                 preConditionTextField.setText(useCase.getPreCondition());
             }
+            if (!Objects.equals(useCase.getActorAction(), "!@#$%^&*()_+"))
+            {
+                actorActionTextArea.setText(useCase.getPostCondition());
+            }
+            if (!Objects.equals(useCase.getSystemAction(), "!@#$%^&*()_+"))
+            {
+                systemActionTextArea.setText(useCase.getPostCondition());
+            }
             if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+"))
             {
                 postConditionTextField.setText(useCase.getPostCondition());
@@ -96,6 +104,14 @@ public class UseCasePageController {
         if (actorChoiceBox.getValue() != null) {
             int actorID = actorList.findByActorName((String) actorChoiceBox.getValue()).getActorID();
             useCase.setActorID(actorID);
+        }
+
+        // Set value for useCaseID
+        if (!useCaseIDTextField.getText().isEmpty() && useCaseList.findByUseCaseId(Integer.parseInt(useCaseIDTextField.getText())) == null) {
+            useCase.setUseCaseID(Integer.parseInt(useCaseIDTextField.getText()));
+        } else {
+            errorLabel.setText("Please enter a valid use case ID.");
+            return;
         }
 
         // Set value for useCaseName
@@ -115,6 +131,16 @@ public class UseCasePageController {
         // Set value for preCondition
         if (!preConditionTextField.getText().isEmpty()) {
             useCase.setPreCondition(preConditionTextField.getText());
+        }
+
+        // Set value for actorAction
+        if (!actorActionTextArea.getText().isEmpty()) {
+            useCase.setActorAction(actorActionTextArea.getText());
+        }
+
+        // Set value for systemAction
+        if (!systemActionTextArea.getText().isEmpty()) {
+            useCase.setSystemAction(systemActionTextArea.getText());
         }
 
         // Set value for postCondition
