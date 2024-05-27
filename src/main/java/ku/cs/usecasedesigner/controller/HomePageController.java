@@ -67,7 +67,6 @@ public class HomePageController {
                 subSystemID = (int) objects.get(2);
             }
             loadProject();
-            loadSubSystemButton();
             saveProject();
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
