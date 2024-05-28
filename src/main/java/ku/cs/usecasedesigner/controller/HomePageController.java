@@ -1075,7 +1075,6 @@ public class HomePageController {
     }
 
     public void saveProject() {
-
         // Save the project components
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
