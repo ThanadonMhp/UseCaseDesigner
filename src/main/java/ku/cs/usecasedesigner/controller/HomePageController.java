@@ -41,9 +41,6 @@ public class HomePageController {
     @FXML
     private HBox subSystemHBox;
 
-    @FXML
-    private VBox homePageVBox;
-
     private double startX;
     private double startY;
     private String projectName, directory;

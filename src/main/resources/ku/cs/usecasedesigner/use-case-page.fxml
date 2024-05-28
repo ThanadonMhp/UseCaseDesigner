@@ -21,7 +21,7 @@
       <TextField fx:id="postConditionTextField" layoutX="325.0" layoutY="317.0" prefHeight="25.0" prefWidth="228.0" />
       <Button layoutX="522.0" layoutY="361.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
       <TextField fx:id="useCaseNameTextField" layoutX="324.0" layoutY="55.0" prefHeight="25.0" prefWidth="230.0" />
-      <Label fx:id="errorLabel" layoutX="322.0" layoutY="41.0" prefHeight="17.0" prefWidth="149.0" textAlignment="CENTER" textFill="RED" />
+      <Label fx:id="errorLabel" layoutX="272.0" layoutY="365.0" prefHeight="17.0" prefWidth="230.0" textAlignment="CENTER" textFill="RED" />
       <TextField fx:id="useCaseIDTextField" layoutX="324.0" layoutY="20.0" prefHeight="25.0" prefWidth="230.0" />
       <Label layoutX="96.0" layoutY="220.0" text="actor" />
       <Label layoutX="324.0" layoutY="220.0" text="system" />
