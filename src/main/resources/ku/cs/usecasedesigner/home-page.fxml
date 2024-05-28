@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
@@ -54,7 +55,7 @@
       <children>
       <TitledPane fx:id="componentsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0" text="Components" textAlignment="CENTER">
         <content>
-          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefHeight="547.0" prefWidth="200.0" style="-fx-background-color: white;">
+          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" style="-fx-background-color: white;">
             <children>
               <!-- ImageView for oval.jpg with drag-and-drop functionality -->
               <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
@@ -77,7 +78,7 @@
                   <Image url="@../../../images/line.png" />
                 </image>
               </ImageView>
-              <ImageView fx:id="arrowImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="195.0" onDragDetected="#arrowDragDetected" pickOnBounds="true" preserveRatio="true">
+              <ImageView fx:id="arrowImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="195.0" onDragDetected="#arrowDragDetected" pickOnBounds="true" preserveRatio="true" visible="false">
                 <image>
                   <Image url="@../../../images/directional.png" />
                 </image>
@@ -89,6 +90,18 @@
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
       </TitledPane>
+            <TitledPane fx:id="actorsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="250.0" prefHeight="429.0" prefWidth="202.0" text="Actors" textAlignment="CENTER" visible="false">
+               <font>
+                  <Font name="Noto Sans Thai Regular" size="12.0" />
+               </font>
+               <content>
+                  <ScrollPane fx:id="actorsScrollPane" prefHeight="361.0" prefWidth="202.0">
+                     <content>
+                        <AnchorPane fx:id="actorsAnchor" minHeight="0.0" minWidth="0.0" style="-fx-background-color: white;" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
         <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
                <children>
               <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">

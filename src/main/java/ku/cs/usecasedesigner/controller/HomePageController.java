@@ -6,12 +6,10 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -34,6 +32,15 @@ public class HomePageController {
 
     @FXML
     private Pane designPane;
+
+    @FXML
+    private TitledPane actorsPane;
+
+    @FXML
+    private AnchorPane actorsAnchor;
+
+    @FXML
+    private ScrollPane actorsScrollPane;
 
     @FXML
     private Label guideLabel;
@@ -530,6 +537,15 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
+    // DragDetected for existing Actor and define which actor it is
+    public void existingActorDragDetected(MouseEvent mouseEvent) {
+        System.out.println("Existing Actor Drag Detected");
+        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("Existing Actor");
+        dragboard.setContent(clipboardContent);
+    }
+
     private void makeDraggable(Node node, String type, int ID) {
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getLayoutX();
@@ -590,39 +606,6 @@ public class HomePageController {
 
         // Create a menu item for sending the component to a subsystem
         Menu sendToSubSystemItem = new Menu("Send to SubSystem");
-
-//        if (subSystemID != 0)
-//        {
-//            MenuItem mainSystemItem = new MenuItem("Main");
-//            mainSystemItem.setOnAction(e -> {
-//                Position position = positionList.findByPositionId(ID);
-//                position.setSubSystemID(0);
-//                saveProject();
-//                subSystemID = 0;
-//                loadProject();
-//                loadSubSystemButton();
-//            });
-//            // Add the Main to the sendToSubSystemItem
-//            sendToSubSystemItem.getItems().add(mainSystemItem);
-//        }
-//
-//        subsystemList.getSubSystemList().forEach(subSystem -> {
-//            if (subSystemID != subSystem.getSubSystemID())
-//            {
-//                MenuItem subSystemItem = new MenuItem(subSystem.getSubSystemName());
-//                subSystemItem.setOnAction(e -> {
-//                    Position position = positionList.findByPositionId(ID);
-//                    position.setSubSystemID(subSystem.getSubSystemID());
-//                    saveProject();
-//                    subSystemID = subSystem.getSubSystemID();
-//                    loadProject();
-//                    loadSubSystemButton();
-//                });
-//                // Add the subSystemItem to the sendToSubSystemItem
-//                sendToSubSystemItem.getItems().add(subSystemItem);
-//            }
-//        });
-
 
         // Add menu items to the context menu
         contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem);
@@ -842,6 +825,8 @@ public class HomePageController {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+            } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
+
             }
 
             if (!designPane.getChildren().isEmpty()) {
@@ -1029,6 +1014,7 @@ public class HomePageController {
         }
 
         loadSubSystemButton();
+        loadActorsList();
     }
 
     public void loadSubSystemButton() {
@@ -1072,6 +1058,50 @@ public class HomePageController {
                 }
             }
         }
+    }
+
+    public void loadActorsList(){
+        // If actorList is not empty show the actorsPane
+        actorsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        actorsScrollPane.setContent(actorsAnchor);
+        if (!actorList.getActorList().isEmpty()) {
+            actorsPane.setVisible(true);
+        } else {
+            actorsPane.setVisible(false);
+        }
+        // Add a actorImage to the actorsAnchor for each actor in the actorList
+        actorList.getActorList().forEach(actor -> {
+            // Draw an actor
+            ImageView imageView = new ImageView();
+            imageView.setImage(actorImageView.getImage());
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(90);
+
+            // Add hidden label to the system
+            Label type = new Label("actor");
+            type.setVisible(false);
+
+            // Add an actor and label to VBox
+            VBox vbox = new VBox();
+            vbox.getChildren().addAll(imageView, type, new Label(actor.getActorName()));
+            vbox.setAlignment(Pos.CENTER);
+
+            // set position of the actor
+            if (actorList.getActorList().indexOf(actor) % 2 == 0) {
+                vbox.setLayoutX(0);
+                vbox.setLayoutY(5 + 90 * actorList.getActorList().indexOf(actor));
+            } else {
+                vbox.setLayoutX(100);
+                vbox.setLayoutY(5 + 90 * (actorList.getActorList().indexOf(actor) - 1));
+            }
+
+            // Make the vbox can be added to the designPane with all the details
+
+
+            vbox.setOnDragDetected(this::existingActorDragDetected);
+            actorsAnchor.getChildren().add(vbox);
+        });
+
     }
 
     public void saveProject() {
