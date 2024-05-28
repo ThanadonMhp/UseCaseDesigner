@@ -742,7 +742,6 @@ public class HomePageController {
             public void handle(MouseEvent mouseEvent) {
                 node.setOnMouseDragged(null);
                 node.setStyle("-fx-border-color: transparent");
-                System.out.println("Editing Finished");
                 saveProject();
                 makeDraggable(node, type, ID);
             }
@@ -766,7 +765,6 @@ public class HomePageController {
                             saveProject();
                             subSystemID = 0;
                             loadProject();
-                            loadSubSystemButton();
                         });
                         // Add the Main to the sendToSubSystemItem
                         sendToSubSystemItem.getItems().add(mainSystemItem);
@@ -781,7 +779,6 @@ public class HomePageController {
                                 saveProject();
                                 subSystemID = subSystem.getSubSystemID();
                                 loadProject();
-                                loadSubSystemButton();
                             });
                             // Add the subSystemItem to the sendToSubSystemItem
                             sendToSubSystemItem.getItems().add(subSystemItem);
@@ -1000,8 +997,7 @@ public class HomePageController {
 
         // Load connections
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
-        ConnectionList connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
-
+        connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
             if (connection.getSubSystemID() == subSystemID) {
@@ -1033,8 +1029,6 @@ public class HomePageController {
         }
 
         loadSubSystemButton();
-
-        System.out.println("Project Opened");
     }
 
     public void loadSubSystemButton() {
@@ -1048,9 +1042,7 @@ public class HomePageController {
             // Set the subSystemID
             subSystemID = 0;
             // Load the project
-            System.out.println("Opening Main SubSystem");
             loadProject();
-            loadSubSystemButton();
         });
 
         // Add a button for each subsystem
@@ -1064,9 +1056,7 @@ public class HomePageController {
                 // Set the subSystemID
                 subSystemID = subsystem.getSubSystemID();
                 // Load the project
-                System.out.println("Opening SubSystem: " + subsystem.getSubSystemName());
                 loadProject();
-                loadSubSystemButton();
             });
         });
 
