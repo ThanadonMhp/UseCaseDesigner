@@ -52,7 +52,7 @@ public class HomePageController {
     private double startY;
     private String projectName, directory;
     private Node startNodeForLink;
-    private int subSystemID;
+    private int subSystemID, existingActorID;
 
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
@@ -275,10 +275,10 @@ public class HomePageController {
         });
     }
 
-    public ArrayList<Integer> addToActorList(double width, double height, double layoutX, double layoutY, String label){
+    public ArrayList<Integer> addToActorList(double width, double height, double layoutX, double layoutY, String label, int actorID){
         // Add the actor to actorList
         Actor actor = new Actor
-                (actorList.findLastActorId() + 1, // actorID
+                (actorID, // actorID
                         label,  // actorName
                         positionList.findLastPositionId() + 1); // positionID
         actorList.addActor(actor);
@@ -826,7 +826,14 @@ public class HomePageController {
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
-
+                // draw the existing actor
+                Actor actor = actorList.findByActorId(existingActorID);
+                drawActor(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID(), positionList.findLastPositionId() + 1);
+                // save to actorList
+                addToActorList(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID());
+                loadProject();
+            } else {
+                System.out.println(dragEvent.getDragboard().getString());
             }
 
             if (!designPane.getChildren().isEmpty()) {
@@ -1069,7 +1076,7 @@ public class HomePageController {
         } else {
             actorsPane.setVisible(false);
         }
-        // Add a actorImage to the actorsAnchor for each actor in the actorList
+
         actorList.getActorList().forEach(actor -> {
             // Draw an actor
             ImageView imageView = new ImageView();
@@ -1095,11 +1102,23 @@ public class HomePageController {
                 vbox.setLayoutY(5 + 90 * (actorList.getActorList().indexOf(actor) - 1));
             }
 
-            // Make the vbox can be added to the designPane with all the details
+            Node actorNode = vbox;
 
+            actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    System.out.println("Actor Drag Detected");
+                    Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
+                    ClipboardContent clipboardContent = new ClipboardContent();
+                    clipboardContent.putString("Existing Actor");
+                    existingActorID = actor.getActorID();
+                    dragboard.setContent(clipboardContent);
 
-            vbox.setOnDragDetected(this::existingActorDragDetected);
-            actorsAnchor.getChildren().add(vbox);
+                    mouseEvent.consume();
+                }
+            });
+
+            actorsAnchor.getChildren().add(actorNode);
         });
 
     }
