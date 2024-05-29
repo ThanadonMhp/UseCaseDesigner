@@ -30,6 +30,17 @@ public class ActorList {
         return null;
     }
 
+    // find findFirstActorId
+    public int findFirstActorId() {
+        int firstActorId = 0;
+        for (Actor actor : actorList) {
+            if (actor.getActorID() < firstActorId) {
+                firstActorId = actor.getActorID();
+            }
+        }
+        return firstActorId;
+    }
+
     public int findLastActorId() {
         int lastActorId = 0;
         for (Actor actor : actorList) {

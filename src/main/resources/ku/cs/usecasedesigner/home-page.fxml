@@ -90,12 +90,12 @@
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
       </TitledPane>
-            <TitledPane fx:id="actorsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="250.0" prefHeight="429.0" prefWidth="202.0" text="Actors" textAlignment="CENTER" visible="false">
+            <TitledPane fx:id="actorsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="250.0" prefHeight="429.0" prefWidth="202.0" style="-fx-background-color: white;" text="Actors" textAlignment="CENTER" visible="false">
                <font>
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
                <content>
-                  <ScrollPane fx:id="actorsScrollPane" prefHeight="361.0" prefWidth="202.0">
+                  <ScrollPane fx:id="actorsScrollPane" style="-fx-background-color: white;">
                      <content>
                         <AnchorPane fx:id="actorsAnchor" minHeight="0.0" minWidth="0.0" style="-fx-background-color: white;" />
                      </content>

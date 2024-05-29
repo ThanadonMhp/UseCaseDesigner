@@ -713,7 +713,7 @@ public class HomePageController {
                 // remove the position from the list
                 positionList.removePositionByID(ID);
                 saveProject();
-                loadSubSystemButton();
+                loadProject();
 
                 System.out.println("Item Removed");
             }
@@ -831,6 +831,7 @@ public class HomePageController {
                 drawActor(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID(), positionList.findLastPositionId() + 1);
                 // save to actorList
                 addToActorList(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID());
+                saveProject();
                 loadProject();
             } else {
                 System.out.println(dragEvent.getDragboard().getString());
@@ -1072,55 +1073,60 @@ public class HomePageController {
         actorsScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         actorsScrollPane.setContent(actorsAnchor);
         if (!actorList.getActorList().isEmpty()) {
+            actorsAnchor.getChildren().clear();
             actorsPane.setVisible(true);
         } else {
             actorsPane.setVisible(false);
         }
 
-        actorList.getActorList().forEach(actor -> {
-            // Draw an actor
-            ImageView imageView = new ImageView();
-            imageView.setImage(actorImageView.getImage());
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(90);
+        // create a loop from 1 to last actor ID
+        for (int i = actorList.findFirstActorId(); i <= actorList.findLastActorId(); i++) {
+            Actor actor = actorList.findByActorId(i);
+            if (actor != null) {
+                // Add the actor to the actorsAnchor
+                // Draw an actor
+                ImageView imageView = new ImageView();
+                imageView.setImage(actorImageView.getImage());
+                imageView.setFitWidth(90);
+                imageView.setFitHeight(90);
 
-            // Add hidden label to the system
-            Label type = new Label("actor");
-            type.setVisible(false);
+                // Add hidden label to the system
+                Label type = new Label("actor");
+                type.setVisible(false);
 
-            // Add an actor and label to VBox
-            VBox vbox = new VBox();
-            vbox.getChildren().addAll(imageView, type, new Label(actor.getActorName()));
-            vbox.setAlignment(Pos.CENTER);
+                // Add an actor and label to VBox
+                VBox vbox = new VBox();
+                vbox.getChildren().addAll(imageView, type, new Label(actor.getActorName()));
+                vbox.setAlignment(Pos.CENTER);
 
-            // set position of the actor
-            if (actorList.getActorList().indexOf(actor) % 2 == 0) {
-                vbox.setLayoutX(0);
-                vbox.setLayoutY(5 + 90 * actorList.getActorList().indexOf(actor));
-            } else {
-                vbox.setLayoutX(100);
-                vbox.setLayoutY(5 + 90 * (actorList.getActorList().indexOf(actor) - 1));
-            }
-
-            Node actorNode = vbox;
-
-            actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    System.out.println("Actor Drag Detected");
-                    Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
-                    ClipboardContent clipboardContent = new ClipboardContent();
-                    clipboardContent.putString("Existing Actor");
-                    existingActorID = actor.getActorID();
-                    dragboard.setContent(clipboardContent);
-
-                    mouseEvent.consume();
+                // set the position of the actor in the actorsAnchor
+                if(actorsAnchor.getChildren().size() % 2 == 0){
+                    vbox.setLayoutX(0);
+                    vbox.setLayoutY(5 + 90 * actorsAnchor.getChildren().size());
+                } else {
+                    vbox.setLayoutX(100);
+                    vbox.setLayoutY(5 + 90 * (actorsAnchor.getChildren().size() - 1));
                 }
-            });
 
-            actorsAnchor.getChildren().add(actorNode);
-        });
+                Node actorNode = vbox;
 
+                actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        System.out.println("Actor Drag Detected");
+                        Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
+                        ClipboardContent clipboardContent = new ClipboardContent();
+                        clipboardContent.putString("Existing Actor");
+                        existingActorID = actor.getActorID();
+                        dragboard.setContent(clipboardContent);
+
+                        mouseEvent.consume();
+                    }
+                });
+
+                actorsAnchor.getChildren().add(actorNode);
+            }
+        }
     }
 
     public void saveProject() {
