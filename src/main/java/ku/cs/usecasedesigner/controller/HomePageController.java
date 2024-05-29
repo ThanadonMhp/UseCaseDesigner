@@ -290,7 +290,8 @@ public class HomePageController {
                         layoutY, // yPosition
                         width, // fitWidth
                         height,  // fitHeight
-                        0); // rotation
+                        0,  // rotation
+                        subSystemID); // subSystemID
         positionList.addPosition(position);
 
         ArrayList<Integer> objects = new ArrayList<>();
@@ -1110,19 +1111,22 @@ public class HomePageController {
 
                 Node actorNode = vbox;
 
-                actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        System.out.println("Actor Drag Detected");
-                        Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
-                        ClipboardContent clipboardContent = new ClipboardContent();
-                        clipboardContent.putString("Existing Actor");
-                        existingActorID = actor.getActorID();
-                        dragboard.setContent(clipboardContent);
+                if (subSystemID != 0)
+                {
+                    actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent mouseEvent) {
+                            System.out.println("Actor Drag Detected");
+                            Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
+                            ClipboardContent clipboardContent = new ClipboardContent();
+                            clipboardContent.putString("Existing Actor");
+                            existingActorID = actor.getActorID();
+                            dragboard.setContent(clipboardContent);
 
-                        mouseEvent.consume();
-                    }
-                });
+                            mouseEvent.consume();
+                        }
+                    });
+                }
 
                 actorsAnchor.getChildren().add(actorNode);
             }
