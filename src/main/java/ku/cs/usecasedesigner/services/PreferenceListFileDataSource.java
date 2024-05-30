@@ -54,7 +54,7 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
                             Boolean.parseBoolean(data[4].trim()), // bold
                             Boolean.parseBoolean(data[5].trim()), // italic
                             Boolean.parseBoolean(data[6].trim()), // underline
-                            data[4].trim()
+                            data[7].trim() // theme
                     );
                     preferenceList.addPreference(preference);
                 }

@@ -132,12 +132,9 @@ public class FXRouter {
 
         if(themeType == 1){
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/light-mode.css").toExternalForm());
         }
-        else {
-            scene.getStylesheets().clear();
-        }
-        if(themeType == 2){
+        else if (themeType == 2){
             scene.getStylesheets().clear();
             scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/dark-mode.css").toExternalForm());
         } else {
@@ -167,9 +164,10 @@ public class FXRouter {
 
         if (themeType == 1){
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
-        } else {
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/light-mode.css").toExternalForm());
+        } else if (themeType == 2){
             scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/dark-mode.css").toExternalForm());
         }
 
         stage.setTitle(route.windowTitle);
@@ -197,9 +195,10 @@ public class FXRouter {
 
         if (themeType == 1){
             scene.getStylesheets().clear();
-            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/application.css").toExternalForm());
-        } else {
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/light-mode.css").toExternalForm());
+        } else if (themeType == 2){
             scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/dark-mode.css").toExternalForm());
         }
 
         stage.setTitle(route.windowTitle);
