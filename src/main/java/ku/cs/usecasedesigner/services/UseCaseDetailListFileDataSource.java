@@ -5,11 +5,11 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SubSystemListFileDataSource implements DataSource<SubSystemList>, ManageDataSource<SubSystem> {
+public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetailList>, ManageDataSource<UseCaseDetail>{
     private String directory;
     private String fileName;
 
-    public SubSystemListFileDataSource(String directory, String fileName) {
+    public UseCaseDetailListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -33,8 +33,8 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
     }
 
     @Override
-    public SubSystemList readData() {
-        SubSystemList subsystemList = new SubSystemList();
+    public UseCaseDetailList readData() {
+        UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
@@ -47,13 +47,14 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("subSystem")) {
-                    SubSystem subsystem = new SubSystem(
-                            Integer.parseInt(data[1]), // subsystemID
-                            data[2], // subsystemName
-                            Integer.parseInt(data[3]) // positionID
+                if (data[0].trim().equals("useCaseDetail")) {
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(
+                            Integer.parseInt(data[1]), // useCaseID
+                            data[2], // type
+                            Integer.parseInt(data[3]), // number
+                            data[4] // detail
                     );
-                    subsystemList.addSubSystem(subsystem);
+                    useCaseDetailList.addUseCaseDetail(useCaseDetail);
                 }
             }
         } catch (Exception e) {
@@ -71,11 +72,11 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
             }
         }
 
-        return subsystemList;
+        return useCaseDetailList;
     }
 
     @Override
-    public void writeData(SubSystemList subsystemList) {
+    public void writeData(UseCaseDetailList useCaseDetailList) {
         // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
@@ -91,9 +92,9 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
         // Import preferenceList from CSV
         PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
-        // Import useCaseDetailList from CSV
-        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
-        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        // Import subSystemList from CSV
+        SubSystemListFileDataSource subSystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
+        SubSystemList subSystemList = subSystemListFileDataSource.readData();
         // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
@@ -145,20 +146,20 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
                 buffer.newLine();
             }
 
-            // Write SubsystemList to CSV
-            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
-                buffer.write(createLine(subsystem));
-                buffer.newLine();
-            }
-
-            // Write useCaseDetailList to CSV
-            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
+            // Write SubSystemList to CSV
+            for (SubSystem subSystem : subSystemList.getSubSystemList()) {
+                String line = subSystemListFileDataSource.createLine(subSystem);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write useCaseList to CSV
+            // Write UseCaseDetailList to CSV
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+                buffer.write(createLine(useCaseDetail));
+                buffer.newLine();
+            }
+
+            // Write UseCaseList to CSV
             for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
@@ -166,25 +167,24 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
             }
 
             // Write UseCaseSystemList to CSV
-            for (UseCaseSystem useCaseSystem :useCaseSystemList.getSystemList()){
+            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
                 String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
                 buffer.append(line);
                 buffer.newLine();
             }
 
             buffer.close();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
-    public String createLine(SubSystem subsystem) {
-        return "subSystem" + ","
-                + subsystem.getSubSystemID() + ","
-                + subsystem.getSubSystemName() + ","
-                + subsystem.getPositionID();
+    public String createLine(UseCaseDetail useCaseDetail) {
+        return "useCaseDetail" + ","
+                + useCaseDetail.getUseCaseID() + ","
+                + useCaseDetail.getType() + ","
+                + useCaseDetail.getNumber() + ","
+                + useCaseDetail.getDetail();
     }
 }

@@ -99,6 +99,9 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         // Import subsystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
+        // Import UseCaseDetailList from CSV
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
         // Import UseCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
@@ -145,6 +148,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             //Write SubsystemList to CSV
             for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 buffer.write(subsystemListFileDataSource.createLine(subsystem));
+                buffer.newLine();
+            }
+
+            //Write UseCaseDetailList to CSV
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+                buffer.write(useCaseDetailListFileDataSource.createLine(useCaseDetail));
                 buffer.newLine();
             }
 

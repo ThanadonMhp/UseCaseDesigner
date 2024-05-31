@@ -95,6 +95,9 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
         // Import subSystemList to file
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
+        // Import useCaseDetailList to file
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
         // Import useCaseList to file
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
@@ -149,6 +152,13 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
             // Write subSystemList to file
             for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 String line = subsystemListFileDataSource.createLine(subsystem);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            // Write useCaseDetailList to file
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
                 buffer.append(line);
                 buffer.newLine();
             }
