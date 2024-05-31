@@ -194,11 +194,15 @@ public class UseCasePageController {
         // Set value for description
         if (!descriptionTextArea.getText().isEmpty()) {
             useCase.setDescription(descriptionTextArea.getText());
+        } else {
+            useCase.setDescription("!@#$%^&*()_+");
         }
 
         // Set value for preCondition
         if (!preConditionTextField.getText().isEmpty()) {
             useCase.setPreCondition(preConditionTextField.getText());
+        } else {
+            useCase.setPreCondition("!@#$%^&*()_+");
         }
 
         // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -229,6 +233,8 @@ public class UseCasePageController {
         // Set value for postCondition
         if (!postConditionTextField.getText().isEmpty()) {
             useCase.setPostCondition(postConditionTextField.getText());
+        } else {
+            useCase.setPostCondition("!@#$%^&*()_+");
         }
 
         // Edit the useCase in the useCaseList
@@ -349,13 +355,26 @@ public class UseCasePageController {
     public void handlePreConditionChoiceButton(ActionEvent actionEvent) {
         // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
         ContextMenu contextMenu = new ContextMenu();
-        for (UseCase useCase : useCaseList.getUseCaseList()) {
-            MenuItem menuItem = new MenuItem(useCase.getUseCaseName());
+        for (UseCase tempUseCase : useCaseList.getUseCaseList()) {
+            // Do not add the current useCase to the postCondition
+            if (tempUseCase.getUseCaseID() == useCase.getUseCaseID()) {
+                // Show the disabled useCase in the menu
+                MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
+                menuItem.setDisable(true);
+                continue;
+            }
+            MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
             menuItem.setOnAction(event -> {
                 if (preConditionTextField.getText().isEmpty()) {
-                    preConditionTextField.setText(useCase.getUseCaseName());
+                    preConditionTextField.setText(tempUseCase.getUseCaseName());
                 } else {
                     preConditionTextField.appendText("/" + useCase.getUseCaseName());
+                }
+                // set current useCase as the postCondition of the selected useCase
+                if (tempUseCase.getPostCondition().isEmpty()) {
+                    tempUseCase.setPostCondition(useCase.getUseCaseName());
+                } else {
+                    tempUseCase.setPostCondition(tempUseCase.getPostCondition() + "/" + useCase.getUseCaseName());
                 }
             });
             contextMenu.getItems().add(menuItem);
@@ -369,13 +388,25 @@ public class UseCasePageController {
     public void handlePostConditionChoiceButton(ActionEvent actionEvent) {
         // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
         ContextMenu contextMenu = new ContextMenu();
-        for (UseCase useCase : useCaseList.getUseCaseList()) {
-            MenuItem menuItem = new MenuItem(useCase.getUseCaseName());
+        for (UseCase tempUseCase : useCaseList.getUseCaseList()) {
+            // Do not add the current useCase to the postCondition
+            if (tempUseCase.getUseCaseID() == useCase.getUseCaseID()) {
+                MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
+                menuItem.setDisable(true);
+                continue;
+            }
+            MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
             menuItem.setOnAction(event -> {
                 if (postConditionTextField.getText().isEmpty()) {
-                    postConditionTextField.setText(useCase.getUseCaseName());
+                    postConditionTextField.setText(tempUseCase.getUseCaseName());
                 } else {
-                    postConditionTextField.appendText("/" + useCase.getUseCaseName());
+                    postConditionTextField.appendText("/" + tempUseCase.getUseCaseName());
+                }
+                // set current useCase as the preCondition of the selected useCase
+                if (tempUseCase.getPreCondition().isEmpty()) {
+                    tempUseCase.setPreCondition(useCase.getUseCaseName());
+                } else {
+                    tempUseCase.setPreCondition(tempUseCase.getPreCondition() + "/" + useCase.getUseCaseName());
                 }
             });
             contextMenu.getItems().add(menuItem);
