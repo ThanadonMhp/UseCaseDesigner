@@ -3,29 +3,47 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.UseCasePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.usecasedesigner.controller.UseCasePageController">
    <children>
-      <Label layoutX="90.0" layoutY="24.0" text="Use Case ID" />
-      <Label layoutX="90.0" layoutY="59.0" text="Use Case Name" />
-      <Label layoutX="90.0" layoutY="94.0" text="Actor" />
-      <Label layoutX="90.0" layoutY="135.0" text="Pre-Condition" />
-      <Label layoutX="90.0" layoutY="184.0" text="description" />
-      <Label layoutX="97.0" layoutY="321.0" text="Post-Condition" />
-      <ChoiceBox fx:id="actorChoiceBox" layoutX="324.0" layoutY="90.0" prefHeight="25.0" prefWidth="230.0" />
-      <TextField fx:id="preConditionTextField" layoutX="324.0" layoutY="131.0" prefHeight="25.0" prefWidth="230.0" />
-      <TextArea fx:id="descriptionTextArea" layoutX="323.0" layoutY="167.0" prefHeight="50.0" prefWidth="230.0" />
-      <TextField fx:id="postConditionTextField" layoutX="325.0" layoutY="317.0" prefHeight="25.0" prefWidth="228.0" />
-      <Button layoutX="522.0" layoutY="361.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
-      <TextField fx:id="useCaseNameTextField" layoutX="324.0" layoutY="55.0" prefHeight="25.0" prefWidth="230.0" />
-      <Label fx:id="errorLabel" layoutX="272.0" layoutY="365.0" prefHeight="17.0" prefWidth="230.0" textAlignment="CENTER" textFill="RED" />
-      <TextField fx:id="useCaseIDTextField" layoutX="324.0" layoutY="20.0" prefHeight="25.0" prefWidth="230.0" />
-      <Label layoutX="96.0" layoutY="220.0" text="actor" />
-      <Label layoutX="324.0" layoutY="220.0" text="system" />
-      <TextArea fx:id="actorActionTextArea" layoutX="95.0" layoutY="237.0" prefHeight="60.0" prefWidth="230.0" />
-      <TextArea fx:id="systemActionTextArea" layoutX="324.0" layoutY="237.0" prefHeight="60.0" prefWidth="230.0" />
+      <Label layoutX="90.0" layoutY="30.0" text="Use Case ID" />
+      <Label layoutX="90.0" layoutY="70.0" text="Use Case Name" />
+      <Label layoutX="90.0" layoutY="110.0" text="Actor" />
+      <Label layoutX="90.0" layoutY="150.0" text="Pre-Condition" />
+      <Label layoutX="90.0" layoutY="190.0" text="description" />
+      <Label layoutX="90.0" layoutY="580.0" text="Post-Condition" />
+      <ChoiceBox fx:id="actorChoiceBox" layoutX="1053.0" layoutY="163.0" prefHeight="25.0" prefWidth="725.0" />
+      <TextField fx:id="preConditionTextField" layoutX="200.0" layoutY="150.0" prefHeight="25.0" prefWidth="700.0" />
+      <TextArea fx:id="descriptionTextArea" layoutX="90.0" layoutY="210.0" prefHeight="37.0" prefWidth="839.0" />
+      <TextField fx:id="postConditionTextField" layoutX="200.0" layoutY="580.0" prefHeight="25.0" prefWidth="700.0" />
+      <Button layoutX="900.0" layoutY="625.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
+      <TextField fx:id="useCaseNameTextField" layoutX="200.0" layoutY="70.0" prefHeight="25.0" prefWidth="725.0" />
+      <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="150.0" layoutY="625.0" prefHeight="25.0" prefWidth="725.0" textAlignment="RIGHT" textFill="RED" />
+      <TextField fx:id="useCaseIDTextField" layoutX="200.0" layoutY="30.0" prefHeight="25.0" prefWidth="725.0" />
+      <Label layoutX="91.0" layoutY="260.0" text="actor" />
+      <Label layoutX="515.0" layoutY="260.0" text="system" />
+      <TextArea fx:id="actorActionTextArea" layoutX="1013.0" layoutY="249.0" prefHeight="60.0" prefWidth="230.0" />
+      <TextArea fx:id="systemActionTextArea" layoutX="1028.0" layoutY="389.0" prefHeight="60.0" prefWidth="230.0" />
+      <ScrollPane fx:id="actorActionScrollPane" layoutX="90.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="415.0">
+         <content>
+            <VBox fx:id="actorActionVBox" prefWidth="400.0" />
+         </content>
+      </ScrollPane>
+      <ScrollPane fx:id="systemActionScrollPane" layoutX="515.0" layoutY="279.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="415.0">
+         <content>
+            <VBox fx:id="systemActionVBox" prefWidth="400.0" />
+         </content>
+      </ScrollPane>
+      <Button layoutX="900.0" layoutY="150.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+      <TextField fx:id="preConditionTextField1" layoutX="200.0" layoutY="110.0" prefHeight="25.0" prefWidth="700.0" />
+      <Button layoutX="900.0" layoutY="110.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+      <Button layoutX="900.0" layoutY="580.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" />
+      <Button fx:id="addActorActionButton" layoutX="130.0" layoutY="256.0" mnemonicParsing="false" onAction="#handleAddActorActionButton" prefHeight="25.0" prefWidth="25.0" text="+" />
+      <Button fx:id="addSystemActionButton" layoutX="563.0" layoutY="256.0" mnemonicParsing="false" onAction="#handleAddSystemActionButton" prefHeight="25.0" prefWidth="25.0" text="+" />
    </children>
 </AnchorPane>

@@ -3,10 +3,9 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.ActorList;
@@ -32,6 +31,10 @@ public class UseCasePageController {
 
     @FXML private TextArea descriptionTextArea, actorActionTextArea, systemActionTextArea;
 
+    @FXML private VBox actorActionVBox, systemActionVBox;
+
+    @FXML private ScrollPane actorActionScrollPane, systemActionScrollPane;
+
     private String directory;
     private String projectName;
     private UseCase useCase;
@@ -44,6 +47,10 @@ public class UseCasePageController {
     private DataSource<PositionList> positionListFileDataSource;
 
     @FXML void initialize() {
+        // disable horizontal scroll bar
+        actorActionScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        systemActionScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -98,7 +105,6 @@ public class UseCasePageController {
     }
 
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
-        System.out.println("Confirm button clicked.");
 
         // Set value for actorID
         if (actorChoiceBox.getValue() != null) {
@@ -107,17 +113,32 @@ public class UseCasePageController {
         }
 
         // Set value for useCaseID
-        if (!useCaseIDTextField.getText().isEmpty() && useCaseList.findByUseCaseId(Integer.parseInt(useCaseIDTextField.getText())) == null) {
-            useCase.setUseCaseID(Integer.parseInt(useCaseIDTextField.getText()));
+        // Check if useCase ID is not empty and not being used by another use case
+        if (!useCaseIDTextField.getText().isEmpty()) {
+            int useCaseID = Integer.parseInt(useCaseIDTextField.getText());
+            if (useCaseList.findByUseCaseId(useCaseID) == null || useCaseID == useCase.getUseCaseID()) {
+                errorLabel.setText("");
+                useCase.setUseCaseID(useCaseID);
+            } else {
+                errorLabel.setText("This use case ID is already being used by another use case.");
+                return;
+            }
         } else {
-            errorLabel.setText("Please enter a valid use case ID.");
+            errorLabel.setText("Please enter the use case ID.");
             return;
         }
 
         // Set value for useCaseName
+        // Check if useCaseName is not empty and not being used by another use case
         if (!useCaseNameTextField.getText().isEmpty()) {
-            errorLabel.setText("");
-            useCase.setUseCaseName(useCaseNameTextField.getText());
+            String useCaseName = useCaseNameTextField.getText();
+            if (!useCaseList.isUseCaseNameExist(useCaseName) || useCaseName.equals(useCase.getUseCaseName())) {
+                errorLabel.setText("");
+                useCase.setUseCaseName(useCaseName);
+            } else {
+                errorLabel.setText("This use case name is already being used by another use case.");
+                return;
+            }
         } else {
             errorLabel.setText("Please enter the use case name.");
             return;
@@ -164,5 +185,78 @@ public class UseCasePageController {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
 
+    }
+
+    public void handleAddActorActionButton(ActionEvent actionEvent) {
+        // if the last textArea is empty, do not add a new textArea
+        if (!actorActionVBox.getChildren().isEmpty()) {
+            HBox lastHBox = (HBox) actorActionVBox.getChildren().get(actorActionVBox.getChildren().size() - 1);
+            TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+            if (lastTextArea.getText().isEmpty()) {
+                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                return;
+            }
+        }
+        errorLabel.setText("");
+        // Create a new HBox to hold the textArea and delete button
+        HBox hBox = new HBox();
+        // add the textArea to the actorActionVBox
+        TextArea textArea = new TextArea();
+        textArea.setPrefWidth(actorActionVBox.getWidth());
+        // set textArea to size of a single line
+        textArea.setPrefHeight(20);
+        textArea.setWrapText(true);
+        // Make textArea size change depending on the text
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
+        });
+        // create a delete button to remove the textArea
+        Button deleteButton = new Button("-");
+        deleteButton.setPrefHeight(20);
+        deleteButton.setOnAction(event -> {
+            actorActionVBox.getChildren().remove(hBox);
+        });
+        // Add textArea and delete button to the HBox
+        hBox.getChildren().add(textArea);
+        hBox.getChildren().add(deleteButton);
+
+        actorActionVBox.getChildren().add(hBox);
+    }
+
+    public void handleAddSystemActionButton(ActionEvent actionEvent) {
+        // if the last textArea is empty, do not add a new textArea
+        if (!systemActionVBox.getChildren().isEmpty()) {
+            HBox lastHBox = (HBox) systemActionVBox.getChildren().get(systemActionVBox.getChildren().size() - 1);
+            TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+            if (lastTextArea.getText().isEmpty()) {
+                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                return;
+            }
+        }
+        errorLabel.setText("");
+        // Create a new HBox to hold the textArea and delete button
+        HBox hBox = new HBox();
+        // add the textArea to the systemActionVBox
+        TextArea textArea = new TextArea();
+        textArea.setPrefWidth(actorActionVBox.getWidth());
+        // set textArea to size of a single line
+        textArea.setPrefHeight(20);
+        textArea.setWrapText(true);
+        // Make textArea size change depending on the text
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            textArea.setPrefHeight(textArea.getText().split("\n").length * 15);
+        });
+        // create a delete button to remove the textArea
+        Button deleteButton = new Button("-");
+        deleteButton.setPrefHeight(20);
+        deleteButton.setOnAction(event -> {
+            actorActionVBox.getChildren().remove(hBox);
+        });
+        // Add textArea and delete button to the HBox
+        hBox.getChildren().add(textArea);
+        hBox.getChildren().add(deleteButton);
+
+
+        systemActionVBox.getChildren().add(hBox);
     }
 }
