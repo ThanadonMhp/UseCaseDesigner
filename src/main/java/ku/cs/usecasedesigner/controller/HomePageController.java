@@ -119,7 +119,7 @@ public class HomePageController {
     }
 
     public void drawUseCase(double width, double height, double layoutX, double layoutY,
-                            String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition,
+                            String label, String actorID, String preCondition, String description, String actorAction,
                             int useCaseID, int positionID) {
         // Draw a system
         Ellipse ellipse = new Ellipse();
@@ -151,17 +151,9 @@ public class HomePageController {
         actorActionLabel.setMaxSize(0, 0);
         actorActionLabel.setVisible(false);
 
-        Label systemActionLabel = new Label(systemAction);
-        systemActionLabel.setMaxSize(0, 0);
-        systemActionLabel.setVisible(false);
-
-        Label postConditionLabel = new Label(postCondition);
-        postConditionLabel.setMaxSize(0, 0);
-        postConditionLabel.setVisible(false);
-
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, actorActionLabel, systemActionLabel, postConditionLabel);
+        stackPane.getChildren().addAll(ellipse, type, useCaseName, actorIDLabel, preConditionLabel, descriptionLabel, actorActionLabel);
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
@@ -195,7 +187,7 @@ public class HomePageController {
     }
 
     public ArrayList<Integer> addToUseCaseList(double width, double height, double layoutX, double layoutY,
-                                               String label, int actorID, String preCondition, String description, String actorAction, String systemAction, String postCondition) {
+                                               String label, String actorID, String preCondition, String description, String actorAction) {
         // Add the use case to useCaseList
         UseCase useCase = new UseCase
                 (useCaseList.findLastUseCaseId() + 1, // useCaseID
@@ -204,8 +196,6 @@ public class HomePageController {
                         preCondition,  // preCondition
                         description,  // description
                         actorAction, // actorAction
-                        systemAction, // systemAction
-                        postCondition,  // postCondition
                         positionList.findLastPositionId() + 1); // positionID
         useCaseList.addUseCase(useCase);
 
@@ -985,7 +975,7 @@ public class HomePageController {
             // Find the position of the use case
             Position position = positionList.findByPositionId(useCase.getPositionID());
             if (position != null && position.getSubSystemID() == subSystemID) {
-                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(),useCase.getActorAction(), useCase.getSystemAction(), useCase.getPostCondition(), useCase.getUseCaseID(), useCase.getPositionID());
+                drawUseCase(position.getFitWidth(), position.getFitHeight(), position.getXPosition(), position.getYPosition(), useCase.getUseCaseName(), useCase.getActorID(), useCase.getPreCondition(), useCase.getDescription(), useCase.getPostCondition(), useCase.getUseCaseID(), useCase.getPositionID());
             }
         });
 
@@ -1080,7 +1070,7 @@ public class HomePageController {
             actorsPane.setVisible(false);
         }
 
-        // create a loop from 1 to last actor ID
+        // create a loop from first actor ID to last actor ID
         for (int i = actorList.findFirstActorId(); i <= actorList.findLastActorId(); i++) {
             Actor actor = actorList.findByActorId(i);
             if (actor != null) {

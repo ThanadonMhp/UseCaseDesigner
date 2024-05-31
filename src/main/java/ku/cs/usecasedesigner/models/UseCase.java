@@ -3,22 +3,18 @@ package ku.cs.usecasedesigner.models;
 public class UseCase {
     private int useCaseID;
     private String useCaseName;
-    private int actorID;
+    private String actorID;
     private String preCondition;
     private String description;
-    private String actorAction;
-    private String systemAction;
     private String postCondition;
     private int positionID;
 
-    public UseCase(int useCaseID, String useCaseName, int actorID, String preCondition, String description,String actorAction, String systemAction, String postCondition, int positionID) {
+    public UseCase(int useCaseID, String useCaseName, String actorID, String preCondition, String description, String postCondition, int positionID) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
         this.actorID = actorID;
         this.preCondition = preCondition;
         this.description = description;
-        this.actorAction = actorAction;
-        this.systemAction = systemAction;
         this.postCondition = postCondition;
         this.positionID = positionID;
     }
@@ -26,11 +22,9 @@ public class UseCase {
     public UseCase(int useCaseID, String useCaseName, int positionID) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
-        this.actorID = 0;
+        this.actorID = "0";
         this.preCondition = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
-        this.actorAction = "!@#$%^&*()_+";
-        this.systemAction = "!@#$%^&*()_+";
         this.postCondition = "!@#$%^&*()_+";
         this.positionID = positionID;
     }
@@ -43,7 +37,7 @@ public class UseCase {
         return useCaseName;
     }
 
-    public int getActorID() {
+    public String getActorID() {
         return actorID;
     }
 
@@ -63,14 +57,6 @@ public class UseCase {
         return positionID;
     }
 
-    public String getActorAction() {
-        return actorAction;
-    }
-
-    public String getSystemAction() {
-        return systemAction;
-    }
-
     public void setUseCaseID(int useCaseID) {
         this.useCaseID = useCaseID;
     }
@@ -79,7 +65,7 @@ public class UseCase {
         this.useCaseName = useCaseName;
     }
 
-    public void setActorID(int actorID) {
+    public void setActorID(String actorID) {
         this.actorID = actorID;
     }
 
@@ -99,11 +85,4 @@ public class UseCase {
         this.positionID = positionID;
     }
 
-    public void setActorAction(String actorAction) {
-        this.actorAction = actorAction;
-    }
-
-    public void setSystemAction(String systemAction) {
-        this.systemAction = systemAction;
-    }
 }

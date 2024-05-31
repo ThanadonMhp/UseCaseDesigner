@@ -51,4 +51,8 @@ public class UseCaseDetailList {
         }
         return null;
     }
+
+    public void clear() {
+        useCaseDetailList.clear();
+    }
 }

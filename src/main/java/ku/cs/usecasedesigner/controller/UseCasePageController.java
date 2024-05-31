@@ -8,14 +8,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.ActorList;
-import ku.cs.usecasedesigner.models.PositionList;
-import ku.cs.usecasedesigner.models.UseCase;
-import ku.cs.usecasedesigner.models.UseCaseList;
-import ku.cs.usecasedesigner.services.ActorListFileDataSource;
-import ku.cs.usecasedesigner.services.DataSource;
-import ku.cs.usecasedesigner.services.PositionListFileDataSource;
-import ku.cs.usecasedesigner.services.UseCaseListFileDataSource;
+import ku.cs.usecasedesigner.models.*;
+import ku.cs.usecasedesigner.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,32 +19,31 @@ public class UseCasePageController {
 
     @FXML private Label errorLabel;
 
-    @FXML private ChoiceBox actorChoiceBox;
+    @FXML private TextField useCaseIDTextField ,useCaseNameTextField, actorTextField ,preConditionTextField, postConditionTextField;
 
-    @FXML private TextField useCaseIDTextField ,useCaseNameTextField ,preConditionTextField, postConditionTextField;
-
-    @FXML private TextArea descriptionTextArea, actorActionTextArea, systemActionTextArea;
+    @FXML private TextArea descriptionTextArea;
 
     @FXML private VBox actorActionVBox, systemActionVBox;
 
     @FXML private ScrollPane actorActionScrollPane, systemActionScrollPane;
 
+    @FXML private Button actorChoiceButton, preConditionChoiceButton, postConditionChoiceButton;
+
     private String directory;
     private String projectName;
     private UseCase useCase;
+    private UseCaseDetail useCaseDetail;
 
     private UseCaseList useCaseList;
     private ActorList actorList;
     private PositionList positionList;
+    private UseCaseDetailList useCaseDetailList;
     private DataSource<UseCaseList> useCaseListDataSource;
     private DataSource<ActorList> actorListFileDataSource;
     private DataSource<PositionList> positionListFileDataSource;
+    private DataSource<UseCaseDetailList> useCaseDetailListDataSource;
 
     @FXML void initialize() {
-        // disable horizontal scroll bar
-        actorActionScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        systemActionScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -64,23 +57,15 @@ public class UseCasePageController {
             actorList = actorListFileDataSource.readData();
             positionListFileDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
             positionList = positionListFileDataSource.readData();
+            useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
+            useCaseDetailList = useCaseDetailListDataSource.readData();
 
-            // Find the use case by ID
+            // Find the use case by useCaseID
             useCase = useCaseList.findByUseCaseId(useCaseID);
 
             useCaseIDTextField.setText(useCase.getUseCaseID() + "");
             useCaseNameTextField.setText(useCase.getUseCaseName());
 
-            // Add actors to the choice box
-            for (int i = 0; i < actorList.getActorList().size(); i++) {
-                actorChoiceBox.getItems().add(actorList.getActorList().get(i).getActorName());
-            }
-
-            if (useCase.getActorID() != 0)
-            {
-                actorChoiceBox.setValue(actorList.findByActorId(useCase.getActorID()).getActorName());
-
-            }
             if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+"))
             {
                 descriptionTextArea.setText(useCase.getDescription());
@@ -89,29 +74,73 @@ public class UseCasePageController {
             {
                 preConditionTextField.setText(useCase.getPreCondition());
             }
-            if (!Objects.equals(useCase.getActorAction(), "!@#$%^&*()_+"))
+            if (!Objects.equals(useCase.getActorID(), 0))
             {
-                actorActionTextArea.setText(useCase.getPostCondition());
-            }
-            if (!Objects.equals(useCase.getSystemAction(), "!@#$%^&*()_+"))
-            {
-                systemActionTextArea.setText(useCase.getPostCondition());
+                // load actorID to actorTextField
+                // split the actorID by "/" and get the actorName from the actorList
+                String[] actorIDs = useCase.getActorID().split("/");
+                // find each actor by actorID and add the actorName to the actorTextField
+                for (String actorID : actorIDs) {
+                    Actor actor = actorList.findByActorId(Integer.parseInt(actorID));
+                    if (actor != null) {
+                        if (actorTextField.getText().isEmpty()) {
+                            actorTextField.setText(actor.getActorName());
+                        } else {
+                            actorTextField.appendText("/" + actor.getActorName());
+                        }
+                    }
+                }
+
             }
             if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+"))
             {
                 postConditionTextField.setText(useCase.getPostCondition());
             }
+
+            // load useCaseDetail to the actorActionVBox and systemActionVBox
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+                if (useCaseDetail.getUseCaseID() == useCase.getUseCaseID()) {
+                    if (useCaseDetail.getType().equals("actor")) {
+                        HBox hBox = new HBox();
+                        TextArea textArea = new TextArea();
+                        textArea.setPrefHeight(20);
+                        textArea.setWrapText(true);
+                        textArea.setText(useCaseDetail.getDetail());
+                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
+                        });
+                        Button deleteButton = new Button("-");
+                        deleteButton.setPrefHeight(20);
+                        deleteButton.setOnAction(event -> {
+                            actorActionVBox.getChildren().remove(hBox);
+                        });
+                        hBox.getChildren().add(textArea);
+                        hBox.getChildren().add(deleteButton);
+                        actorActionVBox.getChildren().add(hBox);
+                    } else if (useCaseDetail.getType().equals("system")) {
+                        HBox hBox = new HBox();
+                        TextArea textArea = new TextArea();
+                        textArea.setPrefHeight(20);
+                        textArea.setWrapText(true);
+                        textArea.setText(useCaseDetail.getDetail());
+                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
+                        });
+                        Button deleteButton = new Button("-");
+                        deleteButton.setPrefHeight(20);
+                        deleteButton.setOnAction(event -> {
+                            systemActionVBox.getChildren().remove(hBox);
+                        });
+                        hBox.getChildren().add(textArea);
+                        hBox.getChildren().add(deleteButton);
+                        systemActionVBox.getChildren().add(hBox);
+                    }
+                }
+            }
         }
     }
 
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
-
-        // Set value for actorID
-        if (actorChoiceBox.getValue() != null) {
-            int actorID = actorList.findByActorName((String) actorChoiceBox.getValue()).getActorID();
-            useCase.setActorID(actorID);
-        }
-
         // Set value for useCaseID
         // Check if useCase ID is not empty and not being used by another use case
         if (!useCaseIDTextField.getText().isEmpty()) {
@@ -144,6 +173,24 @@ public class UseCasePageController {
             return;
         }
 
+        // Set value for actorID
+        // Check if actorTextField is not empty
+        if (!actorTextField.getText().isEmpty()) {
+            String[] actorNames = actorTextField.getText().split("/");
+            String actorID = "";
+            for (String actorName : actorNames) {
+                Actor actor = actorList.findByActorName(actorName);
+                if (actor != null) {
+                    if (actorID.isEmpty()) {
+                        actorID = actor.getActorID() + "";
+                    } else {
+                        actorID += "/" + actor.getActorID();
+                    }
+                }
+            }
+            useCase.setActorID(actorID);
+        }
+
         // Set value for description
         if (!descriptionTextArea.getText().isEmpty()) {
             useCase.setDescription(descriptionTextArea.getText());
@@ -154,14 +201,29 @@ public class UseCasePageController {
             useCase.setPreCondition(preConditionTextField.getText());
         }
 
-        // Set value for actorAction
-        if (!actorActionTextArea.getText().isEmpty()) {
-            useCase.setActorAction(actorActionTextArea.getText());
+        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
+        useCaseDetailList.clear();
+        int number = 1;
+        for (Node node : actorActionVBox.getChildren()) {
+            HBox hBox = (HBox) node;
+            TextArea textArea = (TextArea) hBox.getChildren().get(0);
+            if (!textArea.getText().isEmpty()) {
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", number, textArea.getText());
+                useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                number++;
+            }
         }
 
-        // Set value for systemAction
-        if (!systemActionTextArea.getText().isEmpty()) {
-            useCase.setSystemAction(systemActionTextArea.getText());
+        // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
+        int number2 = 1;
+        for (Node node : systemActionVBox.getChildren()) {
+            HBox hBox = (HBox) node;
+            TextArea textArea = (TextArea) hBox.getChildren().get(0);
+            if (!textArea.getText().isEmpty()) {
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", number2, textArea.getText());
+                useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                number2++;
+            }
         }
 
         // Set value for postCondition
@@ -171,6 +233,8 @@ public class UseCasePageController {
 
         // Edit the useCase in the useCaseList
         useCaseListDataSource.writeData(useCaseList);
+        // Edit the useCaseDetailList
+        useCaseDetailListDataSource.writeData(useCaseDetailList);
 
         // send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
@@ -202,7 +266,6 @@ public class UseCasePageController {
         HBox hBox = new HBox();
         // add the textArea to the actorActionVBox
         TextArea textArea = new TextArea();
-        textArea.setPrefWidth(actorActionVBox.getWidth());
         // set textArea to size of a single line
         textArea.setPrefHeight(20);
         textArea.setWrapText(true);
@@ -238,7 +301,6 @@ public class UseCasePageController {
         HBox hBox = new HBox();
         // add the textArea to the systemActionVBox
         TextArea textArea = new TextArea();
-        textArea.setPrefWidth(actorActionVBox.getWidth());
         // set textArea to size of a single line
         textArea.setPrefHeight(20);
         textArea.setWrapText(true);
@@ -258,5 +320,69 @@ public class UseCasePageController {
 
 
         systemActionVBox.getChildren().add(hBox);
+    }
+
+    public void handleActorChoiceButton(ActionEvent actionEvent) {
+        // Show the actorList in a menu item and let the user choose an actor to add to the actorTextField
+        ContextMenu contextMenu = new ContextMenu();
+        for (int i = actorList.findFirstActorId(); i <= actorList.findLastActorId(); i++) {
+            Actor actor = actorList.findByActorId(i);
+            if (actor != null) {
+                MenuItem menuItem = new MenuItem(actor.getActorName());
+                menuItem.setOnAction(event -> {
+                    if (actorTextField.getText().isEmpty()) {
+                        actorTextField.setText(actor.getActorName());
+                    } else {
+                        actorTextField.appendText("/" + actor.getActorName());
+                    }
+                });
+                contextMenu.getItems().add(menuItem);
+            }
+        }
+        // Get the position of the button
+        Button button = (Button) actionEvent.getSource();
+        contextMenu.show(button, button.getLayoutX() + button.getScene().getX() + button.getScene().getWindow().getX(),
+                button.getLayoutY() + button.getScene().getY() + button.getScene().getWindow().getY() + button.getHeight());
+
+    }
+
+    public void handlePreConditionChoiceButton(ActionEvent actionEvent) {
+        // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
+        ContextMenu contextMenu = new ContextMenu();
+        for (UseCase useCase : useCaseList.getUseCaseList()) {
+            MenuItem menuItem = new MenuItem(useCase.getUseCaseName());
+            menuItem.setOnAction(event -> {
+                if (preConditionTextField.getText().isEmpty()) {
+                    preConditionTextField.setText(useCase.getUseCaseName());
+                } else {
+                    preConditionTextField.appendText("/" + useCase.getUseCaseName());
+                }
+            });
+            contextMenu.getItems().add(menuItem);
+        }
+        // Get the position of the button
+        Button button = (Button) actionEvent.getSource();
+        contextMenu.show(button, button.getLayoutX() + button.getScene().getX() + button.getScene().getWindow().getX(),
+                button.getLayoutY() + button.getScene().getY() + button.getScene().getWindow().getY() + button.getHeight());
+    }
+
+    public void handlePostConditionChoiceButton(ActionEvent actionEvent) {
+        // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
+        ContextMenu contextMenu = new ContextMenu();
+        for (UseCase useCase : useCaseList.getUseCaseList()) {
+            MenuItem menuItem = new MenuItem(useCase.getUseCaseName());
+            menuItem.setOnAction(event -> {
+                if (postConditionTextField.getText().isEmpty()) {
+                    postConditionTextField.setText(useCase.getUseCaseName());
+                } else {
+                    postConditionTextField.appendText("/" + useCase.getUseCaseName());
+                }
+            });
+            contextMenu.getItems().add(menuItem);
+        }
+        // Get the position of the button
+        Button button = (Button) actionEvent.getSource();
+        contextMenu.show(button, button.getLayoutX() + button.getScene().getX() + button.getScene().getWindow().getX(),
+                button.getLayoutY() + button.getScene().getY() + button.getScene().getWindow().getY() + button.getHeight());
     }
 }

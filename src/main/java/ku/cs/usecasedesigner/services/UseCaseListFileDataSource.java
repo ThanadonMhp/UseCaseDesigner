@@ -49,15 +49,13 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 String[] data = line.split(",");
                 if (data[0].trim().equals("useCase")) {
                     UseCase useCase = new UseCase(
-                            Integer.parseInt(data[1].trim()), // useCaseID
-                            data[2].trim(), // useCaseName
-                            Integer.parseInt(data[3].trim()), // actorID
-                            data[4].trim(), // preCondition
-                            data[5].trim(), // description
-                            data[6].trim(), // actorAction
-                            data[7].trim(), // systemAction
-                            data[8].trim(), // postCondition
-                            Integer.parseInt(data[9].trim()) // positionID
+                            Integer.parseInt(data[1]), // useCaseID
+                            data[2], // useCaseName
+                            data[3], // actorID
+                            data[4], // preCondition
+                            data[5], // description
+                            data[6], // postCondition
+                            Integer.parseInt(data[7]) // positionID
                     );
                     useCaseList.addUseCase(useCase);
                 }
@@ -184,8 +182,6 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 + useCase.getActorID() + ","
                 + useCase.getPreCondition() + ","
                 + useCase.getDescription() + ","
-                + useCase.getActorAction() + ","
-                + useCase.getSystemAction() + ","
                 + useCase.getPostCondition() + ","
                 + useCase.getPositionID();
     }

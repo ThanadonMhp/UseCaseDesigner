@@ -30,7 +30,6 @@ public class ActorList {
         return null;
     }
 
-    // find findFirstActorId
     public int findFirstActorId() {
         int firstActorId = 0;
         for (Actor actor : actorList) {
