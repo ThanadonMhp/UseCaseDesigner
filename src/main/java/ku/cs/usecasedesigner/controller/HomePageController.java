@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -14,7 +13,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
 import ku.cs.usecasedesigner.services.*;
@@ -61,7 +59,7 @@ public class HomePageController {
     private UseCaseList useCaseList = new UseCaseList();
 
     @FXML
-    void initialize() throws IOException {
+    void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
@@ -108,9 +106,7 @@ public class HomePageController {
                     // Show the dialog and get the result
                     Optional<String> result = dialog.showAndWait();
                     // If a string was entered, use it as the new label text
-                    if (result.isPresent()) {
-                        label.setText(result.get());
-                    }
+                    result.ifPresent(label::setText);
                 }
             }
         });
