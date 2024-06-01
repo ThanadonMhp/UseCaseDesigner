@@ -837,7 +837,6 @@ public class HomePageController {
     @FXML
     private void designPaneMouseClicked(MouseEvent mouseEvent) {
         if (startNodeForLink != null) {
-            System.out.println("Creating Link");
             Node endNodeForLink = null;
             for (Node node : designPane.getChildren()) {
                 if (node.getBoundsInParent().contains(mouseEvent.getX(), mouseEvent.getY())) {
