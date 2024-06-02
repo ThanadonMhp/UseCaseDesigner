@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -368,22 +370,31 @@ public class HomePageController {
         line.setStartY(startY);
         line.setEndX(endX);
         line.setEndY(endY);
-        designPane.getChildren().add(line);
 
-        // Save the connection
-        Connection connection = new Connection(
-                connectionList.findLastConnectionID() + 1,  // connectionID
-                "Line",  // connectionType
-                startX,  // startX
-                startY,  // startY
-                endX,  // endX
-                endY  // endY
-        );
-        connectionList.addConnection(connection);
+        // Create the start and end points of the line
+        Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
+        Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
 
-        // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
+        // Add mouse event handlers for dragging
+        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true));
+        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false));
+
+        designPane.getChildren().addAll(line, startPoint, endPoint);
+
+//        // Save the connection
+//        Connection connection = new Connection(
+//                connectionList.findLastConnectionID() + 1,  // connectionID
+//                "Line",  // connectionType
+//                startX,  // startX
+//                startY,  // startY
+//                endX,  // endX
+//                endY  // endY
+//        );
+//        connectionList.addConnection(connection);
+//
+//        // Make the component draggable and selectable
+//        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
+//        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void drawArrow(double startX, double startY, double endX, double endY) {
@@ -424,6 +435,49 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
+    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint) {
+        Circle point = (Circle) event.getSource();
+        if (startPoint) {
+            line.setStartX(event.getX());
+            line.setStartY(event.getY());
+        } else {
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
+        }
+        point.setCenterX(event.getX());
+        point.setCenterY(event.getY());
+    }
+
+    public Circle createDraggablePoint(double x, double y) {
+        Circle point = new Circle(x,y, 5, Color.RED);
+        point.setStroke(Color.BLACK);
+        point.setStrokeWidth(1);
+        point.setCenterX(x);
+        point.setCenterY(y);
+        return point;
+    }
+
+    public ArrayList<Integer> addToConnectionList(String type,double startX, double startY, double endX, double endY) {
+        // Save the connection
+        Connection connection = new Connection(
+                connectionList.findLastConnectionID() + 1,  // connectionID
+                type,  // connectionType
+                startX,  // startX
+                startY,  // startY
+                endX,  // endX
+                endY,  // endY
+                subSystemID  // subSystemID
+        );
+        connectionList.addConnection(connection);
+
+        ArrayList<Integer> objects = new ArrayList<>();
+        objects.add(connection.getConnectionID());
+        objects.add(connection.getSubSystemID());
+
+        return objects;
+
+    }
+
     public void ovalDragDetected(MouseEvent mouseEvent) {
         System.out.println("Oval Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
@@ -456,80 +510,11 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void lineMouseClicked(MouseEvent mouseEvent) {
-        System.out.println("Line Mouse Clicked");
-        // Set the ImageView border to black
-        lineImageView.setStyle("-fx-border-color: black");
-        // Set the program into connect mode
-        designPane.setOnMousePressed(e -> {
-            // Create line with the start point at the mouse pressed location
-            Line line = new Line();
-            line.setStartX(e.getX());
-            line.setStartY(e.getY());
-            line.setEndX(e.getX());
-            line.setEndY(e.getY());
-            designPane.getChildren().add(line);
-
-            // Make the component draggable and selectable
-            makeDraggable(line,"connection", connectionList.findLastConnectionID() + 1);
-            makeSelectable(line, "connection", connectionList.findLastConnectionID() + 1);
-        });
-
-        designPane.setOnMouseDragged(e -> {
-            // Update the end point of the line to the current mouse location
-            Line line = (Line) designPane.getChildren().get(designPane.getChildren().size() - 1);
-            line.setEndX(e.getX());
-            line.setEndY(e.getY());
-        });
-
-        designPane.setOnMouseReleased(e -> {
-            // Check if the line is near a node
-            Line line = (Line) designPane.getChildren().get(designPane.getChildren().size() - 1);
-            for (Node node : designPane.getChildren()) {
-                if (node instanceof StackPane || node instanceof VBox) {
-                    double distance = Math.hypot(line.getEndX() - node.getLayoutX(), line.getEndY() - node.getLayoutY());
-                    if (distance < 50) {  // Adjust this value as needed
-                        // Snap the end of the line to the center of the node
-                        line.setEndX(node.getLayoutX() + node.getBoundsInLocal().getWidth() / 2);
-                        line.setEndY(node.getLayoutY() + node.getBoundsInLocal().getHeight() / 2);
-                        break;
-                    }
-                }
-            }
-
-            // Create a connection between the start node and the end node
-            Connection connection = new Connection(
-                    connectionList.findLastConnectionID() + 1,  // connectionID
-                    "Line",  // connectionType
-                    line.getStartX(),  // startX
-                    line.getStartY(),  // startY
-                    line.getEndX(),  // endX
-                    line.getEndY()  // endY
-            );
-            connectionList.addConnection(connection);
-
-            // Reset the mouse event handlers
-            designPane.setOnMousePressed(null);
-            designPane.setOnMouseDragged(null);
-            designPane.setOnMouseReleased(null);
-            lineImageView.setStyle("-fx-border-color: transparent");
-        });
-    }
-
     public void arrowDragDetected(MouseEvent mouseEvent) {
         System.out.println("Arrow Drag Detected");
         Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("Arrow");
-        dragboard.setContent(clipboardContent);
-    }
-
-    // DragDetected for existing Actor and define which actor it is
-    public void existingActorDragDetected(MouseEvent mouseEvent) {
-        System.out.println("Existing Actor Drag Detected");
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
-        ClipboardContent clipboardContent = new ClipboardContent();
-        clipboardContent.putString("Existing Actor");
         dragboard.setContent(clipboardContent);
     }
 
@@ -810,6 +795,7 @@ public class HomePageController {
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+                addToConnectionList("Line", dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
@@ -830,8 +816,7 @@ public class HomePageController {
         }
     }
 
-    @FXML
-    private void designPaneMouseClicked(MouseEvent mouseEvent) {
+    @FXML private void designPaneMouseClicked(MouseEvent mouseEvent) {
         if (startNodeForLink != null) {
             Node endNodeForLink = null;
             for (Node node : designPane.getChildren()) {
@@ -982,23 +967,6 @@ public class HomePageController {
             if (connection.getSubSystemID() == subSystemID) {
                 drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY());
             }
-
-//            // Find the start and end nodes of the connection from position in connection
-//            Node startNode = connectionList.findNodeByPosition(connection.getStartX(), connection.getStartY(), designPane);
-//            Node endNode = connectionList.findNodeByPosition(connection.getEndX(), connection.getEndY(), designPane);
-//            String text = connection.getConnectionType();
-//            if (text.equals("!@#$%^&*()_+")) {
-//                text = "";
-//            }
-//            if (startNode != null && endNode != null) {
-//                // Create a new Line object that connects the start and end nodes
-//                Line line = getLine(startNode, endNode, text);
-//                designPane.getChildren().add(line);
-//
-//                // Make the component draggable and selectable
-//                makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connection.getConnectionID());
-//                makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connection.getConnectionID());
-//            }
         });
 
         // Check if designPane is not empty

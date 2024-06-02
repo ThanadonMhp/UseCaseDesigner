@@ -73,7 +73,7 @@
                   <Image url="@../../../images/box.png" />
                 </image>
               </ImageView>
-              <ImageView fx:id="lineImageView" fitHeight="90.0" fitWidth="90.0" layoutX="105.0" layoutY="100.0" onDragDetected="#lineDragDetected" onMouseClicked="#lineMouseClicked" pickOnBounds="true" preserveRatio="true">
+              <ImageView fx:id="lineImageView" fitHeight="90.0" fitWidth="90.0" layoutX="105.0" layoutY="100.0" onDragDetected="#lineDragDetected" pickOnBounds="true" preserveRatio="true">
                 <image>
                   <Image url="@../../../images/line.png" />
                 </image>
