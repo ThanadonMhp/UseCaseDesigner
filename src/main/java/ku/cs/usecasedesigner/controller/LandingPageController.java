@@ -36,14 +36,14 @@ public class LandingPageController {
             objects.add(projectName);
             objects.add(directory);
             FXRouter.when("HomePage", "ku/cs/usecasedesigner/home-page.fxml", "KU CS UseCaseDesigner | " + projectName);
-            FXRouter.goTo("HomePage" ,objects);
+            FXRouter.goTo("HomePage", objects);
 
             // Close the current window
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
 
-        }else {
+        } else {
             System.out.println("No file selected.");
         }
     }

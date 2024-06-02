@@ -1,24 +1,11 @@
 package ku.cs;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.StageStyle;
 import ku.cs.fxrouter.FXRouter;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ku.cs.usecasedesigner.services.DataSource;
-import ku.cs.usecasedesigner.services.UseCaseSystemListFileDataSource;
-
 import java.io.IOException;
 
 public class ProjectApplication extends Application {
-//    private DataSource<UseCaseSystemListFileDataSource> dataSource;
-//    private UseCaseSystemListFileDataSource UseCaseSystemList;
-//    public void initialize(){
-//        dataSource = new UseCaseSystemListFileDataSource("src/main/java","nattest.csv");
-//        UseCaseSystemList = dataSource.readData();
-//    }
     @Override
     public void start(Stage stage) throws IOException {
         FXRouter.bind(this, stage, 1280,720);

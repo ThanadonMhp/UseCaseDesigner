@@ -17,26 +17,30 @@ import java.util.ArrayList;
 public class NewProjectPageController {
     private String directory;
 
-    @FXML private Button selectButton;
+    @FXML
+    private Button selectButton;
 
-    @FXML private TextField SystemNameTextField;
+    @FXML
+    private TextField SystemNameTextField;
 
-    @FXML private Text systemNameErrorText;
+    @FXML
+    private Text systemNameErrorText;
 
-    @FXML private Text directoryErrorText;
+    @FXML
+    private Text directoryErrorText;
 
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         System.out.println("Confirm button clicked.");
 
         // Check if the system name and directory are empty
-        if(SystemNameTextField.getText().isEmpty()){
+        if (SystemNameTextField.getText().isEmpty()) {
             systemNameErrorText.setText("Please enter a name.");
             return;
         } else {
             systemNameErrorText.setText("");
         }
 
-        if(directory == null){
+        if (directory == null) {
             directoryErrorText.setText("Please select a directory.");
             return;
         } else {
@@ -53,7 +57,7 @@ public class NewProjectPageController {
         objects.add(projectName);
         objects.add(directory);
         FXRouter.when("HomePage", "ku/cs/usecasedesigner/home-page.fxml", "UseCaseDesigner | " + projectName);
-        FXRouter.goTo("HomePage",objects);
+        FXRouter.goTo("HomePage", objects);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();
@@ -61,7 +65,7 @@ public class NewProjectPageController {
         stage.close();
     }
 
-    public void handleSelectButton(ActionEvent actionEvent){
+    public void handleSelectButton(ActionEvent actionEvent) {
         System.out.println("Select button clicked.");
         // Create directory chooser
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -77,6 +81,7 @@ public class NewProjectPageController {
             System.out.println("No directory selected.");
         }
     }
+
     private void setWindowTitle(String projectName) {
         Stage stage = (Stage) SystemNameTextField.getScene().getWindow();
         stage.setTitle(projectName);

@@ -17,23 +17,27 @@ import java.util.Objects;
 
 public class UseCasePageController {
 
-    @FXML private Label errorLabel;
+    @FXML
+    private Label errorLabel;
 
-    @FXML private TextField useCaseIDTextField ,useCaseNameTextField, actorTextField ,preConditionTextField, postConditionTextField;
+    @FXML
+    private TextField useCaseIDTextField, useCaseNameTextField, actorTextField, preConditionTextField, postConditionTextField;
 
-    @FXML private TextArea descriptionTextArea;
+    @FXML
+    private TextArea descriptionTextArea;
 
-    @FXML private VBox actorActionVBox, systemActionVBox;
+    @FXML
+    private VBox actorActionVBox, systemActionVBox;
 
-    @FXML private ScrollPane actorActionScrollPane, systemActionScrollPane;
+    @FXML
+    private ScrollPane actorActionScrollPane, systemActionScrollPane;
 
-    @FXML private Button actorChoiceButton, preConditionChoiceButton, postConditionChoiceButton;
+    @FXML
+    private Button actorChoiceButton, preConditionChoiceButton, postConditionChoiceButton;
 
-    private String directory;
-    private String projectName;
+    private String directory, projectName;
     private UseCase useCase;
     private UseCaseDetail useCaseDetail;
-
     private UseCaseList useCaseList;
     private ActorList actorList;
     private PositionList positionList;
@@ -43,7 +47,8 @@ public class UseCasePageController {
     private DataSource<PositionList> positionListFileDataSource;
     private DataSource<UseCaseDetailList> useCaseDetailListDataSource;
 
-    @FXML void initialize() {
+    @FXML
+    void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -66,16 +71,13 @@ public class UseCasePageController {
             useCaseIDTextField.setText(useCase.getUseCaseID() + "");
             useCaseNameTextField.setText(useCase.getUseCaseName());
 
-            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+"))
-            {
+            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+")) {
                 descriptionTextArea.setText(useCase.getDescription());
             }
-            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+"))
-            {
+            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+")) {
                 preConditionTextField.setText(useCase.getPreCondition());
             }
-            if (!Objects.equals(useCase.getActorID(), 0))
-            {
+            if (!Objects.equals(useCase.getActorID(), 0)) {
                 // load actorID to actorTextField
                 // split the actorID by "/" and get the actorName from the actorList
                 String[] actorIDs = useCase.getActorID().split("/");
@@ -92,8 +94,7 @@ public class UseCasePageController {
                 }
 
             }
-            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+"))
-            {
+            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+")) {
                 postConditionTextField.setText(useCase.getPostCondition());
             }
 

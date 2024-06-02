@@ -18,26 +18,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PreferencePageController {
-    @FXML private ToggleGroup themeGroup;
-    @FXML private RadioButton lightThemeRadioButton;
-    @FXML private RadioButton darkThemeRadioButton;
-    @FXML private ComboBox<String> fontComboBox;
-    @FXML private ComboBox<String> sizeComboBox;
-    @FXML private Label SettingLabel;
-    @FXML private Label ThemeAppLabel;
-    @FXML private Label TextformatLabel;
-    @FXML private AnchorPane pane;
-    @FXML private Button mode;
+
+    public static boolean isLightMode = true;
+
+    @FXML
+    private ToggleGroup themeGroup;
+
+    @FXML
+    private RadioButton lightThemeRadioButton, darkThemeRadioButton;
+
+    @FXML
+    private ComboBox<String> fontComboBox, sizeComboBox;
+
+    @FXML
+    private Label SettingLabel, ThemeAppLabel, TextformatLabel;
+
+    @FXML
+    private AnchorPane pane;
+
+    @FXML
+    private Button mode;
 
     private Alert alert;
     private String directory;
     private String projectName;
     private Integer subSystemID;
-    public static boolean isLightMode = true;
 
     // This method is called when the FXML file is loaded
     // Load the data from the previous page
-    @FXML void initialize() {
+    @FXML
+    void initialize() {
         themeGroup = new ToggleGroup();
         lightThemeRadioButton.setToggleGroup(themeGroup);
         darkThemeRadioButton.setToggleGroup(themeGroup);
@@ -52,10 +62,10 @@ public class PreferencePageController {
                 int theme = (int) objects.get(3);
                 if (theme == 1) {
                     lightThemeRadioButton.setSelected(true);
-                } else if (theme == 2){
+                } else if (theme == 2) {
                     darkThemeRadioButton.setSelected(true);
                 }
-            } else{
+            } else {
                 if (FXRouter.getTheme() == 1) {
                     lightThemeRadioButton.setSelected(true);
                 } else if (FXRouter.getTheme() == 2) {
@@ -83,7 +93,6 @@ public class PreferencePageController {
         });
     }
 
-
     // Save the preference to the file
     public void savePreference(int strokeWidth, String font, int fontSize, String theme) {
         // Save the preference to the file
@@ -95,6 +104,7 @@ public class PreferencePageController {
         preferenceListDataSource.writeData(preferenceList);
 
     }
+
     @FXML
     public void handleSaveButtonAction(ActionEvent actionEvent) throws IOException {
 
@@ -145,7 +155,7 @@ public class PreferencePageController {
         }
 
 
-        savePreference(1, font + " " , size, theme);
+        savePreference(1, font + " ", size, theme);
         FXRouter.goTo("HomePage");
 
         // Close the current window

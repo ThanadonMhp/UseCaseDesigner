@@ -22,11 +22,14 @@ public class LabelPageController {
     private String editType;
     private int editID, subSystemID;
 
-    @FXML private Text errorText, labelText;
+    @FXML
+    private Text errorText, labelText;
 
-    @FXML private TextField labelTextField;
+    @FXML
+    private TextField labelTextField;
 
-    @FXML void initialize() {
+    @FXML
+    void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -69,8 +72,8 @@ public class LabelPageController {
             String label = labelTextField.getText();
 
             // Save the position of the component
-            if (!Objects.equals(type, "editLabel")){
-                if (!Objects.equals(type,"subSystem")){
+            if (!Objects.equals(type, "editLabel")) {
+                if (!Objects.equals(type, "subSystem")) {
                     DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
                     PositionList positionList = positionListDataSource.readData();
                     Position position = new Position(
@@ -107,7 +110,7 @@ public class LabelPageController {
                         );
                         useCaseList.addUseCase(useCase);
                         useCaseListDataSource.writeData(useCaseList);
-                }
+                    }
 
                 } else if (type.equals("subSystem")) {
                     DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
