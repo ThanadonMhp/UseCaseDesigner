@@ -378,11 +378,9 @@ public class HomePageController {
         startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true));
         endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false));
 
+        // Add mouse event handlers for releasing
         startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID));
         endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID));
-
-        // save the connection
-
 
         designPane.getChildren().addAll(startPoint, endPoint, line);
 
@@ -449,7 +447,7 @@ public class HomePageController {
     }
 
     public Circle createDraggablePoint(double x, double y) {
-        Circle point = new Circle(x,y, 5, Color.RED);
+        Circle point = new Circle(x,y, 5, Color.TRANSPARENT);
         point.setStrokeWidth(0);
         point.setCenterX(x);
         point.setCenterY(y);
