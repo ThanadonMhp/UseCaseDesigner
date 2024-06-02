@@ -102,7 +102,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-        <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" onMouseClicked="#designPaneMouseClicked" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
                <children>
               <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
                 <font>

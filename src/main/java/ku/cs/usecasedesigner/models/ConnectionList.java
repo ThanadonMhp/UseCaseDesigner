@@ -86,11 +86,13 @@ public class ConnectionList {
         return lastConnectionID;
     }
 
-    public void updateConnection(int id, double newX, double newY) {
+    public void updateConnection(int ConnectionID, double startX, double startY, double endX, double endY) {
         for (Connection connection : connectionList) {
-            if (connection.getConnectionID() == id) {
-                connection.setStartX(newX);
-                connection.setStartY(newY);
+            if (connection.getConnectionID() == ConnectionID) {
+                connection.setStartX(startX);
+                connection.setStartY(startY);
+                connection.setEndX(endX);
+                connection.setEndY(endY);
             }
         }
     }

@@ -263,7 +263,7 @@ public class HomePageController {
         });
     }
 
-    public ArrayList<Integer> addToActorList(double width, double height, double layoutX, double layoutY, String label, int actorID){
+    public void addToActorList(double width, double height, double layoutX, double layoutY, String label, int actorID){
         // Add the actor to actorList
         Actor actor = new Actor
                 (actorID, // actorID
@@ -286,7 +286,6 @@ public class HomePageController {
         objects.add(position.getPositionID());
         objects.add(actor.getActorID());
 
-        return objects;
     }
 
     public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label,
@@ -379,6 +378,12 @@ public class HomePageController {
         startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true));
         endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false));
 
+        startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID));
+        endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID));
+
+        // save the connection
+
+
         designPane.getChildren().addAll(startPoint, endPoint, line);
 
         // make line selectable
@@ -434,6 +439,13 @@ public class HomePageController {
         }
         point.setCenterX(event.getX());
         point.setCenterY(event.getY());
+
+    }
+
+    public void handlePointMouseReleased(MouseEvent event, Line line, int connectionID) {
+        // Update the connection
+        connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+        saveProject();
     }
 
     public Circle createDraggablePoint(double x, double y) {
@@ -510,11 +522,7 @@ public class HomePageController {
             node.setLayoutX(newX);
             node.setLayoutY(newY);
 
-            if(Objects.equals(type, "connection")) {
-                connectionList.updateConnection(ID, newX, newY);
-            } else {
-                positionList.updatePosition(ID, newX, newY);
-            }
+            positionList.updatePosition(ID, newX, newY);
         });
 
         node.setOnMouseReleased(e -> {
@@ -773,8 +781,8 @@ public class HomePageController {
                 objects.add(subsystemList.findLastSubSystemId() + 1);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                addToConnectionList("Line", dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
-                drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100, connectionList.findLastConnectionID());
+                addToConnectionList("Line", dragEvent.getX(), dragEvent.getY(), dragEvent.getX() - 100, dragEvent.getY() - 100);
+                drawLine(dragEvent.getX() - 50, dragEvent.getY() + 50, dragEvent.getX() + 50, dragEvent.getY() - 50, connectionList.findLastConnectionID());
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
@@ -793,43 +801,6 @@ public class HomePageController {
                 guideLabel.setVisible(false);
             }
         }
-    }
-
-    @FXML private void designPaneMouseClicked(MouseEvent mouseEvent) {
-        if (startNodeForLink != null) {
-            Node endNodeForLink = null;
-            for (Node node : designPane.getChildren()) {
-                if (node.getBoundsInParent().contains(mouseEvent.getX(), mouseEvent.getY())) {
-                    endNodeForLink = node;
-                    break;
-                }
-            }
-            createLink(startNodeForLink, endNodeForLink);
-            startNodeForLink = null;
-        }
-    }
-
-    private void createLink(Node startNode, Node endNode) {
-        System.out.println("Creating Link");
-        //Create a pop to get the text for the link
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter Link Text");
-        dialog.setHeaderText("Please enter the text for the link:");
-        dialog.setContentText("Text:");
-        // get text from the popup
-        Optional<String> result = dialog.showAndWait();
-        String text = "";
-        if (result.isPresent()) {
-            text = result.get();
-        }
-        // Create a new line
-        Line line = getLine(startNode, endNode, text);
-        designPane.getChildren().add(line);
-
-        // Make the component draggable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
-        // Make the component selectable
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void addNewSubSystemButton(ActionEvent actionEvent) throws IOException {
@@ -1041,15 +1012,13 @@ public class HomePageController {
                     vbox.setLayoutY(5 + 90 * (actorsAnchor.getChildren().size() - 1));
                 }
 
-                Node actorNode = vbox;
-
                 if (subSystemID != 0)
                 {
-                    actorNode.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    vbox.setOnDragDetected(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent mouseEvent) {
                             System.out.println("Actor Drag Detected");
-                            Dragboard dragboard = actorNode.startDragAndDrop(TransferMode.ANY);
+                            Dragboard dragboard = vbox.startDragAndDrop(TransferMode.ANY);
                             ClipboardContent clipboardContent = new ClipboardContent();
                             clipboardContent.putString("Existing Actor");
                             existingActorID = actor.getActorID();
@@ -1060,7 +1029,7 @@ public class HomePageController {
                     });
                 }
 
-                actorsAnchor.getChildren().add(actorNode);
+                actorsAnchor.getChildren().add(vbox);
             }
         }
     }
