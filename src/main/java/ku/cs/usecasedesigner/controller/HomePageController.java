@@ -381,20 +381,6 @@ public class HomePageController {
 
         designPane.getChildren().addAll(line, startPoint, endPoint);
 
-//        // Save the connection
-//        Connection connection = new Connection(
-//                connectionList.findLastConnectionID() + 1,  // connectionID
-//                "Line",  // connectionType
-//                startX,  // startX
-//                startY,  // startY
-//                endX,  // endX
-//                endY  // endY
-//        );
-//        connectionList.addConnection(connection);
-//
-//        // Make the component draggable and selectable
-//        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
-//        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
     }
 
     public void drawArrow(double startX, double startY, double endX, double endY) {
@@ -449,15 +435,14 @@ public class HomePageController {
     }
 
     public Circle createDraggablePoint(double x, double y) {
-        Circle point = new Circle(x,y, 5, Color.RED);
-        point.setStroke(Color.BLACK);
-        point.setStrokeWidth(1);
+        Circle point = new Circle(x,y, 5, Color.TRANSPARENT);
+        point.setStrokeWidth(0);
         point.setCenterX(x);
         point.setCenterY(y);
         return point;
     }
 
-    public ArrayList<Integer> addToConnectionList(String type,double startX, double startY, double endX, double endY) {
+    public void addToConnectionList(String type, double startX, double startY, double endX, double endY) {
         // Save the connection
         Connection connection = new Connection(
                 connectionList.findLastConnectionID() + 1,  // connectionID
@@ -469,13 +454,6 @@ public class HomePageController {
                 subSystemID  // subSystemID
         );
         connectionList.addConnection(connection);
-
-        ArrayList<Integer> objects = new ArrayList<>();
-        objects.add(connection.getConnectionID());
-        objects.add(connection.getSubSystemID());
-
-        return objects;
-
     }
 
     public void ovalDragDetected(MouseEvent mouseEvent) {
@@ -708,7 +686,6 @@ public class HomePageController {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                     System.out.println("Item Right Clicked");
-//                    node.setStyle("-fx-border-color: black");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
                     if (subSystemID != 0)
