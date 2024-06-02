@@ -37,7 +37,6 @@ public class UseCasePageController {
 
     private String directory, projectName;
     private UseCase useCase;
-    private UseCaseDetail useCaseDetail;
     private UseCaseList useCaseList;
     private ActorList actorList;
     private PositionList positionList;
@@ -206,28 +205,28 @@ public class UseCasePageController {
             useCase.setPreCondition("!@#$%^&*()_+");
         }
 
-        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
         useCaseDetailList.clear();
-        int number = 1;
+        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
+        int actorNumber = 1;
         for (Node node : actorActionVBox.getChildren()) {
             HBox hBox = (HBox) node;
             TextArea textArea = (TextArea) hBox.getChildren().get(0);
             if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", number, textArea.getText());
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", actorNumber, textArea.getText());
                 useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                number++;
+                actorNumber++;
             }
         }
 
         // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
-        int number2 = 1;
+        int systemNumber = 1;
         for (Node node : systemActionVBox.getChildren()) {
             HBox hBox = (HBox) node;
             TextArea textArea = (TextArea) hBox.getChildren().get(0);
             if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", number2, textArea.getText());
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", systemNumber, textArea.getText());
                 useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                number2++;
+                systemNumber++;
             }
         }
 
@@ -324,7 +323,6 @@ public class UseCasePageController {
         // Add textArea and delete button to the HBox
         hBox.getChildren().add(textArea);
         hBox.getChildren().add(deleteButton);
-
 
         systemActionVBox.getChildren().add(hBox);
     }
