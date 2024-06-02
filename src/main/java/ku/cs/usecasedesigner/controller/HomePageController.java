@@ -28,7 +28,7 @@ import java.util.Optional;
 public class HomePageController {
 
     @FXML
-    private ImageView ovalImageView, actorImageView, systemImageView, lineImageView, arrowImageView;
+    private ImageView ovalImageView, actorImageView, systemImageView, lineImageView;
 
     @FXML
     private Pane designPane;
@@ -48,11 +48,9 @@ public class HomePageController {
     @FXML
     private HBox subSystemHBox;
 
-    private double startX;
-    private double startY;
-    private String projectName, directory;
-    private Node startNodeForLink;
     private int subSystemID, existingActorID;
+    private double startX, startY;
+    private String projectName, directory;
 
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
@@ -75,45 +73,6 @@ public class HomePageController {
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
-    }
-
-    private static Line getLine(Node startNode, Node endNode, String text) {
-        Line line = new Line();
-
-        // Bind the start and end points of the line to the center points of the nodes
-        line.startXProperty().bind(startNode.layoutXProperty().add(startNode.getBoundsInLocal().getWidth() / 2));
-        line.startYProperty().bind(startNode.layoutYProperty().add(startNode.getBoundsInLocal().getHeight() / 2));
-        line.endXProperty().bind(endNode.layoutXProperty().add(endNode.getBoundsInLocal().getWidth() / 2));
-        line.endYProperty().bind(endNode.layoutYProperty().add(endNode.getBoundsInLocal().getHeight() / 2));
-
-        // Create a label and position it in the middle of the line
-        Label label = new Label(text);
-        label.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2));
-        label.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2));
-
-        // Add the label to the design pane
-        ((Pane) startNode.getParent()).getChildren().add(label);
-
-        // Add a double click event handler to the label
-        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
-                    // Create a TextInputDialog
-                    TextInputDialog dialog = new TextInputDialog(label.getText());
-                    dialog.setTitle("Change Label");
-                    dialog.setHeaderText("Please enter the new text for the label:");
-                    dialog.setContentText("Label:");
-
-                    // Show the dialog and get the result
-                    Optional<String> result = dialog.showAndWait();
-                    // If a string was entered, use it as the new label text
-                    result.ifPresent(label::setText);
-                }
-            }
-        });
-
-        return line;
     }
 
     public void drawUseCase(double width, double height, double layoutX, double layoutY,
@@ -207,6 +166,8 @@ public class HomePageController {
                         0); // rotation
         positionList.addPosition(position);
 
+        saveProject();
+
         ArrayList<Integer> objects = new ArrayList<>();
         objects.add(position.getPositionID());
         objects.add(useCase.getUseCaseID());
@@ -282,10 +243,7 @@ public class HomePageController {
                         subSystemID); // subSystemID
         positionList.addPosition(position);
 
-        ArrayList<Integer> objects = new ArrayList<>();
-        objects.add(position.getPositionID());
-        objects.add(actor.getActorID());
-
+        saveProject();
     }
 
     public void drawSubSystem(double width, double height, double layoutX, double layoutY, String label,
@@ -388,44 +346,6 @@ public class HomePageController {
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionID);
     }
 
-    public void drawArrow(double startX, double startY, double endX, double endY) {
-        // Create a new line with arrow head
-        Line line = new Line();
-        line.setStartX(startX);
-        line.setStartY(startY);
-        line.setEndX(endX);
-        line.setEndY(endY);
-
-        // Create a new arrow head
-        double angle = Math.atan2((endY - startY), (endX - startX)) - Math.PI / 2.0;
-        double arrowLength = 10;
-        double arrowWidth = 5;
-        double arrowX = endX + arrowLength * Math.cos(angle);
-        double arrowY = endY + arrowLength * Math.sin(angle);
-        double arrowX1 = arrowX + arrowWidth * Math.cos(angle + Math.PI / 2.0);
-        double arrowY1 = arrowY + arrowWidth * Math.sin(angle + Math.PI / 2.0);
-        double arrowX2 = arrowX + arrowWidth * Math.cos(angle - Math.PI / 2.0);
-        double arrowY2 = arrowY + arrowWidth * Math.sin(angle - Math.PI / 2.0);
-
-        Line arrowHead = new Line();
-        arrowHead.setStartX(endX);
-        arrowHead.setStartY(endY);
-        arrowHead.setEndX(arrowX1);
-        arrowHead.setEndY(arrowY1);
-
-        Line arrowHead2 = new Line();
-        arrowHead2.setStartX(endX);
-        arrowHead2.setStartY(endY);
-        arrowHead2.setEndX(arrowX2);
-        arrowHead2.setEndY(arrowY2);
-
-        designPane.getChildren().addAll(line, arrowHead, arrowHead2);
-
-        // Make the component draggable and selectable
-        makeDraggable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
-        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionList.findLastConnectionID() + 1);
-    }
-
     public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint) {
         Circle point = (Circle) event.getSource();
         if (startPoint) {
@@ -466,6 +386,7 @@ public class HomePageController {
                 subSystemID  // subSystemID
         );
         connectionList.addConnection(connection);
+        saveProject();
     }
 
     public void ovalDragDetected(MouseEvent mouseEvent) {
@@ -500,14 +421,6 @@ public class HomePageController {
         dragboard.setContent(clipboardContent);
     }
 
-    public void arrowDragDetected(MouseEvent mouseEvent) {
-        System.out.println("Arrow Drag Detected");
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
-        ClipboardContent clipboardContent = new ClipboardContent();
-        clipboardContent.putString("Arrow");
-        dragboard.setContent(clipboardContent);
-    }
-
     private void makeDraggable(Node node, String type, int ID) {
         node.setOnMousePressed(e -> {
             startX = e.getSceneX() - node.getLayoutX();
@@ -522,34 +435,6 @@ public class HomePageController {
 
             positionList.updatePosition(ID, newX, newY);
         });
-
-        node.setOnMouseReleased(e -> {
-            // Check if the node is a line and is near a component
-            if (node instanceof Line) {
-                for (Node component : designPane.getChildren()) {
-                    if (component instanceof StackPane || component instanceof VBox) {
-                        double distance = Math.hypot(node.getLayoutX() - component.getLayoutX(), node.getLayoutY() - component.getLayoutY());
-                        if (distance < 50) {  // Adjust this value as needed
-                            // Snap the end of the line to the center of the component
-                            ((Line) node).setEndX(component.getLayoutX() + component.getBoundsInLocal().getWidth() / 2);
-                            ((Line) node).setEndY(component.getLayoutY() + component.getBoundsInLocal().getHeight() / 2);
-
-                            // Create a connection between the start component and the end component
-                            Connection connection = new Connection(
-                                    connectionList.findLastConnectionID() + 1,  // connectionID
-                                    "Line",  // connectionType
-                                    ((Line) node ).getStartX(),  // startX
-                                    ((Line) node ).getStartY(),  // startY
-                                    ((Line) node ).getEndX(),  // endX
-                                    ((Line) node ).getEndY()  // endY
-                            );
-                            connectionList.addConnection(connection);
-                            break;
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void makeSelectable(Node node, String type, int ID){
@@ -558,7 +443,6 @@ public class HomePageController {
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
-        MenuItem rotateItem = new MenuItem("Rotate");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Create a menu item for sending the component to a subsystem
@@ -566,7 +450,7 @@ public class HomePageController {
 
         // Add menu items to the context menu
         if (!Objects.equals(type, "connection")) {
-            contextMenu.getItems().addAll(resizeItem, rotateItem);
+            contextMenu.getItems().add(resizeItem);
         }
 
 
@@ -599,6 +483,7 @@ public class HomePageController {
                                 ((Ellipse) ((StackPane) node).getChildren().get(0)).setRadiusY(newHeight);
                                 // Update the position of the use case
                                 positionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+
                             } else if (Objects.equals(type, "subSystem")) {
                                 ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
                                 ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
@@ -607,21 +492,6 @@ public class HomePageController {
                             }
                         }
                     }
-                }
-            });
-        });
-
-        // Set the action for rotate menu item
-        rotateItem.setOnAction(e -> {
-            System.out.println("Rotate Clicked");
-            // Make the node rotatable by dragging
-            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    double angle = Math.atan2(mouseEvent.getY() - node.getLayoutY(), mouseEvent.getX() - node.getLayoutX());
-                    node.setRotate(Math.toDegrees(angle));
-                    // Update the position of the component
-                    positionList.updateRotation(ID, Math.toDegrees(angle));
                 }
             });
         });
@@ -635,7 +505,6 @@ public class HomePageController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-
                 // Remove the item from the list
                 if(Objects.equals(type, "connection")) {
                     connectionList.removeConnectionByID(ID);
@@ -651,8 +520,10 @@ public class HomePageController {
                     }
                 } else if(Objects.equals(type, "useCase")) {
                     useCaseList.removeUseCaseByPositionID(ID);
+                    positionList.removePositionByID(ID);
                 } else if(Objects.equals(type, "actor")) {
                     actorList.removeActorByPositionID(ID);
+                    positionList.removePositionByID(ID);
                 } else if(Objects.equals(type, "subSystem")) {
                     Integer subSystemIDToRemove = subsystemList.findSubSystemIDByPositionID(ID);
                     // Remove all the components in the subsystem from the position list
@@ -665,13 +536,11 @@ public class HomePageController {
                     }
                     connectionList.removeConnectionBySubSystemID(subSystemIDToRemove);
                     subsystemList.removeSubSystemByPositionID(ID);
+                    positionList.removePositionByID(ID);
                 }
-                // remove the position from the list
-                positionList.removePositionByID(ID);
                 designPane.getChildren().remove(node);
                 saveProject();
                 loadProject();
-
                 System.out.println("Item Removed");
             }
         });
@@ -696,8 +565,7 @@ public class HomePageController {
                     System.out.println("Item Right Clicked");
                     contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
-                    if (subSystemID != 0)
-                    {
+                    if (subSystemID != 0) {
                         MenuItem mainSystemItem = new MenuItem("Main");
                         mainSystemItem.setOnAction(e -> {
                             Position position = positionList.findByPositionId(ID);
@@ -779,10 +647,8 @@ public class HomePageController {
                 objects.add(subsystemList.findLastSubSystemId() + 1);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                addToConnectionList("Line", dragEvent.getX(), dragEvent.getY(), dragEvent.getX() - 100, dragEvent.getY() - 100);
-                drawLine(dragEvent.getX() - 50, dragEvent.getY() + 50, dragEvent.getX() + 50, dragEvent.getY() - 50, connectionList.findLastConnectionID());
-            } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
-                drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+                addToConnectionList("Line", dragEvent.getX() - 45, dragEvent.getY() + 45 , dragEvent.getX() + 45, dragEvent.getY() - 45);
+                drawLine(dragEvent.getX() - 45, dragEvent.getY() + 45, dragEvent.getX() + 45, dragEvent.getY() - 45, connectionList.findLastConnectionID());
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
                 // draw the existing actor
                 Actor actor = actorList.findByActorId(existingActorID);

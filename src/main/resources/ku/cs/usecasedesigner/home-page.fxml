@@ -78,11 +78,6 @@
                   <Image url="@../../../images/line.png" />
                 </image>
               </ImageView>
-              <ImageView fx:id="arrowImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="195.0" onDragDetected="#arrowDragDetected" pickOnBounds="true" preserveRatio="true" visible="false">
-                <image>
-                  <Image url="@../../../images/directional.png" />
-                </image>
-              </ImageView>
             </children>
           </AnchorPane>
         </content>
