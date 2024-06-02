@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -363,7 +364,7 @@ public class HomePageController {
         return objects;
     }
 
-    public void drawLine(double startX, double startY, double endX, double endY) {
+    public void drawLine(double startX, double startY, double endX, double endY , int connectionID) {
         // Create a new line
         Line line = new Line();
         line.setStartX(startX);
@@ -379,8 +380,10 @@ public class HomePageController {
         startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true));
         endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false));
 
-        designPane.getChildren().addAll(line, startPoint, endPoint);
+        designPane.getChildren().addAll(startPoint, endPoint, line);
 
+        // make line selectable
+        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionID);
     }
 
     public void drawArrow(double startX, double startY, double endX, double endY) {
@@ -435,7 +438,7 @@ public class HomePageController {
     }
 
     public Circle createDraggablePoint(double x, double y) {
-        Circle point = new Circle(x,y, 5, Color.TRANSPARENT);
+        Circle point = new Circle(x,y, 5, Color.RED);
         point.setStrokeWidth(0);
         point.setCenterX(x);
         point.setCenterY(y);
@@ -551,16 +554,18 @@ public class HomePageController {
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
         MenuItem rotateItem = new MenuItem("Rotate");
-        MenuItem connectItem = new MenuItem("Connect");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Create a menu item for sending the component to a subsystem
         Menu sendToSubSystemItem = new Menu("Send to SubSystem");
 
         // Add menu items to the context menu
-        contextMenu.getItems().addAll(resizeItem, rotateItem, connectItem);
+        if (!Objects.equals(type, "connection")) {
+            contextMenu.getItems().addAll(resizeItem, rotateItem);
+        }
 
-        if (!Objects.equals(type, "subSystem")) {
+
+        if (!Objects.equals(type, "subSystem") && !Objects.equals(type, "connection")) {
             contextMenu.getItems().add(sendToSubSystemItem);
         }
 
@@ -616,19 +621,6 @@ public class HomePageController {
             });
         });
 
-        // Set the action for connect menu item
-        connectItem.setOnAction(e -> {
-            startNodeForLink = node;
-
-            // Pop up to notify user to select the end node
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Node Connection");
-            alert.setHeaderText("Please select the another component to connect");
-            alert.showAndWait();
-
-            System.out.println("Connect Clicked");
-        });
-
         // Set the action for delete menu item
         deleteItem.setOnAction(e -> {
             // Pop up to confirm deletion
@@ -637,12 +629,21 @@ public class HomePageController {
             alert.setHeaderText("Are you sure you want to delete this item?");
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
-
             if (result.get() == ButtonType.OK) {
-                designPane.getChildren().remove(node);
+
                 // Remove the item from the list
                 if(Objects.equals(type, "connection")) {
                     connectionList.removeConnectionByID(ID);
+                    // remove points of the line
+                    for (Node point : designPane.getChildren()) {
+                        if (point instanceof Circle) {
+                            if (point.getLayoutX() == ((Line) node).getStartX() && point.getLayoutY() == ((Line) node).getStartY()) {
+                                designPane.getChildren().remove(point);
+                            } else if (point.getLayoutX() == ((Line) node).getEndX() && point.getLayoutY() == ((Line) node).getEndY()) {
+                                designPane.getChildren().remove(point);
+                            }
+                        }
+                    }
                 } else if(Objects.equals(type, "useCase")) {
                     useCaseList.removeUseCaseByPositionID(ID);
                 } else if(Objects.equals(type, "actor")) {
@@ -662,6 +663,7 @@ public class HomePageController {
                 }
                 // remove the position from the list
                 positionList.removePositionByID(ID);
+                designPane.getChildren().remove(node);
                 saveProject();
                 loadProject();
 
@@ -674,9 +676,10 @@ public class HomePageController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 node.setOnMouseDragged(null);
-                node.setStyle("-fx-border-color: transparent");
                 saveProject();
-                makeDraggable(node, type, ID);
+                if (!Objects.equals(type, "connection")) {
+                    makeDraggable(node, type, ID);
+                }
             }
         });
 
@@ -771,8 +774,8 @@ public class HomePageController {
                 objects.add(subsystemList.findLastSubSystemId() + 1);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
                 addToConnectionList("Line", dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
+                drawLine(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100, connectionList.findLastConnectionID());
             } else if (dragEvent.getDragboard().getString().equals("Arrow")) {
                 drawArrow(dragEvent.getX(), dragEvent.getY(), dragEvent.getX() + 100, dragEvent.getY() + 100);
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
@@ -942,7 +945,7 @@ public class HomePageController {
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
             if (connection.getSubSystemID() == subSystemID) {
-                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY());
+                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getConnectionID());
             }
         });
 
