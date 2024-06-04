@@ -10,10 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
@@ -320,13 +317,60 @@ public class HomePageController {
         return objects;
     }
 
-    public void drawLine(double startX, double startY, double endX, double endY , int connectionID) {
+    public void drawLine(double startX, double startY, double endX, double endY , int connectionID, String type) {
         // Create a new line
         Line line = new Line();
         line.setStartX(startX);
         line.setStartY(startY);
         line.setEndX(endX);
         line.setEndY(endY);
+
+        // set the line type
+        if (Objects.equals(type, "Association")) {
+            line.setStyle("-fx-stroke: black;");
+        } else if (Objects.equals(type, "Include")) {
+            line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
+            // add arrow to end point of line and group the arrow to single object
+            Polygon arrow = new Polygon();
+            arrow.getPoints().addAll(new Double[]{
+                    0.0, 0.0,
+                    10.0, 5.0,
+                    0.0, 10.0 });
+            arrow.setFill(Color.TRANSPARENT);
+            arrow.setStroke(Color.BLACK);
+            // set the direction of arrow to be the same as the line
+            arrow.setRotate(Math.toDegrees(Math.atan2((endY - startY), (endX - startX))));
+            arrow.setLayoutX(endX - 5);
+            arrow.setLayoutY(endY - 5);
+            designPane.getChildren().add(arrow);
+        } else if (Objects.equals(type, "Extend")) {
+            line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
+            // add arrow to start point of line and group the arrow to single object
+            Polygon arrow = new Polygon();
+            arrow.getPoints().addAll(new Double[]{
+                    0.0, 0.0,
+                    10.0, 5.0,
+                    0.0, 10.0 });
+            arrow.setFill(Color.BLACK);
+            // set the direction of arrow to be the same as the line
+            arrow.setRotate(Math.toDegrees(Math.atan2((endX - startX), (endY - startY))));
+            arrow.setLayoutX(startX - 5);
+            arrow.setLayoutY(startY - 5);
+            designPane.getChildren().add(arrow);
+        } else if (Objects.equals(type, "Generalization")) {
+            // add arrow to start point of line and group the arrow to single object
+            Polygon arrow = new Polygon();
+            arrow.getPoints().addAll(new Double[]{
+                    0.0, 0.0,
+                    10.0, 5.0,
+                    0.0, 10.0 });
+            arrow.setFill(Color.BLACK);
+            // set the direction of arrow to be the same as the line
+            arrow.setRotate(Math.toDegrees(Math.atan2((endX - startX), (endY - startY))));
+            arrow.setLayoutX(startX - 5);
+            arrow.setLayoutY(startY - 5);
+            designPane.getChildren().add(arrow);
+        }
 
         // Create the start and end points of the line
         Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
@@ -648,7 +692,7 @@ public class HomePageController {
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
                 addToConnectionList("Line", dragEvent.getX() - 45, dragEvent.getY() + 45 , dragEvent.getX() + 45, dragEvent.getY() - 45);
-                drawLine(dragEvent.getX() - 45, dragEvent.getY() + 45, dragEvent.getX() + 45, dragEvent.getY() - 45, connectionList.findLastConnectionID());
+                drawLine(dragEvent.getX() - 45, dragEvent.getY() + 45, dragEvent.getX() + 45, dragEvent.getY() - 45, connectionList.findLastConnectionID(), "Generalization");
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
                 // draw the existing actor
                 Actor actor = actorList.findByActorId(existingActorID);
@@ -779,7 +823,7 @@ public class HomePageController {
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
             if (connection.getSubSystemID() == subSystemID) {
-                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getConnectionID());
+                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getConnectionID(), connection.getConnectionType());
             }
         });
 
