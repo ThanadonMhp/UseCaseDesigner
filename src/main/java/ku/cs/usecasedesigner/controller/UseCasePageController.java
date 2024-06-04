@@ -370,7 +370,7 @@ public class UseCasePageController {
                     preConditionTextField.appendText("/" + useCase.getUseCaseName());
                 }
                 // set current useCase as the postCondition of the selected useCase
-                if (tempUseCase.getPostCondition().isEmpty()) {
+                if (Objects.equals(tempUseCase.getPostCondition(), "!@#$%^&*()_+")) {
                     tempUseCase.setPostCondition(useCase.getUseCaseName());
                 } else {
                     tempUseCase.setPostCondition(tempUseCase.getPostCondition() + "/" + useCase.getUseCaseName());
@@ -402,7 +402,7 @@ public class UseCasePageController {
                     postConditionTextField.appendText("/" + tempUseCase.getUseCaseName());
                 }
                 // set current useCase as the preCondition of the selected useCase
-                if (tempUseCase.getPreCondition().isEmpty()) {
+                if (Objects.equals(tempUseCase.getPreCondition(), "!@#$%^&*()_+")) {
                     tempUseCase.setPreCondition(useCase.getUseCaseName());
                 } else {
                     tempUseCase.setPreCondition(tempUseCase.getPreCondition() + "/" + useCase.getUseCaseName());
