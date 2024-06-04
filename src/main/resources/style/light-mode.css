@@ -8,12 +8,10 @@
 
 #designPane {
     -fx-background-color: #e2f3e2;
-    -fx-background-position: fixed;
 }
 
 #ComponentAnchor {
     -fx-background-color: #cdeacb;
-    -fx-background-position: fixed;
 }
 
 .input_box {
@@ -22,7 +20,6 @@
 }
 
 #anchorPane {
-    -fx-background-position: fixed;
     -fx-background-color: #e2f3e2;
 }
 

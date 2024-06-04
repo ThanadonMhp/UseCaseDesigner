@@ -2,6 +2,12 @@
     src: url('font/Roboto-Thin.ttf');
 }
 
+.label {
+    -fx-font-family: "Roboto";
+    -fx-text-fill: #ffffff;
+}
+
+
 #text {
     -fx-font-family: "Roboto";
     -fx-text-fill: #ffffff;
@@ -9,12 +15,10 @@
 
 #designPane {
     -fx-background-color: #1e1e1e; /* Dark background */
-    -fx-background-position: fixed;
 }
 
 #ComponentAnchor {
     -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
-    -fx-background-position: fixed;
 }
 
 .input_box {
@@ -24,7 +28,6 @@
 }
 
 #anchorPane {
-    -fx-background-position: fixed;
     -fx-background-color: #1e1e1e; /* Dark background */
 }
 
