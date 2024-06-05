@@ -31,4 +31,8 @@ public class SubSystem {
     public int getPositionID() {
         return positionID;
     }
+
+    public void setPositionID(int positionID) {
+        this.positionID = positionID;
+    }
 }
