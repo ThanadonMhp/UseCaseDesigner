@@ -381,10 +381,13 @@ public class HomePageController {
             // Add label to the line
             Label label = createLabel("<<extend>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
 
-            designPane.getChildren().addAll(arrow, line);
+            designPane.getChildren().addAll(arrow, startPoint, endPoint, line, label);
+
         } else if (Objects.equals(type, "Generalization")) {
             // add arrow to start point of line and group the arrow to single object
             Polygon arrow = createDraggableArrow(line, false);
+            arrow.setFill(Color.TRANSPARENT);
+            arrow.setStroke(Color.BLACK);
             Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
             Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
 
@@ -396,10 +399,7 @@ public class HomePageController {
             startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
             endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
 
-            // Add label to the line
-            Label label = createLabel("<<generalization>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-
-            designPane.getChildren().addAll(arrow, line);
+            designPane.getChildren().addAll(arrow, startPoint, endPoint, line);
         }
 
         // make line selectable
@@ -512,9 +512,7 @@ public class HomePageController {
         } else if (Objects.equals(type, "Generalization")) {
             // add arrow to start point of line
             Polygon arrow = createDraggableArrow(line, false);
-            // add label to the middle of the line
-            Label label = createLabel("<<generalization>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-            designPane.getChildren().addAll(arrow, label);
+            designPane.getChildren().addAll(arrow);
         }
 
         // Update the connection
@@ -546,14 +544,15 @@ public class HomePageController {
         double tempEndY = line.getEndY();
 
         if (head) {
-            arrow.setRotate(Math.toDegrees(Math.atan2((tempEndX - tempStartX), (tempEndY - tempStartY))));
+            arrow.setRotate(Math.toDegrees(Math.atan2((tempEndY - tempStartY), (tempEndX - tempStartX))));
             arrow.setLayoutX(tempStartX - 5);
             arrow.setLayoutY(tempStartY - 5);
         } else {
-            arrow.setRotate(Math.toDegrees(Math.atan2((tempStartX - tempEndX), (tempStartY - tempEndY))));
+            arrow.setRotate(Math.toDegrees(Math.atan2((tempEndX - tempStartX), (tempEndY - tempStartY))));
             arrow.setLayoutX(tempEndX - 5);
             arrow.setLayoutY(tempEndY - 5);
         }
+
         return arrow;
     }
 
@@ -561,6 +560,7 @@ public class HomePageController {
         Label label = new Label(text);
         label.setLayoutX(x);
         label.setLayoutY(y);
+        label.setDisable(true);
         return label;
     }
 
