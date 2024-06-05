@@ -108,4 +108,21 @@ public class ConnectionList {
             }
         }
     }
+
+    public Connection findByConnectionID(int id) {
+        for (Connection connection : connectionList) {
+            if (connection.getConnectionID() == id) {
+                return connection;
+            }
+        }
+        return null;
+    }
+
+    public void updateConnectionType(int id, String connectionType) {
+        for (Connection connection : connectionList) {
+            if (connection.getConnectionID() == id) {
+                connection.setConnectionType(connectionType);
+            }
+        }
+    }
 }

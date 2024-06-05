@@ -76,4 +76,8 @@ public class Connection {
     public void setSubSystemID(int subSystemID) {
         this.subSystemID = subSystemID;
     }
+
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
 }

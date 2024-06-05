@@ -83,6 +83,18 @@
     -fx-background-color: #8b5cf6;
 }
 
+#homePagePane {
+    -fx-background-color: #1e1e1e; /* Dark background */
+}
+
+#homePageMenuBar {
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+
+#designPane, #componentsPane, #actorsScrollPane {
+    -fx-background-color: #2a2a2a; /* Dark background */
+}
+
 #title-plane {
     -fx-border-color: #4ade80; /* Lighter green border color */
     -fx-border-style: solid;
