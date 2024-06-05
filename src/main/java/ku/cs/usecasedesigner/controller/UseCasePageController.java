@@ -254,7 +254,6 @@ public class UseCasePageController {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
-
     }
 
     public void handleAddActorActionButton(ActionEvent actionEvent) {

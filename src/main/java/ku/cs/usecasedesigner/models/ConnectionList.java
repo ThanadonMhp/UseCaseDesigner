@@ -97,6 +97,17 @@ public class ConnectionList {
         }
     }
 
+    public void updateConnection(Connection connection) {
+        for (Connection c : connectionList) {
+            if (c.getConnectionID() == connection.getConnectionID()) {
+                c.setStartX(connection.getStartX());
+                c.setStartY(connection.getStartY());
+                c.setEndX(connection.getEndX());
+                c.setEndY(connection.getEndY());
+            }
+        }
+    }
+
     public void clear() {
         connectionList.clear();
     }

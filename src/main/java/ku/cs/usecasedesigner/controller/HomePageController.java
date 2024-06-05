@@ -209,7 +209,7 @@ public class HomePageController {
                     objects.add(directory);
                     objects.add("editLabel");
                     objects.add("actor");
-                    objects.add(actorID);
+                    objects.add(positionID);
                     try {
                         saveProject();
                         FXRouter.popup("LabelPage", objects);
@@ -324,6 +324,7 @@ public class HomePageController {
         line.setStartY(startY);
         line.setEndX(endX);
         line.setEndY(endY);
+        line.setStrokeWidth(1);
 
         // set the line type
         if (Objects.equals(type, "Association")) {
@@ -648,7 +649,7 @@ public class HomePageController {
         }
 
         // Create a menu item for selecting type of connection
-        Menu connectionTypeItem = new Menu("Change Relation type");
+        MenuItem connectionTypeItem = new MenuItem("Change Relation type");
         if (Objects.equals(type, "connection")) {
             contextMenu.getItems().add(connectionTypeItem);
         }
@@ -740,6 +741,23 @@ public class HomePageController {
             }
         });
 
+        // Set the action for connection type menu item
+        connectionTypeItem.setOnAction(e -> {
+            // pop up Connection Page
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(subSystemID);
+            objects.add(ID);
+            try {
+                saveProject();
+                FXRouter.popup("ConnectionPage", objects);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+
         // Deselect the node when the mouse is released
         node.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
@@ -787,28 +805,6 @@ public class HomePageController {
                                 });
                                 // Add the subSystemItem to the sendToSubSystemItem
                                 sendToSubSystemItem.getItems().add(subSystemItem);
-                            }
-                        });
-                    }
-
-
-                    if (Objects.equals(type,"connection"))
-                    {
-                        ArrayList<String> connectionTypes = new ArrayList<>();
-                        connectionTypes.add("Association");
-                        connectionTypes.add("Include");
-                        connectionTypes.add("Extend");
-                        connectionTypes.add("Generalization");
-                        // add connection type to menu except the current connection type
-                        connectionTypes.forEach(connectionType -> {
-                            if (!Objects.equals(connectionType, connectionList.findByConnectionID(ID).getConnectionType())) {
-                                MenuItem connectionTypeMenuItem = new MenuItem(connectionType);
-                                connectionTypeMenuItem.setOnAction(e -> {
-                                    connectionList.updateConnectionType(ID, connectionType);
-                                    saveProject();
-                                    loadProject();
-                                });
-                                connectionTypeItem.getItems().add(connectionTypeMenuItem);
                             }
                         });
                     }

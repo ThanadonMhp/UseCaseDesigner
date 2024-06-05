@@ -41,8 +41,13 @@ public class LabelPageController {
                 if (Objects.equals(editType, "actor")) {
                     DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
                     ActorList actorList = actorListDataSource.readData();
-                    Actor actor = actorList.findByActorId(editID);
+                    Actor actor = actorList.findByPositionId(editID);
                     labelTextField.setText(actor.getActorName());
+                    // find position of actor
+                    DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
+                    PositionList positionList = positionListDataSource.readData();
+                    Position position = positionList.findByPositionId(editID);
+                    subSystemID = position.getSubSystemID();
                 } else if (Objects.equals(editType, "subSystem")) {
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
@@ -142,7 +147,7 @@ public class LabelPageController {
                 if (Objects.equals(editType, "actor")) {
                     DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
                     ActorList actorList = actorListDataSource.readData();
-                    Actor actor = actorList.findByActorId(editID);
+                    Actor actor = actorList.findByPositionId(editID);
                     actor.setActorName(label);
                     actorListDataSource.writeData(actorList);
                 } else if (Objects.equals(editType, "subSystem")) {
