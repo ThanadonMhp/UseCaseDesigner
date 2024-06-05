@@ -358,7 +358,10 @@ public class HomePageController {
             startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Include"));
             endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Include"));
 
-            designPane.getChildren().addAll(arrow, startPoint, endPoint, line);
+            // Add label to the line
+            Label label = createLabel("<<include>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+
+            designPane.getChildren().addAll(arrow, startPoint, endPoint, line, label);
 
         } else if (Objects.equals(type, "Extend")) {
             line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
@@ -375,6 +378,9 @@ public class HomePageController {
             startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Extend"));
             endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Extend"));
 
+            // Add label to the line
+            Label label = createLabel("<<extend>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+
             designPane.getChildren().addAll(arrow, line);
         } else if (Objects.equals(type, "Generalization")) {
             // add arrow to start point of line and group the arrow to single object
@@ -389,6 +395,9 @@ public class HomePageController {
             // Add mouse event handlers for releasing
             startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
             endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
+
+            // Add label to the line
+            Label label = createLabel("<<generalization>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
 
             designPane.getChildren().addAll(arrow, line);
         }
@@ -411,7 +420,24 @@ public class HomePageController {
             point.setCenterY(event.getY());
 
         } else if (Objects.equals(type, "Include") || Objects.equals(type, "Generalization")) {
+            // remove the label
+            for (Node label : designPane.getChildren()) {
+                if (label instanceof Label) {
+                    if (label.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && label.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
+                        designPane.getChildren().remove(label);
+                    }
+                }
+            }
+
             if (startPoint) {
+                line.setStartX(event.getX());
+                line.setStartY(event.getY());
+
+                Circle point = (Circle) event.getSource();
+                point.setCenterX(event.getX());
+                point.setCenterY(event.getY());
+
+            } else {
                 // remove the arrow
                 for (Node arrow : designPane.getChildren()) {
                     if (arrow instanceof Polygon) {
@@ -421,14 +447,6 @@ public class HomePageController {
                     }
                 }
 
-                line.setStartX(event.getX());
-                line.setStartY(event.getY());
-
-                Circle point = (Circle) event.getSource();
-                point.setCenterX(event.getX());
-                point.setCenterY(event.getY());
-
-            } else {
                 line.setEndX(event.getX());
                 line.setEndY(event.getY());
 
@@ -437,7 +455,16 @@ public class HomePageController {
                 point.setCenterY(event.getY());
 
             }
-        } else if (Objects.equals(type, "Extend")){
+        } else if (Objects.equals(type, "Extend")) {
+            // remove the label
+            for (Node label : designPane.getChildren()) {
+                if (label instanceof Label) {
+                    if (label.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && label.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
+                        designPane.getChildren().remove(label);
+                    }
+                }
+            }
+
             if (startPoint) {
                 // remove the arrow
                 for (Node arrow : designPane.getChildren()) {
@@ -473,15 +500,21 @@ public class HomePageController {
         if (Objects.equals(type, "Include")) {
             // add arrow to start point of line
             Polygon arrow = createDraggableArrow(line, false);
-            designPane.getChildren().add(arrow);
+            // add label to the middle of the line
+            Label label = createLabel("<<include>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+            designPane.getChildren().addAll(arrow, label);
         } else if (Objects.equals(type, "Extend")) {
             // add arrow to start point of line
             Polygon arrow = createDraggableArrow(line, true);
-            designPane.getChildren().add(arrow);
+            // add label to the middle of the line
+            Label label = createLabel("<<extend>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+            designPane.getChildren().addAll(arrow, label);
         } else if (Objects.equals(type, "Generalization")) {
             // add arrow to start point of line
             Polygon arrow = createDraggableArrow(line, false);
-            designPane.getChildren().add(arrow);
+            // add label to the middle of the line
+            Label label = createLabel("<<generalization>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+            designPane.getChildren().addAll(arrow, label);
         }
 
         // Update the connection
@@ -490,7 +523,7 @@ public class HomePageController {
     }
 
     public Circle createDraggablePoint(double x, double y) {
-        Circle point = new Circle(x,y, 5, Color.TRANSPARENT);
+        Circle point = new Circle(x,y, 5, Color.RED);
         point.setStrokeWidth(0);
         point.setCenterX(x);
         point.setCenterY(y);
@@ -504,6 +537,7 @@ public class HomePageController {
                 10.0, 5.0,
                 0.0, 10.0 });
         arrow.setFill(Color.BLACK);
+        arrow.setDisable(true);
 
         // get line start and start point
         double tempStartX = line.getStartX();
@@ -521,6 +555,13 @@ public class HomePageController {
             arrow.setLayoutY(tempEndY - 5);
         }
         return arrow;
+    }
+
+    public Label createLabel(String text, double x, double y) {
+        Label label = new Label(text);
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        return label;
     }
 
     public void addToConnectionList(String type, double startX, double startY, double endX, double endY) {
