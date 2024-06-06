@@ -7,6 +7,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -53,9 +54,9 @@
     </MenuBar>
     <AnchorPane fx:id="homePagePane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-      <TitledPane fx:id="componentsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="15.0" prefHeight="664.0" prefWidth="202.0" text="Components" textAlignment="CENTER">
+      <TitledPane fx:id="componentsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="15.0" prefHeight="559.0" prefWidth="202.0" text="Components" textAlignment="CENTER">
         <content>
-          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" style="-fx-background-color: white;">
+          <AnchorPane fx:id="ComponentAnchor" minHeight="0.0" minWidth="0.0" prefWidth="200.0" style="-fx-background-color: white;">
             <children>
               <!-- ImageView for oval.jpg with drag-and-drop functionality -->
               <ImageView fx:id="ovalImageView" fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" onDragDetected="#ovalDragDetected" pickOnBounds="true" preserveRatio="true">
@@ -85,7 +86,7 @@
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
       </TitledPane>
-            <TitledPane fx:id="actorsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="250.0" prefHeight="429.0" prefWidth="202.0" style="-fx-background-color: white;" text="Actors" textAlignment="CENTER" visible="false">
+            <TitledPane fx:id="actorsPane" animated="false" collapsible="false" layoutX="14.0" layoutY="250.0" prefHeight="324.0" prefWidth="202.0" style="-fx-background-color: white;" text="Actors" textAlignment="CENTER" visible="false">
                <font>
                   <Font name="Noto Sans Thai Regular" size="12.0" />
                </font>
@@ -97,7 +98,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-        <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: black; -fx-background-color: white;">
+        <Pane fx:id="designPane" layoutX="233.0" layoutY="40.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="639.0" prefWidth="1027.0" style="-fx-border-color: silver; -fx-background-color: white;">
                <children>
               <Label fx:id="guideLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="noto-sans-thai" text="Drag components from Library here…" textAlignment="CENTER" textFill="#817e7e" wrapText="false">
                 <font>
@@ -111,6 +112,15 @@
                   <Button fx:id="addNewSubSystemButton" mnemonicParsing="false" onAction="#addNewSubSystemButton" text="+" textAlignment="CENTER" />
                </children>
             </HBox>
+            <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" layoutX="14.0" layoutY="573.0" prefHeight="104.0" prefWidth="202.0" text="Note">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea fx:id="noteTextArea" layoutX="-1.0" layoutY="-2.0" prefHeight="81.0" prefWidth="202.0" promptText="Write your note here.." wrapText="true" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
       </children>
     </AnchorPane>
   </children>

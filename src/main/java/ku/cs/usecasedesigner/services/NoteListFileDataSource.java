@@ -5,17 +5,17 @@ import ku.cs.usecasedesigner.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class ComponentPreferenceListFileDataSource implements DataSource<ComponentPreferenceList>, ManageDataSource<ComponentPreference> {
+public class NoteListFileDataSource implements DataSource<NoteList>, ManageDataSource<Note>{
     private String directory;
     private String fileName;
 
-    public ComponentPreferenceListFileDataSource(String directory, String fileName) {
+    public NoteListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
-        checkFileIsExist();
+        checkFileIsExisted();
     }
 
-    private void checkFileIsExist() {
+    private void checkFileIsExisted() {
         File file = new File(directory);
         if (!file.exists()) {
             file.mkdirs();
@@ -33,31 +33,26 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
     }
 
     @Override
-    public ComponentPreferenceList readData() {
-        ComponentPreferenceList componentPreferenceList = new ComponentPreferenceList();
+    public NoteList readData() {
+        NoteList noteList = new NoteList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
         BufferedReader buffer = null;
 
         try {
-            reader = new FileReader(file, StandardCharsets.UTF_8);
+            reader = new FileReader(file);
             buffer = new BufferedReader(reader);
 
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("componentPreference")) {
-                    ComponentPreference componentPreference = new ComponentPreference(
-                            Integer.parseInt(data[1].trim()), // strokeWidth
-                            data[2].trim(), // font
-                            Integer.parseInt(data[3].trim()), // fontSize
-                            Boolean.parseBoolean(data[4].trim()), // bold
-                            Boolean.parseBoolean(data[5].trim()), // italic
-                            Boolean.parseBoolean(data[6].trim()), // underline
-                            Integer.parseInt(data[7].trim()) // positionID
+                if (data[0].trim().equals("note")) {
+                    Note note = new Note(
+                            Integer.parseInt(data[1]), // subSystemID
+                            data[2] // note
                     );
-                    componentPreferenceList.addComponentPreference(componentPreference);
+                    noteList.addNote(note);
                 }
             }
         } catch (Exception e) {
@@ -70,44 +65,42 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
                 if (reader != null) {
                     reader.close();
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-
-        return componentPreferenceList;
+        return noteList;
     }
 
     @Override
-    public void writeData(ComponentPreferenceList componentPreferenceList) {
-        // Import actorList to file
+    public void writeData(NoteList noteList) {
+        // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
-        // Import connectionList to file
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
+        // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        // Import noteList from CSV
-        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory, fileName);
-        NoteList noteList = noteListFileDataSource.readData();
-        // Import positionList to file
+        // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
-        // Import preferenceList to file
+        // Import preferenceList from CSV
         PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
         PreferenceList preferenceList = preferenceListFileDataSource.readData();
-        // Import subSystemList to file
+        // Import subsystemList from CSV
         SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
         SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        // Import useCaseDetailList to file
+        // Import useCaseDetailList from CSV
         UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
         UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
-        // Import useCaseList to file
+        // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-        // Import useCaseSystemList to file
+        // Import useCaseSystemList from CSV
         UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
         UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
-
 
         // File writer
         String filePath = directory + File.separator + fileName;
@@ -118,69 +111,70 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            // Write actorList to file
+            // Write ActorList to CSV
             for (Actor actor : actorList.getActorList()) {
                 String line = actorListFileDataSource.createLine(actor);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write componentPreferenceList to file
+            // Write ComponentPreferenceList to CSV
             for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
-                buffer.write(createLine(componentPreference));
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
+                buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write connectionList to file
+            // Write ConnectionList to CSV
             for (Connection connection : connectionList.getConnectionList()) {
                 String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write noteList to file
+            // Write NoteList to CSV
             for (Note note : noteList.getNoteList()) {
-                String line = noteListFileDataSource.createLine(note);
+                String line = createLine(note);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write positionList to file
+            // Write PositionList to CSV
             for (Position position : positionList.getPositionList()) {
                 String line = positionListFileDataSource.createLine(position);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write preferenceList to file
+            // Write PreferenceList to CSV
             for (Preference preference : preferenceList.getPreferenceList()) {
                 String line = preferenceListFileDataSource.createLine(preference);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write subSystemList to file
+            // Write SubsystemList to CSV
             for (SubSystem subsystem : subsystemList.getSubSystemList()) {
                 String line = subsystemListFileDataSource.createLine(subsystem);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write useCaseDetailList to file
+            // Write UseCaseDetailList to CSV
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
                 String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write useCaseList to file
+            // Write UseCaseList to CSV
             for (UseCase useCase : useCaseList.getUseCaseList()) {
                 String line = useCaseListFileDataSource.createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
             }
 
-            // Write useCaseSystemList to file
+            // Write UseCaseSystemList to CSV
             for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
                 String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
                 buffer.append(line);
@@ -189,20 +183,15 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
 
             buffer.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String createLine(ComponentPreference componentPreference) {
-        return "componentPreference,"
-                + componentPreference.getStrokeWidth() + ","
-                + componentPreference.getFont() + ","
-                + componentPreference.getFontSize() + ","
-                + componentPreference.isBold() + ","
-                + componentPreference.isItalic() + ","
-                + componentPreference.isUnderline() + ","
-                + componentPreference.getPositionID();
+    public String createLine(Note note) {
+        return "note" + ","
+                + note.getSubSystemID() + ","
+                + note.getNote();
     }
 }

@@ -45,6 +45,9 @@ public class HomePageController {
     @FXML
     private HBox subSystemHBox;
 
+    @FXML
+    private TextArea noteTextArea;
+
     private int subSystemID, existingActorID;
     private double startX, startY;
     private String projectName, directory;
@@ -52,6 +55,7 @@ public class HomePageController {
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
     private PositionList positionList = new PositionList();
+    private NoteList noteList = new NoteList();
     private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
 
@@ -941,8 +945,9 @@ public class HomePageController {
     }
 
     public void loadProject() {
-        // Clear the design pane
+        // Clear the design pane and note text area
         designPane.getChildren().clear();
+        noteTextArea.clear();
 
         // Clear the lists
         actorList.clear();
@@ -1001,6 +1006,16 @@ public class HomePageController {
             }
         });
 
+        // Load notes
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+        noteList = noteListDataSource.readData(); // Read the NoteList from the CSV file
+        // Recreate each note to noteTextArea
+        Note note = noteList.findBySubSystemID(subSystemID);
+        if (note != null) {
+            noteTextArea.setText(note.getNote());
+        }
+
+
         // Check if designPane is not empty
         if (!designPane.getChildren().isEmpty()) {
             // Make guideLabel invisible
@@ -1019,6 +1034,7 @@ public class HomePageController {
         subSystemHBox.getChildren().add(subSystemHBox.getChildren().size() - 1, mainSubSystemButton);
         // Set the action for the button
         mainSubSystemButton.setOnAction(e -> {
+            saveProject();
             // Set the subSystemID
             subSystemID = 0;
             // Load the project
@@ -1033,6 +1049,7 @@ public class HomePageController {
             subSystemHBox.getChildren().add(subSystemHBox.getChildren().size() - 1, button);
             // Set the action for the button
             button.setOnAction(e -> {
+                saveProject();
                 // Set the subSystemID
                 subSystemID = subsystem.getSubSystemID();
                 // Load the project
@@ -1120,6 +1137,7 @@ public class HomePageController {
         // Save the project components
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
         DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
@@ -1130,9 +1148,25 @@ public class HomePageController {
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
         useCaseSystemList.addSystem(useCaseSystem);
 
+        // find note from subSystemID
+        if (noteList.findBySubSystemID(subSystemID) == null) {
+            if (!noteTextArea.getText().isEmpty()) {
+                noteList.addNote(new Note(subSystemID, noteTextArea.getText()));
+            } else {
+                noteList.addNote(new Note(subSystemID, "!@#$%^&*()"));
+            }
+        } else {
+            if (!noteTextArea.getText().isEmpty()) {
+                noteList.updateNoteBySubSystemID(subSystemID, noteTextArea.getText());
+            } else {
+                noteList.updateNoteBySubSystemID(subSystemID, "!@#$%^&*()");
+            }
+        }
+
         // Write data to CSV
         actorListDataSource.writeData(actorList);
         connectionListDataSource.writeData(connectionList);
+        noteListDataSource.writeData(noteList);
         positionListDataSource.writeData(positionList);
         subsystemListDataSource.writeData(subsystemList);
         useCaseListFileDataSource.writeData(useCaseList);

@@ -30,8 +30,8 @@ public class ProjectApplication extends Application {
         FXRouter.when("NewProjectPage", packageStr + "new-project-page.fxml", "New Project");
         FXRouter.when("LabelPage", packageStr + "label-page.fxml", "Label");
         FXRouter.when("PreferencePage", packageStr + "preference-page.fxml", "Preference");
-        FXRouter.when("UseCasePage", packageStr + "use-case-page.fxml", "Use Case");
-        FXRouter.when("ConnectionPage", packageStr + "connection-page.fxml", "Connection");
+        FXRouter.when("UseCasePage", packageStr + "use-case-page.fxml", "Use Case Detail");
+        FXRouter.when("ConnectionPage", packageStr + "connection-page.fxml", "Relation Type");
     }
     public static void main(String[] args) {
         launch(args);

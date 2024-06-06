@@ -88,6 +88,9 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+        // Import noteList from CSV
+        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory, fileName);
+        NoteList noteList = noteListFileDataSource.readData();
         // Import positionList from CSV
         PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
         PositionList positionList = positionListFileDataSource.readData();
@@ -128,6 +131,13 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             //Write ConnectionList to CSV
             for (Connection connection : connectionList.getConnectionList()) {
                 buffer.write(connectionListFileDataSource.createLine(connection));
+                buffer.newLine();
+            }
+
+            // Write NoteList to CSV
+            for (Note note : noteList.getNoteList()) {
+                String line = noteListFileDataSource.createLine(note);
+                buffer.append(line);
                 buffer.newLine();
             }
 
