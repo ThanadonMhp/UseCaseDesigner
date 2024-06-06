@@ -405,6 +405,27 @@ public class HomePageController {
 
         // make line selectable
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionID);
+
+        // double click to open the connection page
+        line.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                    // Send the connection details to the ConnectionPage
+                    ArrayList<Object> objects = new ArrayList<>();
+                    objects.add(projectName);
+                    objects.add(directory);
+                    objects.add(subSystemID);
+                    objects.add(connectionID);
+                    try {
+                        saveProject();
+                        FXRouter.popup("ConnectionPage", objects);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
     }
 
     public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint, String type) {
@@ -648,12 +669,6 @@ public class HomePageController {
             contextMenu.getItems().add(sendToSubSystemItem);
         }
 
-        // Create a menu item for selecting type of connection
-        MenuItem connectionTypeItem = new MenuItem("Change Relation type");
-        if (Objects.equals(type, "connection")) {
-            contextMenu.getItems().add(connectionTypeItem);
-        }
-
         contextMenu.getItems().add(deleteItem);
 
         //set the action for resize menu item
@@ -739,23 +754,6 @@ public class HomePageController {
                 loadProject();
                 System.out.println("Item Removed");
             }
-        });
-
-        // Set the action for connection type menu item
-        connectionTypeItem.setOnAction(e -> {
-            // pop up Connection Page
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(subSystemID);
-            objects.add(ID);
-            try {
-                saveProject();
-                FXRouter.popup("ConnectionPage", objects);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
         });
 
         // Deselect the node when the mouse is released

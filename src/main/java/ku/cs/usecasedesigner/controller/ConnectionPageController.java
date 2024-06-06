@@ -55,7 +55,7 @@ public class ConnectionPageController {
                 case "Include":
                     includeRadioButton.setSelected(true);
                     break;
-                case "Xxtend":
+                case "Extend":
                     extendRadioButton.setSelected(true);
                     break;
             }
