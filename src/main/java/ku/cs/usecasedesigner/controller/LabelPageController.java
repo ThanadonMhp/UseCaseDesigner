@@ -120,27 +120,35 @@ public class LabelPageController {
                 } else if (type.equals("subSystem")) {
                     DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
                     PositionList positionList = positionListDataSource.readData();
-                    Position position = new Position(
-                            positionList.findLastPositionId() + 1,
-                            layoutX,
-                            layoutY,
-                            width,
-                            height,
-                            0
-                            , subSystemID
-                    );
-                    positionList.addPosition(position);
-                    positionListDataSource.writeData(positionList);
-
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
-                    SubSystem subSystem = new SubSystem(
-                            subSystemList.findLastSubSystemId() + 1,
-                            label,
-                            position.getPositionID()
-                    );
-                    subSystemList.addSubSystem(subSystem);
-                    subSystemListDataSource.writeData(subSystemList);
+
+                    // check if the subSystem name is already exist
+                    if (Objects.equals(label.toLowerCase(), "main")) {
+                        errorText.setText("SubSystem name can be Main.");
+                        return;
+                    } else if (!subSystemList.isSubSystemNameExist(label) || subSystemList.findBySubSystemId(editID).getSubSystemName().equals(label)) {
+                        Position position = new Position(
+                                positionList.findLastPositionId() + 1,
+                                layoutX,
+                                layoutY,
+                                width,
+                                height,
+                                0
+                                , subSystemID
+                        );
+                        positionList.addPosition(position);
+                        positionListDataSource.writeData(positionList);
+
+
+                        SubSystem subSystem = new SubSystem(
+                                subSystemList.findLastSubSystemId() + 1,
+                                label,
+                                position.getPositionID()
+                        );
+                        subSystemList.addSubSystem(subSystem);
+                        subSystemListDataSource.writeData(subSystemList);
+                    }
                 }
 
             } else if (type.equals("editLabel")) {
@@ -151,11 +159,21 @@ public class LabelPageController {
                     actor.setActorName(label);
                     actorListDataSource.writeData(actorList);
                 } else if (Objects.equals(editType, "subSystem")) {
+                    // check if the subSystem name is already exist
+                    if (Objects.equals(label.toLowerCase(), "main")) {
+                        errorText.setText("SubSystem name can be Main.");
+                        return;
+                    }
                     DataSource<SubSystemList> subSystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
                     SubSystemList subSystemList = subSystemListDataSource.readData();
-                    SubSystem subSystem = subSystemList.findBySubSystemId(editID);
-                    subSystem.setSubSystemName(label);
-                    subSystemListDataSource.writeData(subSystemList);
+                    if (!subSystemList.isSubSystemNameExist(label) || subSystemList.findBySubSystemId(editID).getSubSystemName().equals(label)) {
+                        SubSystem subSystem = subSystemList.findBySubSystemId(editID);
+                        subSystem.setSubSystemName(label);
+                        subSystemListDataSource.writeData(subSystemList);
+                    } else {
+                        errorText.setText("SubSystem name already exist.");
+                        return;
+                    }
                 }
             }
 

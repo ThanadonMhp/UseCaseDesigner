@@ -61,4 +61,13 @@ public class SubSystemList {
         }
         return null;
     }
+
+    public boolean isSubSystemNameExist(String subSystemName) {
+        for (SubSystem subsystem : subSystemList) {
+            if (subsystem.getSubSystemName().equals(subSystemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
