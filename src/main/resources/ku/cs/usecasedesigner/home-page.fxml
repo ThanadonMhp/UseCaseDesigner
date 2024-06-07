@@ -27,10 +27,10 @@
             <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
             <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
             <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
-                  <Menu fx:id="exportMenu" mnemonicParsing="false" text="Unspecified Menu">
+                  <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
                     <items>
-                      <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="export" />
-                        <MenuItem fx:id="exportAllMenuItem" mnemonicParsing="false" onAction="#handleExportAllMenuItem" text="Unspecified Action" />
+                      <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />
+                        <MenuItem fx:id="exportAllMenuItem" mnemonicParsing="false" onAction="#handleExportAllMenuItem" text="Export All..." />
                     </items>
                   </Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
