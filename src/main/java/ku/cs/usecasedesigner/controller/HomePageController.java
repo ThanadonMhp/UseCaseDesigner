@@ -1,26 +1,32 @@
 package ku.cs.usecasedesigner.controller;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
+
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.usecasedesigner.models.*;
 import ku.cs.usecasedesigner.services.*;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomePageController {
 
@@ -945,10 +951,6 @@ public class HomePageController {
     }
 
     public void loadProject() {
-        // Clear the design pane and note text area
-        designPane.getChildren().clear();
-        noteTextArea.clear();
-
         // Clear the lists
         actorList.clear();
         connectionList.clear();
@@ -963,6 +965,33 @@ public class HomePageController {
         // Load actors
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         actorList = actorListDataSource.readData(); // Read the ActorList from the CSV file
+
+        // Load subsystems
+        DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
+        subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
+
+        // Load use cases
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+        useCaseList = useCaseListDataSource.readData(); // Read the UseCaseList from the CSV file
+
+        // Load connections
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
+
+        // Load notes
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+        noteList = noteListDataSource.readData(); // Read the NoteList from the CSV file
+
+        loadDesignPane();
+        loadSubSystemButton();
+        loadActorsList();
+    }
+
+    public void loadDesignPane() {
+        // Clear the design pane and note text area
+        designPane.getChildren().clear();
+        noteTextArea.clear();
+
         // Recreate each actor
         actorList.getActorList().forEach(actor -> {
             // Find the position of the actor
@@ -972,9 +1001,6 @@ public class HomePageController {
             }
         });
 
-        // Load subsystems
-        DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
-        subsystemList = subsystemListDataSource.readData(); // Read the SubsystemList from the CSV file
         // Recreate each subsystem
         subsystemList.getSubSystemList().forEach(subsystem -> {
             // Find the position of the subsystem
@@ -984,9 +1010,6 @@ public class HomePageController {
             }
         });
 
-        // Load use cases
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-        useCaseList = useCaseListDataSource.readData(); // Read the UseCaseList from the CSV file
         // Recreate each use case
         useCaseList.getUseCaseList().forEach(useCase -> {
             // Find the position of the use case
@@ -996,9 +1019,6 @@ public class HomePageController {
             }
         });
 
-        // Load connections
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
-        connectionList = connectionListDataSource.readData(); // Read the ConnectionList from the CSV file
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
             if (connection.getSubSystemID() == subSystemID) {
@@ -1006,24 +1026,17 @@ public class HomePageController {
             }
         });
 
-        // Load notes
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
-        noteList = noteListDataSource.readData(); // Read the NoteList from the CSV file
         // Recreate each note to noteTextArea
         Note note = noteList.findBySubSystemID(subSystemID);
         if (note != null) {
             noteTextArea.setText(note.getNote());
         }
 
-
         // Check if designPane is not empty
         if (!designPane.getChildren().isEmpty()) {
             // Make guideLabel invisible
             guideLabel.setVisible(false);
         }
-
-        loadSubSystemButton();
-        loadActorsList();
     }
 
     public void loadSubSystemButton() {
@@ -1182,5 +1195,114 @@ public class HomePageController {
         objects.add(directory);
         objects.add(subSystemID);
         FXRouter.popup("PreferencePage", objects);
+    }
+
+    public void handleExportMenuItem(ActionEvent actionEvent) {
+        boolean noteAdded = false;
+        // add note to the top left corner of the designPane
+        if (noteTextArea.getText() != null) {
+            Label note = new Label(noteTextArea.getText());
+            note.setLayoutX(10);
+            note.setLayoutY(10);
+            designPane.getChildren().add(note);
+            noteAdded = true;
+        }
+
+        // save Pane to image
+        WritableImage image = designPane.snapshot(new SnapshotParameters(), null);
+
+        if (noteAdded) {
+            designPane.getChildren().remove(designPane.getChildren().size() - 1);
+        }
+
+        try {
+            // Create a file chooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export Project");
+            fileChooser.setInitialFileName(projectName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void handleExportAllMenuItem(ActionEvent actionEvent) {
+        int subSystemIDTemp = subSystemID;
+        // load all the subSystems to the designPane
+        subSystemID = 0;
+        loadProject();
+
+        // ArrayList to store the images
+        ArrayList<WritableImage> images = new ArrayList<>();
+
+        // add note to the top left corner of the designPane
+        if (noteTextArea.getText() != null) {
+            Label note = new Label(noteTextArea.getText());
+            note.setLayoutX(10);
+            note.setLayoutY(10);
+            designPane.getChildren().add(note);
+        }
+
+        // save Pane to image
+        WritableImage image = designPane.snapshot(new SnapshotParameters(), null);
+
+        // add the image to the images ArrayList
+        images.add(image);
+
+        subsystemList.getSubSystemList().forEach(subsystem -> {
+            subSystemID = subsystem.getSubSystemID();
+            System.out.println(subSystemID);
+            loadDesignPane();
+
+            // add note to the top left corner of the designPane
+            if (noteTextArea.getText() != null) {
+                Label note = new Label(noteTextArea.getText());
+                note.setLayoutX(10);
+                note.setLayoutY(10);
+                designPane.getChildren().add(note);
+            }
+
+            // save Pane to image
+            WritableImage imageTemp = designPane.snapshot(new SnapshotParameters(), null);
+
+            // add the image to the images ArrayList
+            images.add(imageTemp);
+        });
+
+        // reset the subSystemID
+        subSystemID = subSystemIDTemp;
+        loadProject();
+
+        try {
+            // Create a file chooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export Project");
+            fileChooser.setInitialFileName(projectName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                // save the main image to the file
+                ImageIO.write(SwingFXUtils.fromFXImage(images.get(0), null), "png", new File(file.getParent() + "/" + projectName + "-" + "Main" + ".png"));
+                // save the images to the file
+                AtomicInteger i = new AtomicInteger();
+                subsystemList.getSubSystemList().forEach(subsystem -> {
+                    try {
+                        ImageIO.write(SwingFXUtils.fromFXImage(images.get(i.get()), null), "png", new File(file.getParent() + "/" + projectName + "-" + subsystem.getSubSystemName() + ".png"));
+                        i.getAndIncrement();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
