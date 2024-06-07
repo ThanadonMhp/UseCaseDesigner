@@ -1,7 +1,7 @@
 # Use Case Designer (KU CS - Senior Project)
 
 ## Concept
-- Drag and drop for designing use case diagrams for useCaseSystem (with Subsystems) analysis and design.
+- Drag and drop for designing use case diagrams for system analysis and design.
 
 ## Member
 - ปริภัทร์  มะลีแก้ว 6410450320
