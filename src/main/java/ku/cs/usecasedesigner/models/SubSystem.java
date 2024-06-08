@@ -9,14 +9,6 @@ public class SubSystem {
     public SubSystem(int subSystemID, String subSystemName, int positionID) {
         this.subSystemID = subSystemID;
         this.subSystemName = subSystemName;
-        this.note = "!@#$%^&*()_+";
-        this.positionID = positionID;
-    }
-
-    public SubSystem(int subSystemID, String subSystemName, String note, int positionID) {
-        this.subSystemID = subSystemID;
-        this.subSystemName = subSystemName;
-        this.note = note;
         this.positionID = positionID;
     }
 

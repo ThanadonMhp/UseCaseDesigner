@@ -51,8 +51,7 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
                     SubSystem subsystem = new SubSystem(
                             Integer.parseInt(data[1]), // subsystemID
                             data[2], // subsystemName
-                            data[3], // note
-                            Integer.parseInt(data[4]) // positionID
+                            Integer.parseInt(data[3]) // positionID
                     );
                     subsystemList.addSubSystem(subsystem);
                 }
@@ -196,7 +195,6 @@ public class SubSystemListFileDataSource implements DataSource<SubSystemList>, M
         return "subSystem" + ","
                 + subsystem.getSubSystemID() + ","
                 + subsystem.getSubSystemName() + ","
-                + subsystem.getNote() + ","
                 + subsystem.getPositionID();
     }
 }

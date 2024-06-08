@@ -64,6 +64,7 @@ public class HomePageController {
     private NoteList noteList = new NoteList();
     private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
+    private UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
 
     @FXML
     void initialize() {
@@ -984,6 +985,11 @@ public class HomePageController {
         DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
         noteList = noteListDataSource.readData(); // Read the NoteList from the CSV file
 
+        // load systemList
+        useCaseSystemList = new UseCaseSystemList();
+        UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
+        useCaseSystemList.addSystem(useCaseSystem);
+
         loadDesignPane();
         loadSubSystemButton();
         loadActorsList();
@@ -1157,11 +1163,6 @@ public class HomePageController {
         DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
-
-        // Save the components to the data sources
-        UseCaseSystemList useCaseSystemList = new UseCaseSystemList();
-        UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
-        useCaseSystemList.addSystem(useCaseSystem);
 
         // find note from subSystemID
         if (noteList.findBySubSystemID(subSystemID) == null) {
