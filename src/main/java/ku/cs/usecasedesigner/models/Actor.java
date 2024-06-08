@@ -5,6 +5,7 @@ public class Actor {
     private String actorName;
     private String alias;
     private String description;
+    private String note;
     private int positionID;
 
     public Actor(int actorID, String actorName, int positionID) {
@@ -12,14 +13,16 @@ public class Actor {
         this.actorName = actorName;
         this.alias = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
+        this.note = "!@#$%^&*()_+";
         this.positionID = positionID;
     }
 
-    public Actor(int actorID, String actorName, String alias, String description, int positionID) {
+    public Actor(int actorID, String actorName, String alias, String description, String note, int positionID) {
         this.actorID = actorID;
         this.actorName = actorName;
         this.alias = alias;
         this.description = description;
+        this.note = note;
         this.positionID = positionID;
     }
 
@@ -44,6 +47,10 @@ public class Actor {
         return description;
     }
 
+    public String getNote() {
+        return note;
+    }
+
     public void setActorID(int actorID) {
         this.actorID = actorID;
     }
@@ -62,5 +69,9 @@ public class Actor {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

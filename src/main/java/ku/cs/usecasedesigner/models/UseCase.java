@@ -7,15 +7,17 @@ public class UseCase {
     private String preCondition;
     private String description;
     private String postCondition;
+    private String note;
     private int positionID;
 
-    public UseCase(int useCaseID, String useCaseName, String actorID, String preCondition, String description, String postCondition, int positionID) {
+    public UseCase(int useCaseID, String useCaseName, String actorID, String preCondition, String description, String postCondition, String note, int positionID) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
         this.actorID = actorID;
         this.preCondition = preCondition;
         this.description = description;
         this.postCondition = postCondition;
+        this.note = note;
         this.positionID = positionID;
     }
 
@@ -26,6 +28,7 @@ public class UseCase {
         this.preCondition = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
         this.postCondition = "!@#$%^&*()_+";
+        this.note = "!@#$%^&*()_+";
         this.positionID = positionID;
     }
 
@@ -51,6 +54,10 @@ public class UseCase {
 
     public String getPostCondition() {
         return postCondition;
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public int getPositionID() {
@@ -79,6 +86,10 @@ public class UseCase {
 
     public void setPostCondition(String postCondition) {
         this.postCondition = postCondition;
+    }
+
+    public void setNote (String note) {
+        this.note = note;
     }
 
     public void setPositionID(int positionID) {

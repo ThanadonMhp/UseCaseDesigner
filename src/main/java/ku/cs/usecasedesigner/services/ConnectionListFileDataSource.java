@@ -55,7 +55,8 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                             Double.parseDouble(data[4].trim()), // startY
                             Double.parseDouble(data[5].trim()), // endX
                             Double.parseDouble(data[6].trim()), // endY
-                            Integer.parseInt(data[7].trim()) // subsystemID
+                            data[7].trim(), // note
+                            Integer.parseInt(data[8].trim()) // subsystemID
                     );
                     connectionList.addConnection(connection);
                 }
@@ -202,6 +203,7 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 + connection.getStartY() + ","
                 + connection.getEndX() + ","
                 + connection.getEndY() + ","
+                + connection.getNote() + ","
                 + connection.getSubSystemID();
     }
 }

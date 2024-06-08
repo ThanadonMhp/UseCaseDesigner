@@ -55,7 +55,8 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                             data[4], // preCondition
                             data[5], // description
                             data[6], // postCondition
-                            Integer.parseInt(data[7]) // positionID
+                            data[7], // note
+                            Integer.parseInt(data[8]) // positionID
                     );
                     useCaseList.addUseCase(useCase);
                 }

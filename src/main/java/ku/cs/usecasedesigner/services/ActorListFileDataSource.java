@@ -53,7 +53,8 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
                             data[2].trim(), // actorName
                             data[3].trim(), // alias
                             data[4].trim(), // description
-                            Integer.parseInt(data[5].trim()) // positionID
+                            data[5].trim(), // note
+                            Integer.parseInt(data[6].trim()) // positionID
                     );
                     actorList.addActor(actor);
                 }
@@ -199,6 +200,7 @@ public class ActorListFileDataSource implements DataSource<ActorList>, ManageDat
                 + actor.getActorName() + ","
                 + actor.getAlias() + ","
                 + actor.getDescription() + ","
+                + actor.getNote() + ","
                 + actor.getPositionID();
     }
 }

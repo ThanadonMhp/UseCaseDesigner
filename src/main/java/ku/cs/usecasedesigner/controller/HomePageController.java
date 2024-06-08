@@ -160,6 +160,7 @@ public class HomePageController {
                         preCondition,  // preCondition
                         description,  // description
                         actorAction, // actorAction
+                        "!@#$%^&*()_+",  // note
                         positionList.findLastPositionId() + 1); // positionID
         useCaseList.addUseCase(useCase);
 
@@ -605,6 +606,7 @@ public class HomePageController {
                 startY,  // startY
                 endX,  // endX
                 endY,  // endY
+                "!@#$%^&*()_+",  // description
                 subSystemID  // subSystemID
         );
         connectionList.addConnection(connection);
