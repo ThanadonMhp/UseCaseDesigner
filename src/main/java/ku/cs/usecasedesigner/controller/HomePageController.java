@@ -1208,6 +1208,8 @@ public class HomePageController {
             noteAdded = true;
         }
 
+        designPane.getChildren().removeIf(node -> node instanceof Circle && ((Circle) node).getFill().equals(Color.RED));
+
         // save Pane to image
         WritableImage image = designPane.snapshot(new SnapshotParameters(), null);
 
@@ -1248,6 +1250,9 @@ public class HomePageController {
             designPane.getChildren().add(note);
         }
 
+        // remove all red circles in the designPane
+        designPane.getChildren().removeIf(node -> node instanceof Circle && ((Circle) node).getFill().equals(Color.RED));
+
         // save Pane to image
         WritableImage image = designPane.snapshot(new SnapshotParameters(), null);
 
@@ -1266,6 +1271,8 @@ public class HomePageController {
                 note.setLayoutY(10);
                 designPane.getChildren().add(note);
             }
+            // remove all red circles in the designPane
+            designPane.getChildren().removeIf(node -> node instanceof Circle && ((Circle) node).getFill().equals(Color.RED));
 
             // save Pane to image
             WritableImage imageTemp = designPane.snapshot(new SnapshotParameters(), null);
