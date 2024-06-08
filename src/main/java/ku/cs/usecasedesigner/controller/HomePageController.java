@@ -624,7 +624,7 @@ public class HomePageController {
 
     public void actorDragDetected(MouseEvent mouseEvent) {
         System.out.println("Actor Drag Detected");
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        Dragboard dragboard = actorImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("Actor");
         dragboard.setContent(clipboardContent);
@@ -632,7 +632,7 @@ public class HomePageController {
 
     public void systemDragDetected(MouseEvent mouseEvent) {
         System.out.println("System Drag Detected");
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        Dragboard dragboard = systemImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("System");
         dragboard.setContent(clipboardContent);
@@ -640,7 +640,7 @@ public class HomePageController {
 
     public void lineDragDetected(MouseEvent mouseEvent) {
         System.out.println("Line Drag Detected");
-        Dragboard dragboard = ovalImageView.startDragAndDrop(TransferMode.ANY);
+        Dragboard dragboard = lineImageView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString("Line");
         dragboard.setContent(clipboardContent);
