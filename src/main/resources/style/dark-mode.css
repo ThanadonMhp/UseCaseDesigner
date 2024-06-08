@@ -132,7 +132,7 @@
     -fx-background-position: fixed;
     -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
 }
-#labelTextField{
+#labelTextField, #aliasTextField {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 100;
 }

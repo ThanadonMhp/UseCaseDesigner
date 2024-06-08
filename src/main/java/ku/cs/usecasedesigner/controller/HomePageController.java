@@ -14,6 +14,8 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 
 import ku.cs.fxrouter.FXRouter;
@@ -233,11 +235,12 @@ public class HomePageController {
         });
     }
 
-    public void addToActorList(double width, double height, double layoutX, double layoutY, String label, int actorID){
+    public void addToActorList(double width, double height, double layoutX, double layoutY, String label, String note, int actorID){
         // Add the actor to actorList
         Actor actor = new Actor
                 (actorID, // actorID
                         label,  // actorName
+                        note,  // note
                         positionList.findLastPositionId() + 1); // positionID
         actorList.addActor(actor);
 
@@ -329,7 +332,8 @@ public class HomePageController {
         return objects;
     }
 
-    public void drawLine(double startX, double startY, double endX, double endY , int connectionID, String type) {
+    public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
+                         String arrowHead, String lineType, String arrowTail) {
         // Create a new line
         Line line = new Line();
         line.setStartX(startX);
@@ -338,82 +342,35 @@ public class HomePageController {
         line.setEndY(endY);
         line.setStrokeWidth(1);
 
-        // set the line type
-        if (Objects.equals(type, "Association")) {
-            line.setStyle("-fx-stroke: black;");
-            // Create the start and end points of the line
-            Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-            Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-
-            // Add mouse event handlers for dragging
-            startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, "Association"));
-            endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, "Association"));
-
-            // Add mouse event handlers for releasing
-            startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Association"));
-            endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Association"));
-
-            designPane.getChildren().addAll(startPoint, endPoint, line);
-
-        } else if (Objects.equals(type, "Include")) {
+        if (Objects.equals(lineType, "dash")){
             line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
-
-            // Create the start and end points of the line
-            Polygon arrow = createDraggableArrow(line, false);
-            Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-            Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-
-            // Add mouse event handlers for dragging
-            startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, "Include"));
-            endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, "Include"));
-
-            // Add mouse event handlers for releasing
-            startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Include"));
-            endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Include"));
-
-            // Add label to the line
-            Label label = createLabel("<<include>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-
-            designPane.getChildren().addAll(arrow, startPoint, endPoint, line, label);
-
-        } else if (Objects.equals(type, "Extend")) {
-            line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
-            // add arrow to start point of line and group the arrow to single object
-            Polygon arrow = createDraggableArrow(line, true);
-            Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-            Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-
-            // Add mouse event handlers for dragging
-            startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, "Extend"));
-            endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, "Extend"));
-
-            // Add mouse event handlers for releasing
-            startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Extend"));
-            endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Extend"));
-
-            // Add label to the line
-            Label label = createLabel("<<extend>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-
-            designPane.getChildren().addAll(arrow, startPoint, endPoint, line, label);
-
-        } else if (Objects.equals(type, "Generalization")) {
-            // add arrow to start point of line and group the arrow to single object
-            Polygon arrow = createDraggableArrow(line, false);
-            arrow.setFill(Color.TRANSPARENT);
-            arrow.setStroke(Color.BLACK);
-            Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-            Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-
-            // Add mouse event handlers for dragging
-            startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, "Generalization"));
-            endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, "Generalization"));
-
-            // Add mouse event handlers for releasing
-            startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
-            endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, "Generalization"));
-
-            designPane.getChildren().addAll(arrow, startPoint, endPoint, line);
         }
+
+        // Create Start and End points of the line
+        Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
+        Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
+
+        // Add arrow to the start and end points of the line
+        Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
+        Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
+
+        // Add mouse Event handlers for dragging
+        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail));
+        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail));
+
+        // Add mouse Event handlers for releasing
+        startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
+        endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
+
+        // Add label to the line
+        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
+            addLabel.setVisible(false);
+        }
+
+
+        // Add the line to the designPane
+        designPane.getChildren().addAll(startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon, addLabel, line);
 
         // make line selectable
         makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionID);
@@ -440,114 +397,53 @@ public class HomePageController {
         });
     }
 
-    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint, String type) {
-        if (Objects.equals(type, "Association")) {
-            Circle point = (Circle) event.getSource();
-            if (startPoint) {
-                line.setStartX(event.getX());
-                line.setStartY(event.getY());
-            } else {
-                line.setEndX(event.getX());
-                line.setEndY(event.getY());
-            }
-            point.setCenterX(event.getX());
-            point.setCenterY(event.getY());
-
-        } else if (Objects.equals(type, "Include") || Objects.equals(type, "Generalization")) {
-            // remove the label
-            for (Node label : designPane.getChildren()) {
-                if (label instanceof Label) {
-                    if (label.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && label.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
-                        designPane.getChildren().remove(label);
-                    }
+    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint, String label, String arrowHead, String arrowTail) {
+        // remove the arrowHead and arrowTail
+        for (Node arrow : designPane.getChildren()) {
+            if (arrow instanceof Label) {
+                if (arrow.getLayoutX() == line.getStartX() - 5 && arrow.getLayoutY() == line.getStartY() - 5) {
+                    designPane.getChildren().remove(arrow);
+                } else if (arrow.getLayoutX() == line.getEndX() - 5 && arrow.getLayoutY() == line.getEndY() - 5) {
+                    designPane.getChildren().remove(arrow);
                 }
             }
-
-            if (startPoint) {
-                line.setStartX(event.getX());
-                line.setStartY(event.getY());
-
-                Circle point = (Circle) event.getSource();
-                point.setCenterX(event.getX());
-                point.setCenterY(event.getY());
-
-            } else {
-                // remove the arrow
-                for (Node arrow : designPane.getChildren()) {
-                    if (arrow instanceof Polygon) {
-                        if (arrow.getLayoutX() == line.getEndX() - 5 && arrow.getLayoutY() == line.getEndY() - 5) {
-                            designPane.getChildren().remove(arrow);
-                        }
-                    }
-                }
-
-                line.setEndX(event.getX());
-                line.setEndY(event.getY());
-
-                Circle point = (Circle) event.getSource();
-                point.setCenterX(event.getX());
-                point.setCenterY(event.getY());
-
-            }
-        } else if (Objects.equals(type, "Extend")) {
-            // remove the label
-            for (Node label : designPane.getChildren()) {
-                if (label instanceof Label) {
-                    if (label.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && label.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
-                        designPane.getChildren().remove(label);
-                    }
-                }
-            }
-
-            if (startPoint) {
-                // remove the arrow
-                for (Node arrow : designPane.getChildren()) {
-                    if (arrow instanceof Polygon) {
-                        if (arrow.getLayoutX() == line.getStartX() - 5 && arrow.getLayoutY() == line.getStartY() - 5) {
-                            designPane.getChildren().remove(arrow);
-                        }
-                    }
-                }
-
-                line.setStartX(event.getX());
-                line.setStartY(event.getY());
-
-                Circle point = (Circle) event.getSource();
-                point.setCenterX(event.getX());
-                point.setCenterY(event.getY());
-
-            } else {
-                line.setEndX(event.getX());
-                line.setEndY(event.getY());
-
-                Circle point = (Circle) event.getSource();
-                point.setCenterX(event.getX());
-                point.setCenterY(event.getY());
-
-            }
-        } else {
-            System.out.println("Invalid type");
         }
+
+        // remove the label
+        for (Node labelNode : designPane.getChildren()) {
+            if (labelNode instanceof Label) {
+                if (labelNode.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && labelNode.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
+                    designPane.getChildren().remove(labelNode);
+                }
+            }
+        }
+
+        Circle point = (Circle) event.getSource();
+        if (startPoint) {
+            line.setStartX(event.getX());
+            line.setStartY(event.getY());
+        } else {
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
+        }
+        point.setCenterX(event.getX());
+        point.setCenterY(event.getY());
+
     }
 
-    public void handlePointMouseReleased(MouseEvent event, Line line, int connectionID, String type) {
-        if (Objects.equals(type, "Include")) {
-            // add arrow to start point of line
-            Polygon arrow = createDraggableArrow(line, false);
-            // add label to the middle of the line
-            Label label = createLabel("<<include>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-            designPane.getChildren().addAll(arrow, label);
-        } else if (Objects.equals(type, "Extend")) {
-            // add arrow to start point of line
-            Polygon arrow = createDraggableArrow(line, true);
-            // add label to the middle of the line
-            Label label = createLabel("<<extend>>", (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-            designPane.getChildren().addAll(arrow, label);
-        } else if (Objects.equals(type, "Generalization")) {
-            // add arrow to start point of line
-            Polygon arrow = createDraggableArrow(line, false);
-            designPane.getChildren().addAll(arrow);
+    public void handlePointMouseReleased(MouseEvent event, Line line, int connectionID, String label, String arrowHead, String arrowTail) {
+        // Add the arrowHead and arrowTail
+        Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
+        Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
+
+        // Add the label
+        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
+            addLabel.setVisible(false);
         }
+
+        // Add the arrowHead and arrowTail to the designPane
+        designPane.getChildren().addAll(arrowHeadPolygon, arrowTailPolygon, addLabel);
 
         // Update the connection
         connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
@@ -562,32 +458,78 @@ public class HomePageController {
         return point;
     }
 
-    public Polygon createDraggableArrow(Line line, boolean head) {
-        Polygon arrow = new Polygon();
-        arrow.getPoints().addAll(new Double[]{
-                0.0, 0.0,
-                10.0, 5.0,
-                0.0, 10.0 });
-        arrow.setFill(Color.BLACK);
-        arrow.setDisable(true);
+    public Label createDraggableArrow(Line line, boolean head, String arrowType) {
+        // if arrowType is none set the arrow to invisible
+        if (Objects.equals(arrowType, "none")) {
+            Label arrow = new Label("!@#$%^&*()_+");
+            arrow.setDisable(true);
+            arrow.setVisible(false);
+            return arrow;
+        } else if (Objects.equals(arrowType, "close")){
+            if (head) {
+                Label arrow = new Label("⨞");
+                arrow.setLayoutX(line.getStartX() - 5);
+                arrow.setLayoutY(line.getStartY() - 5);
+                arrow.setDisable(true);
 
-        // get line start and start point
-        double tempStartX = line.getStartX();
-        double tempStartY = line.getStartY();
-        double tempEndX = line.getEndX();
-        double tempEndY = line.getEndY();
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
 
-        if (head) {
-            arrow.setRotate(Math.toDegrees(Math.atan2((tempEndY - tempStartY), (tempEndX - tempStartX))));
-            arrow.setLayoutX(tempStartX - 5);
-            arrow.setLayoutY(tempStartY - 5);
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle);
+
+                return arrow;
+            } else {
+                Label arrow = new Label("▷");
+                arrow.setLayoutX(line.getEndX() - 5);
+                arrow.setLayoutY(line.getEndY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle + 180);
+
+                return arrow;
+            }
+        } else if (Objects.equals(arrowType, "open")){
+            if (head) {
+                Label arrow = new Label(">");
+                arrow.setLayoutX(line.getStartX() - 5);
+                arrow.setLayoutY(line.getStartY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle);
+
+                return arrow;
+            } else {
+                Label arrow = new Label("<");
+                arrow.setLayoutX(line.getEndX() - 5);
+                arrow.setLayoutY(line.getEndY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle + 180);
+
+                return arrow;
+            }
         } else {
-            arrow.setRotate(Math.toDegrees(Math.atan2((tempEndX - tempStartX), (tempEndY - tempStartY))));
-            arrow.setLayoutX(tempEndX - 5);
-            arrow.setLayoutY(tempEndY - 5);
-        }
+            System.out.println("Invalid arrow type");
+            return null;
 
-        return arrow;
+        }
     }
 
     public Label createLabel(String text, double x, double y) {
@@ -598,18 +540,21 @@ public class HomePageController {
         return label;
     }
 
-    public void addToConnectionList(String type, double startX, double startY, double endX, double endY) {
+    public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
+                                    String arrowHead, String lineType, String arrowTail) {
         // Save the connection
         Connection connection = new Connection(
                 connectionList.findLastConnectionID() + 1,  // connectionID
-                type,  // connectionType
                 startX,  // startX
                 startY,  // startY
                 endX,  // endX
                 endY,  // endY
-                "!@#$%^&*()_+",  // description
-                subSystemID  // subSystemID
-        );
+                label,  // label
+                arrowHead,  // arrowHead
+                lineType,  // lineType
+                arrowTail,  // arrowTail
+                "!@#$%^&*()_+",  // note
+                subSystemID);  // subSystemID
         connectionList.addConnection(connection);
         saveProject();
     }
@@ -878,14 +823,14 @@ public class HomePageController {
                 objects.add(subsystemList.findLastSubSystemId() + 1);
                 FXRouter.popup("LabelPage",objects);
             } else if (dragEvent.getDragboard().getString().equals("Line")) {
-                addToConnectionList("Association", dragEvent.getX() - 45, dragEvent.getY() + 45 , dragEvent.getX() + 45, dragEvent.getY() - 45);
-                drawLine(dragEvent.getX() - 45, dragEvent.getY() + 45, dragEvent.getX() + 45, dragEvent.getY() - 45, connectionList.findLastConnectionID(), "Association");
+                addToConnectionList(dragEvent.getX() - 45, dragEvent.getY() + 45 , dragEvent.getX() + 45, dragEvent.getY() - 45, "Association", "none", "solid", "none");
+                drawLine(connectionList.findLastConnectionID(), dragEvent.getX() - 45, dragEvent.getY() + 45 , dragEvent.getX() + 45, dragEvent.getY() - 45, "Association", "none", "solid", "none");
             } else if (dragEvent.getDragboard().getString().equals("Existing Actor")) {
                 // draw the existing actor
                 Actor actor = actorList.findByActorId(existingActorID);
                 drawActor(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID(), positionList.findLastPositionId() + 1);
                 // save to actorList
-                addToActorList(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getActorID());
+                addToActorList(75.00, 75.00, dragEvent.getX() - 75, dragEvent.getY() - 75, actor.getActorName(), actor.getNote(), actor.getActorID());
                 saveProject();
                 loadProject();
             } else {
@@ -1030,13 +975,13 @@ public class HomePageController {
         // Recreate each connection
         connectionList.getConnectionList().forEach(connection -> {
             if (connection.getSubSystemID() == subSystemID) {
-                drawLine(connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getConnectionID(), connection.getConnectionType());
+                drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
             }
         });
 
         // Recreate each note to noteTextArea
         Note note = noteList.findBySubSystemID(subSystemID);
-        if (note != null) {
+        if ((note != null) && (!Objects.equals(note.getNote(), "!@#$%^&*()_+"))) {
             noteTextArea.setText(note.getNote());
         }
 
@@ -1169,13 +1114,13 @@ public class HomePageController {
             if (!noteTextArea.getText().isEmpty()) {
                 noteList.addNote(new Note(subSystemID, noteTextArea.getText()));
             } else {
-                noteList.addNote(new Note(subSystemID, "!@#$%^&*()"));
+                noteList.addNote(new Note(subSystemID, "!@#$%^&*()_+"));
             }
         } else {
             if (!noteTextArea.getText().isEmpty()) {
                 noteList.updateNoteBySubSystemID(subSystemID, noteTextArea.getText());
             } else {
-                noteList.updateNoteBySubSystemID(subSystemID, "!@#$%^&*()");
+                noteList.updateNoteBySubSystemID(subSystemID, "!@#$%^&*()_+");
             }
         }
 

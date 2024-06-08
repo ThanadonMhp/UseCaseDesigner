@@ -194,6 +194,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 + useCase.getPreCondition() + ","
                 + useCase.getDescription() + ","
                 + useCase.getPostCondition() + ","
+                + useCase.getNote() + ","
                 + useCase.getPositionID();
     }
 }

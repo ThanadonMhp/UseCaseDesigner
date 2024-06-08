@@ -8,12 +8,21 @@ public class Actor {
     private String note;
     private int positionID;
 
-    public Actor(int actorID, String actorName, int positionID) {
+    public Actor(int actorID, String actorName, String note, int positionID) {
         this.actorID = actorID;
         this.actorName = actorName;
         this.alias = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
-        this.note = "!@#$%^&*()_+";
+        this.note = note;
+        this.positionID = positionID;
+    }
+
+    public Actor(int actorID, String actorName, String alias, String note, int positionID) {
+        this.actorID = actorID;
+        this.actorName = actorName;
+        this.alias = alias;
+        this.description = "!@#$%^&*()_+";
+        this.note = note;
         this.positionID = positionID;
     }
 

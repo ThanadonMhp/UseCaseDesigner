@@ -50,13 +50,16 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 if (data[0].trim().equals("connection")) {
                     Connection connection = new Connection(
                             Integer.parseInt(data[1].trim()), // connectionID
-                            data[2].trim(), // connectionType
-                            Double.parseDouble(data[3].trim()), // startX
-                            Double.parseDouble(data[4].trim()), // startY
-                            Double.parseDouble(data[5].trim()), // endX
-                            Double.parseDouble(data[6].trim()), // endY
-                            data[7].trim(), // note
-                            Integer.parseInt(data[8].trim()) // subsystemID
+                            Double.parseDouble(data[2].trim()), // startX
+                            Double.parseDouble(data[3].trim()), // startY
+                            Double.parseDouble(data[4].trim()), // endX
+                            Double.parseDouble(data[5].trim()), // endY
+                            data[6].trim(), // label
+                            data[7].trim(), // arrowHead
+                            data[8].trim(), // lineType
+                            data[9].trim(), // arrowTail
+                            data[10].trim(), // note
+                            Integer.parseInt(data[11].trim()) // subSystemID
                     );
                     connectionList.addConnection(connection);
                 }
@@ -198,11 +201,14 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
     public String createLine(Connection connection) {
         return "connection,"
                 + connection.getConnectionID() + ","
-                + connection.getConnectionType() + ","
                 + connection.getStartX() + ","
                 + connection.getStartY() + ","
                 + connection.getEndX() + ","
                 + connection.getEndY() + ","
+                + connection.getLabel() + ","
+                + connection.getArrowHead() + ","
+                + connection.getLineType() + ","
+                + connection.getArrowTail() + ","
                 + connection.getNote() + ","
                 + connection.getSubSystemID();
     }

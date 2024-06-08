@@ -24,7 +24,7 @@ public class UseCasePageController {
     private TextField useCaseIDTextField, useCaseNameTextField, actorTextField, preConditionTextField, postConditionTextField;
 
     @FXML
-    private TextArea descriptionTextArea;
+    private TextArea descriptionTextArea, noteTextArea;
 
     @FXML
     private VBox actorActionVBox, systemActionVBox;
@@ -95,6 +95,10 @@ public class UseCasePageController {
             }
             if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+")) {
                 postConditionTextField.setText(useCase.getPostCondition());
+            }
+
+            if (!Objects.equals(useCase.getNote(), "!@#$%^&*()_+")) {
+                noteTextArea.setText(useCase.getNote());
             }
 
             // load useCaseDetail to the actorActionVBox and systemActionVBox
@@ -235,6 +239,13 @@ public class UseCasePageController {
             useCase.setPostCondition(postConditionTextField.getText());
         } else {
             useCase.setPostCondition("!@#$%^&*()_+");
+        }
+
+        // Set value for note
+        if (!noteTextArea.getText().isEmpty()) {
+            useCase.setNote(noteTextArea.getText());
+        } else {
+            useCase.setNote("!@#$%^&*()_+");
         }
 
         // Edit the useCase in the useCaseList

@@ -2,42 +2,33 @@ package ku.cs.usecasedesigner.models;
 
 public class Connection {
     private int connectionID;
-    private String connectionType;
     private double startX;
     private double startY;
     private double endX;
     private double endY;
+    private String label;
+    private String arrowHead;
+    private String lineType;
+    private String arrowTail;
     private String note;
     private int subSystemID;
 
-    public Connection(int connectionID, String connectionType, double startX, double startY, double endX, double endY) {
+    public Connection(int connectionID, double startX, double startY, double endX, double endY, String label, String arrowHead, String lineType, String arrowTail, String note, int subSystemID) {
         this.connectionID = connectionID;
-        this.connectionType = connectionType;
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
-        this.note = "!@#$%^&*()_+";
-        this.subSystemID = 0;
-    }
-
-    public Connection(int connectionID, String connectionType, double startX, double startY, double endX, double endY, String note, int subSystemID) {
-        this.connectionID = connectionID;
-        this.connectionType = connectionType;
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+        this.label = label;
+        this.arrowHead = arrowHead;
+        this.lineType = lineType;
+        this.arrowTail = arrowTail;
         this.note = note;
         this.subSystemID = subSystemID;
     }
 
     public int getConnectionID() {
         return connectionID;
-    }
-
-    public String getConnectionType() {
-        return connectionType;
     }
 
     public double getStartX() {
@@ -56,12 +47,33 @@ public class Connection {
         return endY;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public String getArrowHead() {
+        return arrowHead;
+    }
+
+    public String getLineType() {
+        return lineType;
+    }
+
+    public String getArrowTail() {
+        return arrowTail;
+    }
+
+
     public String getNote() {
         return note;
     }
 
     public int getSubSystemID() {
         return subSystemID;
+    }
+
+    public void setConnectionID(int connectionID) {
+        this.connectionID = connectionID;
     }
 
     public void setStartX(double startX) {
@@ -80,15 +92,27 @@ public class Connection {
         this.endY = endY;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setArrowHead(String arrowHead) {
+        this.arrowHead = arrowHead;
+    }
+
+    public void setLineType(String lineType) {
+        this.lineType = lineType;
+    }
+
+    public void setArrowTail(String arrowTail) {
+        this.arrowTail = arrowTail;
+    }
+
     public void setSubSystemID(int subSystemID) {
         this.subSystemID = subSystemID;
     }
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public void setConnectionType(String connectionType) {
-        this.connectionType = connectionType;
     }
 }

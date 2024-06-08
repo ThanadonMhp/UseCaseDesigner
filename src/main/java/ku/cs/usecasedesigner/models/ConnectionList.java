@@ -128,12 +128,4 @@ public class ConnectionList {
         }
         return null;
     }
-
-    public void updateConnectionType(int id, String connectionType) {
-        for (Connection connection : connectionList) {
-            if (connection.getConnectionID() == id) {
-                connection.setConnectionType(connectionType);
-            }
-        }
-    }
 }

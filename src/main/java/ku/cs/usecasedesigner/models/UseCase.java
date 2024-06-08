@@ -21,14 +21,14 @@ public class UseCase {
         this.positionID = positionID;
     }
 
-    public UseCase(int useCaseID, String useCaseName, int positionID) {
+    public UseCase(int useCaseID, String useCaseName, String note, int positionID) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
         this.actorID = "0";
         this.preCondition = "!@#$%^&*()_+";
         this.description = "!@#$%^&*()_+";
         this.postCondition = "!@#$%^&*()_+";
-        this.note = "!@#$%^&*()_+";
+        this.note = note;
         this.positionID = positionID;
     }
 

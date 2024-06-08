@@ -3,6 +3,8 @@ package ku.cs.usecasedesigner.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -23,10 +25,16 @@ public class LabelPageController {
     private int editID, subSystemID;
 
     @FXML
-    private Text errorText, labelText;
+    private Text errorText;
 
     @FXML
-    private TextField labelTextField;
+    private Label labelText, aliasLabel;
+
+    @FXML
+    private TextField labelTextField, aliasTextField;
+
+    @FXML
+    private TextArea noteTextArea;
 
     @FXML
     void initialize() {
@@ -39,10 +47,19 @@ public class LabelPageController {
                 editType = (String) objects.get(3);
                 editID = (int) objects.get(4);
                 if (Objects.equals(editType, "actor")) {
+                    labelTextField.setPrefWidth(130.0);
+                    aliasLabel.setVisible(true);
+                    aliasTextField.setVisible(true);
                     DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
                     ActorList actorList = actorListDataSource.readData();
                     Actor actor = actorList.findByPositionId(editID);
                     labelTextField.setText(actor.getActorName());
+                    if (!Objects.equals(actor.getNote(), "!@#$%^&*()_+")) {
+                        noteTextArea.setText(actor.getNote());
+                    }
+                    if (!Objects.equals(actor.getAlias(), "!@#$%^&*()_+")) {
+                        aliasTextField.setText(actor.getAlias());
+                    }
                     // find position of actor
                     DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
                     PositionList positionList = positionListDataSource.readData();
@@ -53,21 +70,40 @@ public class LabelPageController {
                     SubSystemList subSystemList = subSystemListDataSource.readData();
                     SubSystem subSystem = subSystemList.findBySubSystemId(editID);
                     labelTextField.setText(subSystem.getSubSystemName());
+                    // load note from noteList
+                    DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+                    NoteList noteList = noteListDataSource.readData();
+                    Note note = noteList.findBySubSystemID(editID);
+                    if (!Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
+                        noteTextArea.setText(note.getNote());
+                    }
                 }
-                labelText.setText("Edit " + editType + " name :");
             } else {
                 width = (double) objects.get(3);
                 height = (double) objects.get(4);
                 layoutX = (double) objects.get(5);
                 layoutY = (double) objects.get(6);
                 subSystemID = (int) objects.get(7);
-                labelText.setText("Enter " + type + " name :");
+
+                if (Objects.equals(type, "actor")) {
+                    labelTextField.setPrefWidth(130.0);
+                    aliasLabel.setVisible(true);
+                    aliasTextField.setVisible(true);
+                }
             }
 
         }
     }
 
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
+        String note = noteTextArea.getText();
+        if (noteTextArea.getText().isEmpty()) {
+            note = "!@#$%^&*()_+";
+        }
+        String alias = aliasTextField.getText();
+        if (aliasLabel.getText().isEmpty()) {
+            alias = "!@#$%^&*()_+";
+        }
         if (labelTextField.getText().isEmpty()) {
             errorText.setText("Please enter a label.");
         } else {
@@ -100,6 +136,8 @@ public class LabelPageController {
                         Actor actor = new Actor(
                                 actorList.findLastActorId() + 1,
                                 label,
+                                alias,
+                                note,
                                 position.getPositionID()
                         );
                         actorList.addActor(actor);
@@ -111,6 +149,7 @@ public class LabelPageController {
                         UseCase useCase = new UseCase(
                                 useCaseList.findLastUseCaseId() + 1,
                                 label,
+                                note,
                                 position.getPositionID()
                         );
                         useCaseList.addUseCase(useCase);
@@ -148,6 +187,16 @@ public class LabelPageController {
                         );
                         subSystemList.addSubSystem(subSystem);
                         subSystemListDataSource.writeData(subSystemList);
+
+                        // add note to noteList
+                        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+                        NoteList noteList = noteListDataSource.readData();
+                        Note noteListData = new Note(
+                                subSystem.getSubSystemID(),
+                                note
+                        );
+                        noteList.addNote(noteListData);
+                        noteListDataSource.writeData(noteList);
                     }
                 }
 
@@ -157,6 +206,8 @@ public class LabelPageController {
                     ActorList actorList = actorListDataSource.readData();
                     Actor actor = actorList.findByPositionId(editID);
                     actor.setActorName(label);
+                    actor.setAlias(alias);
+                    actor.setNote(note);
                     actorListDataSource.writeData(actorList);
                 } else if (Objects.equals(editType, "subSystem")) {
                     // check if the subSystem name is already exist
@@ -174,6 +225,13 @@ public class LabelPageController {
                         errorText.setText("SubSystem name already exist.");
                         return;
                     }
+
+                    // load note from noteList
+                    DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+                    NoteList noteList = noteListDataSource.readData();
+                    Note noteListData = noteList.findBySubSystemID(editID);
+                    noteListData.setNote(note);
+                    noteListDataSource.writeData(noteList);
                 }
             }
 
