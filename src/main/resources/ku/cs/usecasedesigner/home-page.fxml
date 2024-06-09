@@ -37,7 +37,7 @@
             <MenuItem fx:id="preferenceMenuItem" mnemonicParsing="false" onAction="#handlePreferenceMenuItem" text="Preference" />
           </items>
         </Menu>
-        <Menu disable="true" mnemonicParsing="false" text="Edit">
+        <Menu disable="true" mnemonicParsing="false" text="Edit" visible="false">
           <items>
             <MenuItem mnemonicParsing="false" text="Undo" />
             <MenuItem mnemonicParsing="false" text="Redo" />
@@ -51,9 +51,9 @@
             <MenuItem mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
-        <Menu disable="true" mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem fx:id="manualMenu" mnemonicParsing="false" onAction="#handleManualMenu" text="Manual" />
           </items>
         </Menu>
       </menus>

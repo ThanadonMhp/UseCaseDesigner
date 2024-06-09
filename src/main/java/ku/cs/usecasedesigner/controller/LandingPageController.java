@@ -5,10 +5,14 @@ import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.usecasedesigner.models.PreferenceList;
+import ku.cs.usecasedesigner.services.DataSource;
+import ku.cs.usecasedesigner.services.PreferenceListFileDataSource;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LandingPageController {
     public void handleOpenButton(ActionEvent actionEvent) throws IOException {
@@ -30,6 +34,21 @@ public class LandingPageController {
 
             // Get the directory from the file path
             String directory = file.getParent();
+
+            // load preferenceList
+            PreferenceList preferenceList = new PreferenceList();
+            DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
+            preferenceList = preferenceListDataSource.readData(); // Read the PreferenceList from the CSV file
+            preferenceList.getPreferenceList().forEach(preference -> {
+                String theme  = preference.getTheme();
+                if (Objects.equals(theme, "Light")) {
+                    FXRouter.setTheme(1);
+                    System.out.println("light");
+                } else if (Objects.equals(theme, "Dark")) {
+                    FXRouter.setTheme(2);
+                    System.out.println("dark");
+                }
+            });
 
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();

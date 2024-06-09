@@ -2,13 +2,7 @@
     src: url('font/Roboto-Thin.ttf');
 }
 
-.label {
-    -fx-font-family: "Roboto";
-    -fx-text-fill: #ffffff;
-}
-
-
-#text {
+.label, #lightThemeRadioButton, #darkThemeRadioButton, #text, #labelTextField, #aliasTextField {
     -fx-font-family: "Roboto";
     -fx-text-fill: #ffffff;
 }
@@ -18,6 +12,10 @@
 }
 
 #ComponentAnchor {
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+
+.menu, .menu-item {
     -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
 }
 

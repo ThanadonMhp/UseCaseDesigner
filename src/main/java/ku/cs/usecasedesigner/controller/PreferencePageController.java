@@ -98,11 +98,10 @@ public class PreferencePageController {
         // Save the preference to the file
         PreferenceList preferenceList = new PreferenceList();
         DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
-        Preference preference = new Preference(strokeWidth, font, fontSize, theme);
+        Preference preference = new Preference(theme);
         preferenceList.addPreference(preference);
 
         preferenceListDataSource.writeData(preferenceList);
-
     }
 
     @FXML
@@ -120,43 +119,48 @@ public class PreferencePageController {
         String theme = selectedThemeRadioButton.getText();
         String font = fontComboBox.getValue();
 
-        if (font == null || font.isBlank()) {
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Please select a font.");
-            alert.show();
-            return;
-        }
+//        if (font == null || font.isBlank()) {
+//            alert.setAlertType(Alert.AlertType.WARNING);
+//            alert.setContentText("Please select a font.");
+//            alert.show();
+//            return;
+//        }
+//
+//        String sizeValue = sizeComboBox.getValue();
+//
+//        if (sizeValue == null || sizeValue.isBlank()) {
+//            alert.setAlertType(Alert.AlertType.WARNING);
+//            alert.setContentText("Please select a font size.");
+//            alert.show();
+//            return; // Exit the method if no size is selected
+//        }
+//
+//        int size;
+//        try {
+//            size = Integer.parseInt(sizeValue);
+//
+//
+//            if (size <= 0) {
+//                alert.setAlertType(Alert.AlertType.WARNING);
+//                alert.setContentText("Please enter a valid font size greater than 0.");
+//                alert.show();
+//                return;
+//            }
+//        } catch (NumberFormatException e) {
+//            alert.setAlertType(Alert.AlertType.WARNING);
+//            alert.setContentText("Please enter a valid number for the font size.");
+//            alert.show();
+//            return;
+//        }
 
-        String sizeValue = sizeComboBox.getValue();
+        savePreference(1, "Arial", 12, theme);
+        // Go back to the home page
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(subSystemID);
 
-        if (sizeValue == null || sizeValue.isBlank()) {
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Please select a font size.");
-            alert.show();
-            return; // Exit the method if no size is selected
-        }
-
-        int size;
-        try {
-            size = Integer.parseInt(sizeValue);
-
-
-            if (size <= 0) {
-                alert.setAlertType(Alert.AlertType.WARNING);
-                alert.setContentText("Please enter a valid font size greater than 0.");
-                alert.show();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Please enter a valid number for the font size.");
-            alert.show();
-            return;
-        }
-
-
-        savePreference(1, font + " ", size, theme);
-        FXRouter.goTo("HomePage");
+        FXRouter.goTo("HomePage",objects);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();

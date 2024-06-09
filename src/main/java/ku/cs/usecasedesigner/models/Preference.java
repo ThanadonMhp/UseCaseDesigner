@@ -9,6 +9,16 @@ public class Preference {
     private boolean underline;
     private String theme;
 
+    public Preference(String theme){
+        this.strokeWidth = 1;
+        this.font = "Arial";
+        this.fontSize = 12;
+        this.bold = false;
+        this.italic = false;
+        this.underline = false;
+        this.theme = theme;
+    }
+
     public Preference(int strokeWidth, String font, int fontSize, String theme) {
         this.strokeWidth = strokeWidth;
         this.font = font;
