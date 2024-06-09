@@ -15,3 +15,6 @@
 ## References
 - [Use Case Diagram Designer](https://online.visual-paradigm.com/diagrams/features/use-case-diagram-software/)
 - [Use Case Model Basics](https://devjourneys.com/2020/08/24/use-case-model-%E0%B9%80%E0%B8%9A%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%95%E0%B9%89%E0%B8%99/)
+- [JavaFX Explore: Make Any Node Draggable](https://www.youtube.com/watch?v=YaDkj-bqcj8&t=633s)
+- [Drag and Drop Project Demo](https://github.com/joelgraff/java_fx_node_link_demo)
+- [JavaFX Drag and Drop String Between Controls Internal](https://www.youtube.com/watch?v=3kutgRKTOI0)
