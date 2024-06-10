@@ -69,6 +69,15 @@ public class PositionList {
         }
     }
 
+    public void updateSize(int id, double newWidth, double newHeight) {
+        for (Position position : positionList) {
+            if (position.getPositionID() == id) {
+                position.setFitWidth(newWidth);
+                position.setFitHeight(newHeight);
+            }
+        }
+    }
+
     public void removePositionByID(int id) {
         for (Position position : positionList) {
             if (position.getPositionID() == id) {

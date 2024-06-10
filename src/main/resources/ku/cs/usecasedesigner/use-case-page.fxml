@@ -42,6 +42,6 @@
       <Button fx:id="addSystemActionButton" layoutX="900.0" layoutY="275.0" mnemonicParsing="false" onAction="#handleAddSystemActionButton" prefHeight="25.0" prefWidth="25.0" text="+" />
       <Button fx:id="postConditionChoiceButton" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="900.0" layoutY="600.0" mnemonicParsing="false" onAction="#handlePostConditionChoiceButton" prefHeight="25.0" prefWidth="25.0" text="v" />
       <Label layoutX="92.0" layoutY="640.0" text="Note" />
-      <TextArea fx:id="noteTextArea" layoutX="90.0" layoutY="660.0" prefHeight="50.0" prefWidth="835.0" />
+      <TextArea fx:id="noteTextArea" layoutX="90.0" layoutY="660.0" prefHeight="50.0" prefWidth="835.0" wrapText="true" />
    </children>
 </AnchorPane>
