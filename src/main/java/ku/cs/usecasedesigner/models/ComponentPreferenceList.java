@@ -21,12 +21,21 @@ public class ComponentPreferenceList {
         componentPreferenceList.remove(componentPreference);
     }
 
-    public ComponentPreference findByPositionID(int positionID) {
+    public ComponentPreference findByIDAndType (int ID, String type) {
         for (ComponentPreference componentPreference : componentPreferenceList) {
-            if (componentPreference.getPositionID() == positionID) {
+            if (componentPreference.getID() == ID && componentPreference.getType().equals(type)) {
                 return componentPreference;
             }
         }
         return null;
+    }
+
+    public boolean isPreferenceExist(int ID, String type) {
+        for (ComponentPreference componentPreference : componentPreferenceList) {
+            if (componentPreference.getID() == ID && componentPreference.getType().equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -70,7 +70,10 @@ public class HomePageController {
 
     private ActorList actorList = new ActorList();
     private ConnectionList connectionList = new ConnectionList();
+    private ComponentPreferenceList componentPreferenceList = new ComponentPreferenceList();
     private PositionList positionList = new PositionList();
+    private PreferenceList preferenceList = new PreferenceList();
+    private Preference preference;
     private NoteList noteList = new NoteList();
     private SubSystemList subsystemList = new SubSystemList();
     private UseCaseList useCaseList = new UseCaseList();
@@ -125,6 +128,18 @@ public class HomePageController {
         Label actorActionLabel = new Label(actorAction);
         actorActionLabel.setMaxSize(0, 0);
         actorActionLabel.setVisible(false);
+
+        // find component preference
+        if (componentPreferenceList.isPreferenceExist(positionID, "useCase")) {
+            ComponentPreference componentPreference = componentPreferenceList.findByIDAndType(positionID, "useCase");
+            useCaseName.setTextFill(componentPreference.getFontColor());
+            ellipse.setStroke(componentPreference.getStrokeColor());
+            ellipse.setStrokeWidth(componentPreference.getStrokeWidth());
+        } else {
+            useCaseName.setTextFill(preference.getFontColor());
+            ellipse.setStroke(preference.getStrokeColor());
+            ellipse.setStrokeWidth(preference.getStrokeWidth());
+        }
 
         // Add an oval and label to StackPane
         StackPane stackPane = new StackPane();
@@ -206,9 +221,21 @@ public class HomePageController {
         Label type = new Label("actor");
         type.setVisible(false);
 
+        // Add label to the actor
+        Label actorName = new Label(label);
+
+        // find component preference
+        if (componentPreferenceList.isPreferenceExist(positionID, "actor")) {
+            ComponentPreference componentPreference = componentPreferenceList.findByIDAndType(positionID, "actor");
+            // set color of actorName
+            actorName.setTextFill(componentPreference.getFontColor());
+        } else {
+            actorName.setTextFill(preference.getFontColor());
+        }
+
         // Add an actor and label to VBox
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(imageView, type, new Label(label));
+        vbox.getChildren().addAll(imageView, type, actorName);
         vbox.setAlignment(Pos.CENTER);
         vbox.setLayoutX(layoutX);
         vbox.setLayoutY(layoutY);
@@ -272,15 +299,31 @@ public class HomePageController {
         Rectangle rectangle = new Rectangle();
         rectangle.setWidth(width);
         rectangle.setHeight(height);
-        rectangle.setStyle("-fx-fill: transparent; -fx-stroke: black;");
+        rectangle.setFill(Color.TRANSPARENT);
 
         // Add hidden label to the system
         Label type = new Label("subSystem");
         type.setVisible(false);
 
+        // Add label to the system
+        Label subSystemName = new Label(label);
+
+        // find component preference
+        if (componentPreferenceList.isPreferenceExist(positionID, "subSystem")) {
+            ComponentPreference componentPreference = componentPreferenceList.findByIDAndType(positionID, "subSystem");
+            // set color of type
+            subSystemName.setTextFill(componentPreference.getFontColor());
+            rectangle.setStroke(componentPreference.getStrokeColor());
+            rectangle.setStrokeWidth(componentPreference.getStrokeWidth());
+        } else {
+            subSystemName.setTextFill(preference.getFontColor());
+            rectangle.setStroke(preference.getStrokeColor());
+            rectangle.setStrokeWidth(preference.getStrokeWidth());
+        }
+
         // Add an image and label to VBox
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(rectangle, type, new Label(label));
+        vbox.getChildren().addAll(rectangle, type, subSystemName);
         vbox.setAlignment(Pos.CENTER);
         vbox.setLayoutX(layoutX);
         vbox.setLayoutY(layoutY);
@@ -376,6 +419,17 @@ public class HomePageController {
             addLabel.setVisible(false);
         }
 
+        // find component preference
+        if (componentPreferenceList.isPreferenceExist(connectionID, "connection")) {
+            ComponentPreference componentPreference = componentPreferenceList.findByIDAndType(connectionID, "connection");
+            addLabel.setTextFill(componentPreference.getFontColor());
+            line.setStroke(componentPreference.getStrokeColor());
+            line.setStrokeWidth(componentPreference.getStrokeWidth());
+        } else {
+            addLabel.setTextFill(preference.getFontColor());
+            line.setStroke(preference.getStrokeColor());
+            line.setStrokeWidth(preference.getStrokeWidth());
+        }
 
         // Add the line to the designPane
         designPane.getChildren().addAll(startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon, addLabel, line);
@@ -621,6 +675,7 @@ public class HomePageController {
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
+        MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
 
         // Create a menu item for sending the component to a subsystem
@@ -635,6 +690,7 @@ public class HomePageController {
             contextMenu.getItems().add(sendToSubSystemItem);
         }
 
+        contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
 
         //set the action for resize menu item
@@ -677,6 +733,25 @@ public class HomePageController {
                     }
                 }
             });
+        });
+
+        // Set the action for properties menu item
+        propertiesItem.setOnAction(e -> {
+            System.out.println("Properties Clicked");
+            // Send the component details to the PropertyPage
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(subSystemID);
+            objects.add(type);
+            objects.add(ID);
+            saveProject();
+            try {
+                FXRouter.popup("PropertyPage", objects);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
         });
 
         // Set the action for delete menu item
@@ -944,6 +1019,21 @@ public class HomePageController {
         DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
         noteList = noteListDataSource.readData(); // Read the NoteList from the CSV file
 
+        // Load component preferences
+        DataSource<ComponentPreferenceList> componentPreferenceListDataSource = new ComponentPreferenceListFileDataSource(directory, projectName + ".csv");
+        componentPreferenceList = componentPreferenceListDataSource.readData(); // Read the ComponentPreferenceList from the CSV file
+
+        // Load preferences
+        DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
+        preferenceList = preferenceListDataSource.readData(); // Read the PreferenceList from the CSV file
+        preferenceList.getPreferenceList().forEach(tempPreference -> {
+            preference = tempPreference;
+        });
+        if (preference == null) {
+            preference = new Preference(1,Color.BLACK,Color.BLACK,"Light");
+            preferenceList.addPreference(preference);
+        }
+
         // load systemList
         useCaseSystemList = new UseCaseSystemList();
         UseCaseSystem useCaseSystem = new UseCaseSystem(useCaseSystemList.findLastUseCaseSystemId() + 1, projectName);
@@ -1117,11 +1207,13 @@ public class HomePageController {
         // Save the project components
         DataSource<ActorList> actorListDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ComponentPreferenceList> componentPreferenceListDataSource = new ComponentPreferenceListFileDataSource(directory, projectName + ".csv");
         DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
         DataSource<PositionList> positionListDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
         DataSource<SubSystemList> subsystemListDataSource = new SubSystemListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListFileDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseSystemList> useCaseSystemListDataSource = new UseCaseSystemListFileDataSource(directory, projectName + ".csv");
+        DataSource<PreferenceList> preferenceListFileDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
 
         // find note from subSystemID
         if (noteList.findBySubSystemID(subSystemID) == null) {
@@ -1141,11 +1233,13 @@ public class HomePageController {
         // Write data to CSV
         actorListDataSource.writeData(actorList);
         connectionListDataSource.writeData(connectionList);
+        componentPreferenceListDataSource.writeData(componentPreferenceList);
         noteListDataSource.writeData(noteList);
         positionListDataSource.writeData(positionList);
         subsystemListDataSource.writeData(subsystemList);
         useCaseListFileDataSource.writeData(useCaseList);
         useCaseSystemListDataSource.writeData(useCaseSystemList);
+        preferenceListFileDataSource.writeData(preferenceList);
 
         System.out.println("Project Saved");
     }

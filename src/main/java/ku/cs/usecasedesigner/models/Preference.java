@@ -1,41 +1,31 @@
 package ku.cs.usecasedesigner.models;
 
+import javafx.scene.paint.Color;
+
 public class Preference {
     private int strokeWidth;
-    private String font;
-    private int fontSize;
-    private boolean bold;
-    private boolean italic;
-    private boolean underline;
+    private Color strokeColor;
+    private Color fontColor;
     private String theme;
 
     public Preference(String theme){
         this.strokeWidth = 1;
-        this.font = "Arial";
-        this.fontSize = 12;
-        this.bold = false;
-        this.italic = false;
-        this.underline = false;
+        this.strokeColor = Color.BLACK;
+        this.fontColor = Color.BLACK;
         this.theme = theme;
     }
 
-    public Preference(int strokeWidth, String font, int fontSize, String theme) {
+    public Preference(int strokeWidth, String theme) {
         this.strokeWidth = strokeWidth;
-        this.font = font;
-        this.fontSize = fontSize;
-        this.bold = false;
-        this.italic = false;
-        this.underline = false;
+        this.strokeColor = Color.BLACK;
+        this.fontColor = Color.BLACK;
         this.theme = theme;
     }
 
-    public Preference(int strokeWidth, String font, int fontSize, boolean bold, boolean italic, boolean underline, String theme) {
+    public Preference(int strokeWidth, Color strokeColor, Color fontColor, String theme){
         this.strokeWidth = strokeWidth;
-        this.font = font;
-        this.fontSize = fontSize;
-        this.bold = bold;
-        this.italic = italic;
-        this.underline = underline;
+        this.strokeColor = strokeColor;
+        this.fontColor = fontColor;
         this.theme = theme;
     }
 
@@ -43,24 +33,13 @@ public class Preference {
         return strokeWidth;
     }
 
-    public String getFont() {
-        return font;
+
+    public Color getStrokeColor() {
+        return strokeColor;
     }
 
-    public int getFontSize() {
-        return fontSize;
-    }
-
-    public boolean isBold() {
-        return bold;
-    }
-
-    public boolean isItalic() {
-        return italic;
-    }
-
-    public boolean isUnderline() {
-        return underline;
+    public Color getFontColor() {
+        return fontColor;
     }
 
     public String getTheme() {
@@ -71,12 +50,12 @@ public class Preference {
         this.strokeWidth = strokeWidth;
     }
 
-    public void setFont(String font) {
-        this.font = font;
+    public void setStrokeColor(Color strokeColor) {
+        this.strokeColor = strokeColor;
     }
 
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
+    public void setFontColor(Color fontColor) {
+        this.fontColor = fontColor;
     }
 
     public void setTheme(String theme) {

@@ -1,5 +1,6 @@
 package ku.cs.usecasedesigner.services;
 
+import javafx.scene.paint.Color;
 import ku.cs.usecasedesigner.models.*;
 
 import java.io.*;
@@ -49,12 +50,9 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
                 if (data[0].trim().equals("preference")) {
                     Preference preference = new Preference(
                             Integer.parseInt(data[1].trim()), // strokeWidth
-                            data[2].trim(), // font
-                            Integer.parseInt(data[3].trim()), // fontSize
-                            Boolean.parseBoolean(data[4].trim()), // bold
-                            Boolean.parseBoolean(data[5].trim()), // italic
-                            Boolean.parseBoolean(data[6].trim()), // underline
-                            data[7].trim() // theme
+                            Color.web(data[2].trim()), // strokeColor
+                            Color.web(data[3].trim()), // fontColor
+                            data[4].trim() // theme
                     );
                     preferenceList.addPreference(preference);
                 }
@@ -82,6 +80,9 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
         // Import actorList from CSV
         ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
         ActorList actorList = actorListFileDataSource.readData();
+        // Import componentPreferenceList from CSV
+        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
+        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
         // Import connectionList from CSV
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
@@ -116,6 +117,13 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
             // Write actorList to file
             for (Actor actor : actorList.getActorList()) {
                 String line = actorListFileDataSource.createLine(actor);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            // Write componentPreferenceList to file
+            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
+                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -187,11 +195,8 @@ public class PreferenceListFileDataSource implements DataSource<PreferenceList>,
     public String createLine(Preference preference) {
         return "preference,"
                 + preference.getStrokeWidth() + ","
-                + preference.getFont() + ","
-                + preference.getFontSize() + ","
-                + preference.isBold() + ","
-                + preference.isItalic() + ","
-                + preference.isUnderline() + ","
+                + preference.getStrokeColor().toString() + ","
+                + preference.getFontColor().toString() + ","
                 + preference.getTheme();
     }
 }

@@ -1,5 +1,6 @@
 package ku.cs.usecasedesigner.services;
 
+import javafx.scene.paint.Color;
 import ku.cs.usecasedesigner.models.*;
 
 import java.io.*;
@@ -50,12 +51,11 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
                 if (data[0].trim().equals("componentPreference")) {
                     ComponentPreference componentPreference = new ComponentPreference(
                             Integer.parseInt(data[1].trim()), // strokeWidth
-                            data[2].trim(), // font
-                            Integer.parseInt(data[3].trim()), // fontSize
-                            Boolean.parseBoolean(data[4].trim()), // bold
-                            Boolean.parseBoolean(data[5].trim()), // italic
-                            Boolean.parseBoolean(data[6].trim()), // underline
-                            Integer.parseInt(data[7].trim()) // positionID
+                            Color.web(data[2].trim()), // strokeColor
+                            Color.web(data[3].trim()), // fontColor
+                            data[4].trim(), // type
+                            Integer.parseInt(data[5].trim()) // ID
+
                     );
                     componentPreferenceList.addComponentPreference(componentPreference);
                 }
@@ -198,11 +198,9 @@ public class ComponentPreferenceListFileDataSource implements DataSource<Compone
     public String createLine(ComponentPreference componentPreference) {
         return "componentPreference,"
                 + componentPreference.getStrokeWidth() + ","
-                + componentPreference.getFont() + ","
-                + componentPreference.getFontSize() + ","
-                + componentPreference.isBold() + ","
-                + componentPreference.isItalic() + ","
-                + componentPreference.isUnderline() + ","
-                + componentPreference.getPositionID();
+                + componentPreference.getStrokeColor().toString() + ","
+                + componentPreference.getFontColor().toString() + ","
+                + componentPreference.getType() + ","
+                + componentPreference.getID();
     }
 }

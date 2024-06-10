@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -21,14 +22,15 @@ public class PreferencePageController {
 
     public static boolean isLightMode = true;
 
+    private Preference preference;
+
+    private PreferenceList preferenceList;
+
     @FXML
     private ToggleGroup themeGroup;
 
     @FXML
     private RadioButton lightThemeRadioButton, darkThemeRadioButton;
-
-    @FXML
-    private ComboBox<String> fontComboBox, sizeComboBox;
 
     @FXML
     private Label SettingLabel, ThemeAppLabel, TextformatLabel;
@@ -38,6 +40,10 @@ public class PreferencePageController {
 
     @FXML
     private Button mode;
+
+    @FXML private ChoiceBox<Integer> strokeWidthChoiceBox, fontSizeChoiceBox;
+
+    @FXML private ColorPicker fontColorPicker, strokeColorPicker;
 
     private Alert alert;
     private String directory;
@@ -58,47 +64,43 @@ public class PreferencePageController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             subSystemID = (Integer) objects.get(2);
-            if (objects.size() == 4) {
-                int theme = (int) objects.get(3);
-                if (theme == 1) {
-                    lightThemeRadioButton.setSelected(true);
-                } else if (theme == 2) {
-                    darkThemeRadioButton.setSelected(true);
-                }
+            if (FXRouter.getTheme() == 1) {
+                lightThemeRadioButton.setSelected(true);
+            } else if (FXRouter.getTheme() == 2) {
+                darkThemeRadioButton.setSelected(true);
+            }
+
+            PreferenceListFileDataSource preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
+            preferenceList = preferenceListDataSource.readData();
+            preferenceList.getPreferenceList().forEach(tempPreference -> {
+                preference = tempPreference;
+            });
+
+            // Set the choice box
+            strokeWidthChoiceBox.getItems().addAll(1, 2, 3, 4, 5);
+            strokeWidthChoiceBox.setValue(preference.getStrokeWidth());
+
+            // Set color picker
+            strokeColorPicker.setValue(preference.getStrokeColor());
+
+            // Set the color picker to match the component preference color
+            fontColorPicker.setValue(preference.getFontColor());
+
+            // set the theme radio button
+            if (preference.getTheme().equals("Light")) {
+                lightThemeRadioButton.setSelected(true);
             } else {
-                if (FXRouter.getTheme() == 1) {
-                    lightThemeRadioButton.setSelected(true);
-                } else if (FXRouter.getTheme() == 2) {
-                    darkThemeRadioButton.setSelected(true);
-                }
+                darkThemeRadioButton.setSelected(true);
             }
         }
-        fontComboBox.setItems(FXCollections.observableArrayList("LINE Seed Sans TH App", "Arial", "Tahoma"));
-        sizeComboBox.setItems(FXCollections.observableArrayList("12", "14", "16"));
-        fontComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(fontComboBox);
-            if (newValue.equals("LINE Seed Sans TH App")) {
-                // Load and set LINE Seed Sans TH App font
-                Font font1 = Font.loadFont(getClass().getResourceAsStream("/style/font/LINESeedSansTH_A_Bd.ttf"), 14);
-                SettingLabel.setFont(font1);
-                ThemeAppLabel.setFont(font1);
-                TextformatLabel.setFont(font1);
-
-            } else {
-                // Set default font for other options (Arial, Tahoma)
-                SettingLabel.setFont(Font.getDefault());
-                ThemeAppLabel.setFont(Font.getDefault());
-                TextformatLabel.setFont(Font.getDefault());
-            }
-        });
     }
 
     // Save the preference to the file
-    public void savePreference(int strokeWidth, String font, int fontSize, String theme) {
+    public void savePreference(int strokeWidth, Color strokeColor, Color fontColor, String theme) {
         // Save the preference to the file
         PreferenceList preferenceList = new PreferenceList();
         DataSource<PreferenceList> preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
-        Preference preference = new Preference(theme);
+        Preference preference = new Preference(strokeWidth, strokeColor, fontColor, theme);
         preferenceList.addPreference(preference);
 
         preferenceListDataSource.writeData(preferenceList);
@@ -116,44 +118,16 @@ public class PreferencePageController {
             return; // Exit the method if no theme is selected
         }
 
-        String theme = selectedThemeRadioButton.getText();
-        String font = fontComboBox.getValue();
+        int strokeWidth = strokeWidthChoiceBox.getValue();
+        Color strokeColor = strokeColorPicker.getValue();
+        Color fontColor = fontColorPicker.getValue();
 
-//        if (font == null || font.isBlank()) {
-//            alert.setAlertType(Alert.AlertType.WARNING);
-//            alert.setContentText("Please select a font.");
-//            alert.show();
-//            return;
-//        }
-//
-//        String sizeValue = sizeComboBox.getValue();
-//
-//        if (sizeValue == null || sizeValue.isBlank()) {
-//            alert.setAlertType(Alert.AlertType.WARNING);
-//            alert.setContentText("Please select a font size.");
-//            alert.show();
-//            return; // Exit the method if no size is selected
-//        }
-//
-//        int size;
-//        try {
-//            size = Integer.parseInt(sizeValue);
-//
-//
-//            if (size <= 0) {
-//                alert.setAlertType(Alert.AlertType.WARNING);
-//                alert.setContentText("Please enter a valid font size greater than 0.");
-//                alert.show();
-//                return;
-//            }
-//        } catch (NumberFormatException e) {
-//            alert.setAlertType(Alert.AlertType.WARNING);
-//            alert.setContentText("Please enter a valid number for the font size.");
-//            alert.show();
-//            return;
-//        }
+        if (darkThemeRadioButton.isSelected()) {
+            savePreference(strokeWidth, strokeColor, fontColor, "Dark");
+        } else {
+            savePreference(strokeWidth, strokeColor, fontColor, "Light");
+        }
 
-        savePreference(1, "Arial", 12, theme);
         // Go back to the home page
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
@@ -172,6 +146,14 @@ public class PreferencePageController {
     @FXML
     private void handleLightThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(1);
+        PreferenceListFileDataSource preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
+        preferenceList = preferenceListDataSource.readData();
+        preferenceList.getPreferenceList().forEach(tempPreference -> {
+            preference = tempPreference;
+        });
+        preference.setTheme("Light");
+        // write the preference to the file
+        preferenceListDataSource.writeData(preferenceList);
 
         ArrayList<Object> objects = (ArrayList) FXRouter.getData();
         objects.add(1);
@@ -187,6 +169,14 @@ public class PreferencePageController {
     @FXML
     private void handleDarkThemeSelected(ActionEvent event) throws IOException {
         FXRouter.setTheme(2);
+        PreferenceListFileDataSource preferenceListDataSource = new PreferenceListFileDataSource(directory, projectName + ".csv");
+        preferenceList = preferenceListDataSource.readData();
+        preferenceList.getPreferenceList().forEach(tempPreference -> {
+            preference = tempPreference;
+        });
+        preference.setTheme("Dark");
+        // write the preference to the file
+        preferenceListDataSource.writeData(preferenceList);
 
         ArrayList<Object> objects = (ArrayList) FXRouter.getData();
         objects.add(2);

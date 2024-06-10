@@ -32,6 +32,7 @@ public class ProjectApplication extends Application {
         FXRouter.when("PreferencePage", packageStr + "preference-page.fxml", "Preference");
         FXRouter.when("UseCasePage", packageStr + "use-case-page.fxml", "Use Case Detail");
         FXRouter.when("ConnectionPage", packageStr + "connection-page.fxml", "Relation Type");
+        FXRouter.when("PropertyPage", packageStr + "property-page.fxml", "Properties");
     }
     public static void main(String[] args) {
         launch(args);

@@ -1,88 +1,60 @@
 package ku.cs.usecasedesigner.models;
 
+import javafx.scene.paint.Color;
+
 public class ComponentPreference {
     private int strokeWidth;
-    private String font;
-    private int fontSize;
-    private boolean bold;
-    private boolean italic;
-    private boolean underline;
-    private double positionID;
+    private Color strokeColor;
+    private Color fontColor;
+    private String type;
+    private int ID;
 
-    public ComponentPreference(int strokeWidth, String font, int fontSize, double positionID) {
+    public ComponentPreference(int strokeWidth, Color strokeColor, Color fontColor, String type, int ID){
         this.strokeWidth = strokeWidth;
-        this.font = font;
-        this.fontSize = fontSize;
-        this.bold = false;
-        this.italic = false;
-        this.underline = false;
-        this.positionID = positionID;
-    }
-
-    public ComponentPreference(int strokeWidth, String font, int fontSize, boolean bold, boolean italic, boolean underline, double positionID) {
-        this.strokeWidth = strokeWidth;
-        this.font = font;
-        this.fontSize = fontSize;
-        this.bold = bold;
-        this.italic = italic;
-        this.underline = underline;
-        this.positionID = positionID;
+        this.strokeColor = strokeColor;
+        this.fontColor = fontColor;
+        this.type = type;
+        this.ID = ID;
     }
 
     public int getStrokeWidth() {
         return strokeWidth;
     }
 
-    public String getFont() {
-        return font;
+    public Color getStrokeColor() {
+        return strokeColor;
     }
 
-    public int getFontSize() {
-        return fontSize;
+    public Color getFontColor() {
+        return fontColor;
     }
 
-    public boolean isBold() {
-        return bold;
+    public String getType() {
+        return type;
     }
 
-    public boolean isItalic() {
-        return italic;
-    }
-
-    public boolean isUnderline() {
-        return underline;
-    }
-
-    public double getPositionID() {
-        return positionID;
+    public int getID() {
+        return ID;
     }
 
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = strokeWidth;
     }
 
-    public void setFont(String font) {
-        this.font = font;
+    public void setStrokeColor(Color strokeColor) {
+        this.strokeColor = strokeColor;
     }
 
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
+    public void setFontColor(Color fontColor) {
+        this.fontColor = fontColor;
     }
 
-    public void setBold(boolean bold) {
-        this.bold = bold;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setItalic(boolean italic) {
-        this.italic = italic;
-    }
-
-    public void setUnderline(boolean underline) {
-        this.underline = underline;
-    }
-
-    public void setPositionID(double positionID) {
-        this.positionID = positionID;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 }
