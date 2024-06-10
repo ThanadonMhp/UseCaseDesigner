@@ -209,7 +209,7 @@ public class UseCasePageController {
             useCase.setPreCondition("!@#$%^&*()_+");
         }
 
-        useCaseDetailList.clear();
+        useCaseDetailList.clearUseCaseDetail(useCase.getUseCaseID());
         // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
         int actorNumber = 1;
         for (Node node : actorActionVBox.getChildren()) {

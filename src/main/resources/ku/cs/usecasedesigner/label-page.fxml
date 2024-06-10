@@ -14,7 +14,7 @@
       <Button fx:id="confirmButton" layoutX="121.0" layoutY="235.0" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confrim" />
       <Text fx:id="errorText" fill="RED" layoutX="21.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="258.0000042915344" />
       <Label fx:id="noteLabel" layoutX="21.0" layoutY="135.0" prefHeight="25.0" prefWidth="258.0" text="Note" />
-      <TextArea fx:id="noteTextArea" layoutX="20.0" layoutY="160.0" prefHeight="50.0" prefWidth="260.0" />
+      <TextArea fx:id="noteTextArea" layoutX="20.0" layoutY="160.0" prefHeight="50.0" prefWidth="260.0" wrapText="true" />
       <Label fx:id="labelText" layoutX="20.0" layoutY="59.0" prefHeight="25.0" prefWidth="130.0" text="Name" />
       <TextField fx:id="aliasTextField" layoutX="150.0" layoutY="85.0" prefHeight="25.0" prefWidth="130.0" visible="false" />
       <Label fx:id="aliasLabel" layoutX="150.0" layoutY="59.0" prefHeight="25.0" prefWidth="130.0" text="Alias" visible="false" />

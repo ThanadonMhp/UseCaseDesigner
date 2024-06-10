@@ -55,4 +55,9 @@ public class UseCaseDetailList {
     public void clear() {
         useCaseDetailList.clear();
     }
+
+    // clear use case detail that contains use Case ID
+    public void clearUseCaseDetail(int useCaseID) {
+        useCaseDetailList.removeIf(useCaseDetail -> useCaseDetail.getUseCaseID() == useCaseID);
+    }
 }

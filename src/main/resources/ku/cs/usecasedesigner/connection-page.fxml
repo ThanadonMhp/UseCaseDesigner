@@ -76,6 +76,6 @@
       </VBox>
       <TextField fx:id="labelTextField" layoutX="300.0" layoutY="335.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" />
       <Label layoutX="50.0" layoutY="430.0" text="Note" />
-      <TextArea fx:id="noteTextArea" layoutX="50.0" layoutY="451.0" prefHeight="50.0" prefWidth="500.0" />
+      <TextArea fx:id="noteTextArea" layoutX="50.0" layoutY="451.0" prefHeight="50.0" prefWidth="500.0" wrapText="true" />
    </children>
 </AnchorPane>
