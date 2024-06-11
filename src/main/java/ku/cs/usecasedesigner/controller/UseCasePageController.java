@@ -41,10 +41,12 @@ public class UseCasePageController {
     private ActorList actorList;
     private PositionList positionList;
     private UseCaseDetailList useCaseDetailList;
+    private ComponentPreferenceList componentPreferenceList;
     private DataSource<UseCaseList> useCaseListDataSource;
     private DataSource<ActorList> actorListFileDataSource;
     private DataSource<PositionList> positionListFileDataSource;
     private DataSource<UseCaseDetailList> useCaseDetailListDataSource;
+    private DataSource<ComponentPreferenceList> componentPreferenceListDataSource;
 
     @FXML
     void initialize() {
@@ -151,6 +153,9 @@ public class UseCasePageController {
             int useCaseID = Integer.parseInt(useCaseIDTextField.getText());
             if (useCaseList.findByUseCaseId(useCaseID) == null || useCaseID == useCase.getUseCaseID()) {
                 errorLabel.setText("");
+                componentPreferenceListDataSource = new ComponentPreferenceListFileDataSource(directory, projectName + ".csv");
+                componentPreferenceList = componentPreferenceListDataSource.readData();
+                componentPreferenceList.updateIDWithType(useCase.getUseCaseID(), "useCase", useCaseID);
                 useCase.setUseCaseID(useCaseID);
             } else {
                 errorLabel.setText("This use case ID is already being used by another use case.");
@@ -252,6 +257,8 @@ public class UseCasePageController {
         useCaseListDataSource.writeData(useCaseList);
         // Edit the useCaseDetailList
         useCaseDetailListDataSource.writeData(useCaseDetailList);
+        // Edit the componentPreferenceList
+        componentPreferenceListDataSource.writeData(componentPreferenceList);
 
         // send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();

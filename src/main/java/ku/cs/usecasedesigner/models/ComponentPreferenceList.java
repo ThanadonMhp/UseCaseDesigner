@@ -38,4 +38,22 @@ public class ComponentPreferenceList {
         }
         return false;
     }
+
+    public void removeFromIDAndType(int ID, String type) {
+        for (ComponentPreference componentPreference : componentPreferenceList) {
+            if (componentPreference.getID() == ID && componentPreference.getType().equals(type)) {
+                componentPreferenceList.remove(componentPreference);
+                return;
+            }
+        }
+    }
+
+    public void updateIDWithType(int ID, String type, int newID) {
+        for (ComponentPreference componentPreference : componentPreferenceList) {
+            if (componentPreference.getID() == ID && componentPreference.getType().equals(type)) {
+                componentPreference.setID(newID);
+                return;
+            }
+        }
+    }
 }

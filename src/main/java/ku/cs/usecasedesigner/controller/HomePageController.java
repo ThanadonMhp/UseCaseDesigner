@@ -766,6 +766,7 @@ public class HomePageController {
                 // Remove the item from the list
                 if(Objects.equals(type, "connection")) {
                     connectionList.removeConnectionByID(ID);
+                    componentPreferenceList.removeFromIDAndType(ID, "connection");
                     // remove points of the line
                     for (Node point : designPane.getChildren()) {
                         if (point instanceof Circle) {
@@ -779,9 +780,11 @@ public class HomePageController {
                 } else if(Objects.equals(type, "useCase")) {
                     useCaseList.removeUseCaseByPositionID(ID);
                     positionList.removePositionByID(ID);
+                    componentPreferenceList.removeFromIDAndType(ID, "useCase");
                 } else if(Objects.equals(type, "actor")) {
                     actorList.removeActorByPositionID(ID);
                     positionList.removePositionByID(ID);
+                    componentPreferenceList.removeFromIDAndType(ID, "actor");
                 } else if(Objects.equals(type, "subSystem")) {
                     Integer subSystemIDToRemove = subsystemList.findSubSystemIDByPositionID(ID);
                     // Remove all the components in the subsystem from the position list
@@ -790,6 +793,7 @@ public class HomePageController {
                             positionList.removePositionByID(position.getPositionID());
                             useCaseList.removeUseCaseByPositionID(position.getPositionID());
                             actorList.removeActorByPositionID(position.getPositionID());
+                            componentPreferenceList.removeFromIDAndType(position.getPositionID(), "useCase");
                         });
                     }
                     connectionList.removeConnectionBySubSystemID(subSystemIDToRemove);
