@@ -394,7 +394,7 @@ public class HomePageController {
         line.setStrokeWidth(1);
 
         if (Objects.equals(lineType, "dash")){
-            line.setStyle("-fx-stroke: black; -fx-stroke-dash-array: 10 10;");
+            line.setStyle("-fx-stroke-dash-array: 10 10;");
         }
 
         // Create Start and End points of the line
