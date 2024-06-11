@@ -103,7 +103,7 @@ public class HomePageController {
         Ellipse ellipse = new Ellipse();
         ellipse.setRadiusX(width);
         ellipse.setRadiusY(height);
-        ellipse.setStyle("-fx-fill: transparent; -fx-stroke: black;");
+        ellipse.setStyle("-fx-fill: transparent");
 
         // Add useCaseName
         Label useCaseName = new Label(label);
