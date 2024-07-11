@@ -15,11 +15,6 @@ public class ProjectApplication extends Application {
         FXRouter.popup("LandingPage", true);
 
     }
-    private void setWindowTitle(String title) {
-        Stage stage = FXRouter.getStage();
-        stage.setTitle(title);
-
-    }
 
     private static void configRoute() {
         String packageStr = "ku/cs/usecasedesigner/";
