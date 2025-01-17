@@ -10,7 +10,7 @@
 ## Links
 - GitHub : [UseCaseDesigner](https://github.com/ThanadonMhp/UseCaseDesigner)
 - Figma : [SeniorProject - UseCaseDesigner](https://www.figma.com/files/team/1354696602475933275/SeniorProject-UseCaseDesigner)
-- Lucidchart (ER Diagram) : [SeniorProject-UseCaseDesigner](https://lucid.app/lucidchart/3a56664a-2209-4512-a823-2196fdbaebf7/edit?viewport_loc=-7300%2C-5045%2C15527%2C7553%2C0_0&invitationId=inv_c4b3a92a-3586-4f8b-9450-d091aaf4a47e)
+- Lucidchart (ER Diagram) : [SeniorProject-UseCaseDesigner]([https://lucid.app/lucidchart/3a56664a-2209-4512-a823-2196fdbaebf7/edit?viewport_loc=-7300%2C-5045%2C15527%2C7553%2C0_0&invitationId=inv_c4b3a92a-3586-4f8b-9450-d091aaf4a47e](https://lucid.app/lucidchart/3a56664a-2209-4512-a823-2196fdbaebf7/edit?viewport_loc=-4962%2C-1675%2C10369%2C5044%2CoInK7Vv7XAUq&invitationId=inv_c4b3a92a-3586-4f8b-9450-d091aaf4a47e))
   
 ## References
 - [Use Case Diagram Designer](https://online.visual-paradigm.com/diagrams/features/use-case-diagram-software/)
